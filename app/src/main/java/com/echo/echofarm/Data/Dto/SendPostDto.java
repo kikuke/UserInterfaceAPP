@@ -1,12 +1,14 @@
 package com.echo.echofarm.Data.Dto;
 
+import android.net.Uri;
+
 import java.util.List;
 
 public class SendPostDto {
 
     private String uid;
     private String title;
-    private List<String> imgSrc;
+    private List<Uri> imgSrc;
     private String contents;
     private String ownProduct;
     private List<String> ownTag;
@@ -16,7 +18,7 @@ public class SendPostDto {
 
     public SendPostDto(){}
 
-    public SendPostDto(String uid, String title, List<String> imgSrc, String contents, String ownProduct, List<String> ownTag, String wantProduct, List<String> wantTag, boolean allowOther) {
+    public SendPostDto(String uid, String title, List<Uri> imgSrc, String contents, String ownProduct, List<String> ownTag, String wantProduct, List<String> wantTag, boolean allowOther) {
         this.uid = uid;
         this.title = title;
         this.imgSrc = imgSrc;
@@ -44,11 +46,11 @@ public class SendPostDto {
         this.title = title;
     }
 
-    public List<String> getImgSrc() {
+    public List<Uri> getImgSrc() {
         return imgSrc;
     }
 
-    public void setImgSrc(List<String> imgSrc) {
+    public void setImgSrc(List<Uri> imgSrc) {
         this.imgSrc = imgSrc;
     }
 

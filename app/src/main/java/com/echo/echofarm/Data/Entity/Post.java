@@ -1,12 +1,13 @@
 package com.echo.echofarm.Data.Entity;
 
+import android.net.Uri;
+
 import java.util.List;
 
 public class Post {
 
     private String uid;
     private String title;
-    private List<String> imgSrc;
     private String contents;
     private String ownProduct;
     private List<String> ownTag;
@@ -16,9 +17,9 @@ public class Post {
 
     public Post() {}
 
-    public Post(String uid, String title, List<String> imgSrc, String contents, String ownProduct, List<String> ownTag,
+    public Post(String uid, String title, List<Uri> imgSrc, String contents, String ownProduct, List<String> ownTag,
                 String wantProduct, List<String> wantTag, boolean allowOther){
-        this.uid = uid; this.title = title; this.imgSrc = imgSrc; this.contents = contents;
+        this.uid = uid; this.title = title; this.contents = contents;
         this.ownProduct = ownProduct; this.ownTag = ownTag; this.wantProduct = wantProduct; this.wantTag=wantTag; this.allowOther=allowOther;
     }
 
@@ -36,14 +37,6 @@ public class Post {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public List<String> getImgSrc() {
-        return imgSrc;
-    }
-
-    public void setImgSrc(List<String> imgSrc) {
-        this.imgSrc = imgSrc;
     }
 
     public String getContents() {
@@ -100,7 +93,6 @@ public class Post {
         return "Post{" +
                 "uid='" + uid + '\'' +
                 ", title='" + title + '\'' +
-                ", imgSrc=" + imgSrc +
                 ", contents='" + contents + '\'' +
                 ", ownProduct='" + ownProduct + '\'' +
                 ", ownTag=" + ownTag +

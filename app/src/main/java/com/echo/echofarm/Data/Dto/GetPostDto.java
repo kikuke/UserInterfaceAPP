@@ -1,12 +1,14 @@
 package com.echo.echofarm.Data.Dto;
 
+import android.net.Uri;
+
 import java.util.List;
 
 public class GetPostDto {
 
     private String uid;
     private String title;
-    private List<String> imgSrc;
+    private List<Uri> imgSrc;
     private String contents;
     private String ownProduct;
     private List<String> ownTag;
@@ -30,11 +32,11 @@ public class GetPostDto {
         this.title = title;
     }
 
-    public List<String> getImgSrc() {
+    public List<Uri> getImgSrc() {
         return imgSrc;
     }
 
-    public void setImgSrc(List<String> imgSrc) {
+    public void setImgSrc(List<Uri> imgSrc) {
         this.imgSrc = imgSrc;
     }
 

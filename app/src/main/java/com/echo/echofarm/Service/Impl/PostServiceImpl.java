@@ -1,5 +1,6 @@
 package com.echo.echofarm.Service.Impl;
 
+import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -7,27 +8,35 @@ import androidx.annotation.NonNull;
 import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Data.Entity.Post;
+import com.echo.echofarm.Interface.GetPostListener;
+import com.echo.echofarm.Interface.SendPostListener;
 import com.echo.echofarm.Service.PostService;
+import com.echo.echofarm.Service.StoreService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class PostServiceImpl implements PostService {
     private static final String TAG = "PostService";
     private FirebaseFirestore db;
+    private StoreService storeService;
 
     public PostServiceImpl(){
         db = FirebaseFirestore.getInstance();
+        storeService = new StoreServiceImpl();
     }
 
-    public void sendPostDto(SendPostDto sendPostDto){
+    //중간 인터페이스 만들어서 서비스 연결시켜주기
+    public void sendPostDto(SendPostDto sendPostDto, SendPostListener sendPostListener){
         Post post = new Post();
 
         post.setUid(sendPostDto.getUid());
         post.setTitle(sendPostDto.getTitle());
-        post.setImgSrc(sendPostDto.getImgSrc());//이미지 업로드 후 저장작업 필요함. 이미지 자체를 담고있기?
         post.setContents(sendPostDto.getContents());
         post.setOwnProduct(sendPostDto.getOwnProduct());
         post.setOwnTag(sendPostDto.getOwnTag());
@@ -40,17 +49,32 @@ public class PostServiceImpl implements PostService {
                 @Override
                 public void onSuccess(DocumentReference documentReference) {
                     Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                    getPostDto(documentReference.getId());
+
+                    sendImgUri(documentReference.getId(), sendPostDto.getImgSrc());
+
+                    sendPostListener.onSuccess(documentReference.getId());
                 }})
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
+
+                        sendPostListener.onFailed();
                     }
                 });
     }
 
-    public void getPostDto(String postId){
+    private void sendImgUri(String docID, List<Uri> uriList){
+        int i=0;
+        for(Uri uri : uriList){
+            System.out.println(uri+ docID+ Integer.toString(i));
+
+            storeService.storeImage(uri, docID, Integer.toString(i));
+            i++;
+        }
+    }
+
+    public void getPostDto(String postId, GetPostListener getPostListener){
         DocumentReference docRef = db.collection("post").document(postId);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -60,7 +84,6 @@ public class PostServiceImpl implements PostService {
 
                 getPostDto.setUid(post.getUid());
                 getPostDto.setTitle(post.getTitle());
-                getPostDto.setImgSrc(post.getImgSrc());
                 getPostDto.setContents(post.getContents());
                 getPostDto.setOwnProduct(post.getOwnProduct());
                 getPostDto.setOwnTag(post.getOwnTag());
@@ -68,9 +91,20 @@ public class PostServiceImpl implements PostService {
                 getPostDto.setWantTag(post.getWantTag());
                 getPostDto.setAllowOther(post.isAllowOther());
 
-                Log.w(TAG, "getPostDto" + getPostDto);
-                //포스트액티비티로 이동하기
-            }
-        });
+                getPostDto.setImgSrc(new ArrayList<>());
+                storeService.getAllImageUrl(postId, getPostDto.getImgSrc());
+
+                getPostListener.onSuccess(getPostDto);
+
+                Log.w(TAG, "Success getPostDto: " + getPostDto);
+            }})
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Success getPostDto:", e);
+
+                        getPostListener.onFailed();
+                    }
+                });;
     }
 }
