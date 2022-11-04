@@ -66,7 +66,7 @@ public class StoreServiceImpl implements StoreService {
     public void getImageUrl(String postId, String photoName, GetPostDto getPostDto, GetImgUrlListener getImgUrlListener){
         StorageReference storageRef = storage.getReference();
 
-        storageRef.child("photo/" + postId + "/" + photoName + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.child("photo/" + postId + "/" + photoName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
                 getPostDto.getImgSrc().add(uri);
@@ -77,6 +77,8 @@ public class StoreServiceImpl implements StoreService {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Log.w(TAG, "Failed get Image: " + exception);
+
+                System.out.println("photo/" + postId + "/" + photoName + ".png" + storageRef.child("photo/" + postId + "/" + photoName + ".png"));
                 getImgUrlListener.onFailed();
             }
         });
