@@ -8,8 +8,8 @@ import androidx.annotation.NonNull;
 import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Data.Entity.Post;
-import com.echo.echofarm.Interface.GetPostListener;
-import com.echo.echofarm.Interface.SendPostListener;
+import com.echo.echofarm.Interface.GetImgUrlListener;
+import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.Service.PostService;
 import com.echo.echofarm.Service.StoreService;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -32,7 +32,7 @@ public class PostServiceImpl implements PostService {
     }
 
     //중간 인터페이스 만들어서 서비스 연결시켜주기
-    public void sendPostDto(SendPostDto sendPostDto, SendPostListener sendPostListener){
+    public void sendPostDto(SendPostDto sendPostDto, StoreImgListener storeImgListener){
         Post post = new Post();
 
         post.setUid(sendPostDto.getUid());
@@ -50,31 +50,27 @@ public class PostServiceImpl implements PostService {
                 public void onSuccess(DocumentReference documentReference) {
                     Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
 
-                    sendImgUri(documentReference.getId(), sendPostDto.getImgSrc());
-
-                    sendPostListener.onSuccess(documentReference.getId());
+                    sendImgUri(documentReference.getId(), sendPostDto.getImgSrc(), storeImgListener);
                 }})
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Error adding document", e);
-
-                        sendPostListener.onFailed();
                     }
                 });
     }
 
-    private void sendImgUri(String docID, List<Uri> uriList){
+    private void sendImgUri(String docID, List<Uri> uriList, StoreImgListener storeImgListener){
         int i=0;
         for(Uri uri : uriList){
             System.out.println(uri+ docID+ Integer.toString(i));
 
-            storeService.storeImage(uri, docID, Integer.toString(i));
+            storeService.storeImage(uri, docID, Integer.toString(i), storeImgListener);
             i++;
         }
     }
 
-    public void getPostDto(String postId, GetPostListener getPostListener){
+    public void getPostDto(String postId, GetImgUrlListener getImgUrlListener){
         DocumentReference docRef = db.collection("post").document(postId);
         docRef.get().addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
             @Override
@@ -92,9 +88,7 @@ public class PostServiceImpl implements PostService {
                 getPostDto.setAllowOther(post.isAllowOther());
 
                 getPostDto.setImgSrc(new ArrayList<>());
-                storeService.getAllImageUrl(postId, getPostDto.getImgSrc());
-
-                getPostListener.onSuccess(getPostDto);
+                storeService.getAllImageUrl(postId, getPostDto, getImgUrlListener);
 
                 Log.w(TAG, "Success getPostDto: " + getPostDto);
             }})
@@ -102,8 +96,6 @@ public class PostServiceImpl implements PostService {
                     @Override
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Success getPostDto:", e);
-
-                        getPostListener.onFailed();
                     }
                 });;
     }

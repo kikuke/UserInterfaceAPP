@@ -5,6 +5,9 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.echo.echofarm.Data.Dto.GetPostDto;
+import com.echo.echofarm.Interface.GetImgUrlListener;
+import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.Service.StoreService;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -21,33 +24,35 @@ public class StoreServiceImpl implements StoreService {
 
     public StoreServiceImpl(){ storage = FirebaseStorage.getInstance(); }
 
-    public void storeImage(Uri imageUri, String forderName, String photoName){
+    public void storeImage(Uri imageUri, String postId, String photoName, StoreImgListener storeImgListener){
         StorageReference storageRef = storage.getReference();
-        StorageReference imageRef = storageRef.child("photo/" + forderName + "/" + photoName + ".png");
+        StorageReference imageRef = storageRef.child("photo/" + postId + "/" + photoName + ".png");
         UploadTask uploadTask = imageRef.putFile(imageUri);
 
         uploadTask.addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Log.w(TAG, "Failed Store Image", exception);
+                storeImgListener.onFailed();
             }
         }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
             @Override
             public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
                 Log.w(TAG, "Success Store Image: " + imageUri);
+                storeImgListener.onSuccess(postId);
             }
         });
     }
 
-    public void getAllImageUrl(String forderName, List<Uri> uriList){
+    public void getAllImageUrl(String postId, GetPostDto getPostDto, GetImgUrlListener getImgUrlListener){
         StorageReference storageRef = storage.getReference();
-        storageRef.child("photo/" + forderName).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
+        storageRef.child("photo/" + postId).listAll().addOnSuccessListener(new OnSuccessListener<ListResult>() {
                     @Override
                     public void onSuccess(ListResult listResult) {
                         for (StorageReference item : listResult.getItems()) {
-                            getImageUrl(forderName, item.getName(), uriList);
+                            getImageUrl(postId, item.getName(), getPostDto, getImgUrlListener);
                         }
-                        Log.w(TAG, "Success get All Image: " + uriList);
+                        Log.w(TAG, "Success get All Image: " + getPostDto);
                     }
                 })
                 .addOnFailureListener(new OnFailureListener() {
@@ -58,19 +63,21 @@ public class StoreServiceImpl implements StoreService {
                 });
     }
 
-    public void getImageUrl(String forderName, String photoName, List<Uri> uriList){
+    public void getImageUrl(String postId, String photoName, GetPostDto getPostDto, GetImgUrlListener getImgUrlListener){
         StorageReference storageRef = storage.getReference();
 
-        storageRef.child("photo/" + forderName + "/" + photoName + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+        storageRef.child("photo/" + postId + "/" + photoName + ".png").getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
-                uriList.add(uri);
-                Log.w(TAG, "Success get Image: " + uri + "List: " + uriList);
+                getPostDto.getImgSrc().add(uri);
+                getImgUrlListener.onSuccess(getPostDto);
+                Log.w(TAG, "Success get Image: " + getPostDto);
             }
         }).addOnFailureListener(new OnFailureListener() {
             @Override
             public void onFailure(@NonNull Exception exception) {
                 Log.w(TAG, "Failed get Image: " + exception);
+                getImgUrlListener.onFailed();
             }
         });
     }

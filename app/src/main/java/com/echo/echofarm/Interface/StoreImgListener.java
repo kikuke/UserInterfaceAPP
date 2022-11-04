@@ -1,7 +1,7 @@
 package com.echo.echofarm.Interface;
 
 
-public interface SendPostListener {
+public interface StoreImgListener {
     void onSuccess(String postId);
     void onFailed();
 }

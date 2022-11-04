@@ -15,12 +15,19 @@ public class Post {
     private List<String> wantTag;
     private boolean allowOther;
 
-    public Post() {}
+    public Post() {
+    }
 
     public Post(String uid, String title, List<Uri> imgSrc, String contents, String ownProduct, List<String> ownTag,
-                String wantProduct, List<String> wantTag, boolean allowOther){
-        this.uid = uid; this.title = title; this.contents = contents;
-        this.ownProduct = ownProduct; this.ownTag = ownTag; this.wantProduct = wantProduct; this.wantTag=wantTag; this.allowOther=allowOther;
+                String wantProduct, List<String> wantTag, boolean allowOther) {
+        this.uid = uid;
+        this.title = title;
+        this.contents = contents;
+        this.ownProduct = ownProduct;
+        this.ownTag = ownTag;
+        this.wantProduct = wantProduct;
+        this.wantTag = wantTag;
+        this.allowOther = allowOther;
     }
 
     public String getUid() {

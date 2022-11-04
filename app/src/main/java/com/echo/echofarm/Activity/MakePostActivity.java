@@ -2,20 +2,17 @@ package com.echo.echofarm.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 
 import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.SendPostDto;
-import com.echo.echofarm.Interface.GetPostListener;
-import com.echo.echofarm.Interface.SendPostListener;
+import com.echo.echofarm.Interface.GetImgUrlListener;
+import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.PostService;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public class MakePostActivity extends AppCompatActivity {
@@ -38,11 +35,13 @@ public class MakePostActivity extends AppCompatActivity {
                 "Pencil", Arrays.asList("tag1", "tag2"), "ball", Arrays.asList("tag3", "tag4"), false);
 
         //어디까지나 사용 예시임! 아래는 각 함수 사용법 활용을 위한 예제. 리스너에 인텐트 달아서 연결시키거나 하는방식으로 사용
-        postService.sendPostDto(sendPostDto, new SendPostListener() {
+        postService.sendPostDto(sendPostDto, new StoreImgListener() {
+            //각 이미지들의 저장이 끝났을 때 호출되는 콜백
             @Override
             public void onSuccess(String postId) {
                 //getPostDto의 사용예시임! postId는 랜덤?생성임.
-                postService.getPostDto(postId, new GetPostListener() {
+                postService.getPostDto(postId, new GetImgUrlListener() {
+                    //각 이미지의 url을 불러오는것이 성공했을 때 호출되는 콜백
                     @Override
                     public void onSuccess(GetPostDto getPostDto) {
                         //getPostDto를 이용해 ㅅ인텐트로 새창 열거나 액티비티에 대입해 활용하는 형식으로 사용하면 됨.
