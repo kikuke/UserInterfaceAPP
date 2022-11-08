@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +27,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     EditText editPW;
     Button loginBtn;
     Button joinBtn;
+    TextView loginErrorText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +38,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
 
         editID = (EditText) findViewById(R.id.idEditText);
         editPW = (EditText) findViewById(R.id.passwordEditText);
+        loginErrorText = findViewById(R.id.loginErrorText);
 
         loginBtn = (Button) findViewById(R.id.loginButton);
         loginBtn.setOnClickListener(this);
@@ -79,8 +82,8 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             updateUI(user);
 
                             //테스트 용으로 포스트만드는 인텐트로 이동.
-                            Intent makePostIntent = new Intent(LoginActivity.this, MakePostActivity.class);
-                            startActivity(makePostIntent);
+                            Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
+                            startActivity(mainActivity);
 
                         } else {
                             // If sign in fails, display a message to the user.
@@ -88,6 +91,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                             Toast.makeText(LoginActivity.this, "Authentication failed.",
                                     Toast.LENGTH_SHORT).show();
                             updateUI(null);
+                            loginErrorText.setVisibility(View.VISIBLE);
                         }
                     }
                 });

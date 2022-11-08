@@ -1,11 +1,13 @@
 package com.echo.echofarm.Activity;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -24,8 +26,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private RecyclerView recyclerView;
     private ProgressBar loadingPB;
     private NestedScrollView nestedSV;
-    private ScrollView editPostScrollView;
-    private Button searchBtn, morePostBtn;
+    private Button morePostBtn;
     private ImageButton editPostBtn, chattingBtn, settingBtn;
     private LinearLayout mainLayout;
 
@@ -47,17 +48,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // 액션바 제목
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Html.fromHtml("<font color='#000'>최근 게시물</font>"));
+
         // 액티비티 버튼 처리
-        searchBtn = findViewById(R.id.searchBtn);
         editPostBtn = findViewById(R.id.editPostBtn);
         chattingBtn = findViewById(R.id.chattingBtn);
         settingBtn = findViewById(R.id.settingBtn);
-        searchBtn.setOnClickListener(this);
         editPostBtn.setOnClickListener(this);
         chattingBtn.setOnClickListener(this);
         settingBtn.setOnClickListener(this);
 
-        editPostScrollView = findViewById(R.id.editPost_scrollView);
         mainLayout = findViewById(R.id.main_postLayout);
 
         // post, 스크롤 관련 처리
@@ -93,12 +95,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // 액티비티 수준 onClick
     @Override
     public void onClick(View view) {
-        if(view == searchBtn) {
+        if(view == editPostBtn) {
 
-        } else if(view == editPostBtn) {
-            mainLayout.setVisibility(View.INVISIBLE);
-            editPostScrollView.setVisibility(View.VISIBLE);
-            editPostBtn.setImageResource(R.drawable.edit_selected);
         } else if(view == chattingBtn) {
 
         } else if(view == settingBtn) {
