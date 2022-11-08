@@ -19,7 +19,6 @@ import com.google.firebase.auth.FirebaseUser;
 
 public class JoinActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "EmailPassword";
-
     private FirebaseAuth mAuth;
 
     EditText editID;
