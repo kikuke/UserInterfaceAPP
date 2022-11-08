@@ -5,59 +5,48 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-    <FrameLayout
+
+
+    <androidx.core.widget.NestedScrollView
+        android:id="@+id/idNestedSV"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:layout_weight="1">
+        android:layout_weight="1"
+        tools:context=".MainActivity">
+
         <LinearLayout
-            android:id="@+id/main_postLayout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:orientation="vertical">
 
-            <androidx.core.widget.NestedScrollView
-                android:id="@+id/idNestedSV"
+            <!--recycler view for displaying our list of data
+                and we are making nested scroll for our
+                recycler view as false-->
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/idRVCourses"
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
                 android:layout_weight="1"
-                tools:context=".MainActivity">
+                android:nestedScrollingEnabled="false" />
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+            <ProgressBar
+                android:id="@+id/idPBLoading"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content" />
 
-                    <!--recycler view for displaying our list of data
-                        and we are making nested scroll for our
-                        recycler view as false-->
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/idRVCourses"
-                        android:layout_width="match_parent"
-                        android:layout_height="0dp"
-                        android:layout_weight="1"
-                        android:nestedScrollingEnabled="false" />
-
-                    <ProgressBar
-                        android:id="@+id/idPBLoading"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content" />
-
-                    <Button
-                        android:id="@+id/idBtn"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_margin="20dp"
-                        android:background="#AA90C5F9"
-                        android:text="더 많은 게시물 보기"
-                        android:textColor="@color/black"
-                        android:visibility="gone"/>
-                </LinearLayout>
-
-            </androidx.core.widget.NestedScrollView>
-
+            <Button
+                android:id="@+id/idBtn"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="20dp"
+                android:background="#AA90C5F9"
+                android:text="더 많은 게시물 보기"
+                android:textColor="@color/black"
+                android:visibility="gone"/>
         </LinearLayout>
 
-    </FrameLayout>
+    </androidx.core.widget.NestedScrollView>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="50dp"
