@@ -28,7 +28,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private NestedScrollView nestedSV;
     private Button morePostBtn;
     private ImageButton editPostBtn, chattingBtn, settingBtn;
-    private LinearLayout mainLayout;
 
     // post에 들어갈 데이터 예제, PostAdapter의 매개변수
     private String[] titles = {"1", "2", "3", "4", "5"};
@@ -59,8 +58,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         editPostBtn.setOnClickListener(this);
         chattingBtn.setOnClickListener(this);
         settingBtn.setOnClickListener(this);
-
-        mainLayout = findViewById(R.id.main_postLayout);
 
         // post, 스크롤 관련 처리
         recyclerView = findViewById(R.id.idRVCourses);
