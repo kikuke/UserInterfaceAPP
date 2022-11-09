@@ -72,18 +72,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                // ex) 3 * n개 게시물 표시시 '더 많은 게시물'버튼 생성
-                if(postCount >= 3) {
+                // ex) 3 * 5개 게시물 표시시 '더 많은 게시물'버튼 생성
+                if(postCount >= 5*3) {
                     loadingPB.setVisibility(View.GONE);
                     morePostBtn.setVisibility(View.VISIBLE);
                 }
                 // 스크롤이 끝이라면 데이터 불러옴
                 else if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    postCount++;
                     Log.i("my", "" + postCount, null);
                     loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
 
-                    // 데이터 n개씩 불러옴
+                    // 데이터 5개씩 불러옴
                     getData();
                 }
             }
@@ -101,8 +100,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     private void getData() {
+        // 5개의 불러올 데이터
         for(int i = 0; i < 5; i++) {
-            postInfoArrayList.add(new PostInfo(titles[i], message[i], images[i]));
+            postInfoArrayList.add(new PostInfo(++postCount, titles[i], message[i], images[i]));
             postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
             recyclerView.setAdapter(postAdapter);
         }

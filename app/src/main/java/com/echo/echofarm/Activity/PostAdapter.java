@@ -1,11 +1,13 @@
 package com.echo.echofarm.Activity;
 
 import android.content.Context;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
@@ -54,6 +56,18 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postImage = itemView.findViewById(R.id.imageView_postLayout);
             title = itemView.findViewById(R.id.title_postLayout);
             tags = itemView.findViewById(R.id.tags_postLayout);
+
+            //click 이벤트 처리
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    if(pos != RecyclerView.NO_POSITION) {
+                        Log.i("my", "" + pos, null);
+                        Log.i("my", ""+postInfoArrayList.get(pos).getId(),null);
+                    }
+                }
+            });
         }
     }
 }
