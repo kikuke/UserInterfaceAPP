@@ -5,8 +5,10 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.echo.echofarm.Activity.PostInfo;
 import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Interface.GetImgUrlListener;
+import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.Service.StoreService;
 import com.google.android.gms.tasks.OnFailureListener;
@@ -63,6 +65,26 @@ public class StoreServiceImpl implements StoreService {
                 });
     }
 
+    public void getImageUrl(String postId, String photoName, PostInfo postInfo, GetPostInfoListener getPostInfoListener){
+        StorageReference storageRef = storage.getReference();
+
+        storageRef.child("photo/" + postId + "/" + photoName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+            @Override
+            public void onSuccess(Uri uri) {
+                postInfo.setImageUri(uri);
+                getPostInfoListener.onSuccess(postInfo);
+                Log.w(TAG, "Success get Image: " + postInfo);
+            }
+        }).addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Log.w(TAG, "Failed get Image: " + exception);
+
+                getPostInfoListener.onFailed();
+            }
+        });
+    }
+
     public void getImageUrl(String postId, String photoName, GetPostDto getPostDto, GetImgUrlListener getImgUrlListener){
         StorageReference storageRef = storage.getReference();
 
@@ -78,7 +100,6 @@ public class StoreServiceImpl implements StoreService {
             public void onFailure(@NonNull Exception exception) {
                 Log.w(TAG, "Failed get Image: " + exception);
 
-                System.out.println("photo/" + postId + "/" + photoName + ".png" + storageRef.child("photo/" + postId + "/" + photoName + ".png"));
                 getImgUrlListener.onFailed();
             }
         });
