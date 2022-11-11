@@ -56,6 +56,8 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         }
         else if(v==homeButton){
             Intent intent = new Intent(getApplicationContext(),MainActivity.class);
+            startActivity(intent);
+            finish();
         }
         else if(v==profileButton){
 
