@@ -6,6 +6,7 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
@@ -92,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         if(view == editPostBtn) {
-
+            startActivity(new Intent(this, EditPostActivity.class));
         } else if(view == chattingBtn) {
 
         } else if(view == settingBtn) {
