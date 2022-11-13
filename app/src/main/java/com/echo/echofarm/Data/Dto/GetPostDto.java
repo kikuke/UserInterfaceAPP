@@ -2,6 +2,8 @@ package com.echo.echofarm.Data.Dto;
 
 import android.net.Uri;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class GetPostDto {
@@ -15,6 +17,7 @@ public class GetPostDto {
     private String wantProduct;
     private List<String> wantTag;
     private boolean allowOther;
+    private Date nowTime;
 
     public String getUid() {
         return uid;
@@ -88,6 +91,9 @@ public class GetPostDto {
         this.allowOther = allowOther;
     }
 
+    public Date getNowTime() {return nowTime;}
+
+    public void setNowTime(Date nowTime) {this.nowTime = nowTime;}
 
     @Override
     public String toString() {
@@ -101,6 +107,7 @@ public class GetPostDto {
                 ", wantProduct='" + wantProduct + '\'' +
                 ", wantTag=" + wantTag +
                 ", allowOther=" + allowOther +
+                ", nowTime=" + nowTime +
                 '}';
     }
 }

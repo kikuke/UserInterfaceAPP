@@ -1,40 +1,27 @@
-package com.echo.echofarm.Data.Entity;
+package com.echo.echofarm.Data.Dto;
 
-import android.net.Uri;
-
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.List;
 
-public class Post {
+public class GetPostListDto {
 
-    private String uid;
-    private String title;
-    private String contents;
-    private String ownProduct;
-    private List<String> ownTag;
-    private String wantProduct;
-    private List<String> wantTag;
-    private boolean allowOther;
-    private Date nowTime;
+    public GetPostListDto(){}
 
-    public Post() {
-        nowTime = new Date();
-    }
-
-    public Post(String uid, String title, List<Uri> imgSrc, String contents, String ownProduct, List<String> ownTag,
-                String wantProduct, List<String> wantTag, boolean allowOther) {
+    public GetPostListDto(String uid, String title, String ownProduct, List<String> ownTag, String wantProduct, List<String> wantTag, Boolean allowOther) {
         this.uid = uid;
         this.title = title;
-        this.contents = contents;
         this.ownProduct = ownProduct;
         this.ownTag = ownTag;
         this.wantProduct = wantProduct;
         this.wantTag = wantTag;
         this.allowOther = allowOther;
-
-        nowTime = new Date();
     }
+
+    private String uid;
+    private String title;
+    private String ownProduct;
+    private List<String> ownTag;
+    private String wantProduct;
+    private List<String> wantTag;
 
     public String getUid() {
         return uid;
@@ -50,14 +37,6 @@ public class Post {
 
     public void setTitle(String title) {
         this.title = title;
-    }
-
-    public String getContents() {
-        return contents;
-    }
-
-    public void setContents(String contents) {
-        this.contents = contents;
     }
 
     public String getOwnProduct() {
@@ -92,28 +71,26 @@ public class Post {
         this.wantTag = wantTag;
     }
 
-    public boolean isAllowOther() {
+    public Boolean getAllowOther() {
         return allowOther;
     }
 
-    public void setAllowOther(boolean allowOther) {
+    public void setAllowOther(Boolean allowOther) {
         this.allowOther = allowOther;
     }
 
-    public Date getNowTime() {return nowTime;}
+    private Boolean allowOther;
 
     @Override
     public String toString() {
-        return "Post{" +
+        return "GetPostListDto{" +
                 "uid='" + uid + '\'' +
                 ", title='" + title + '\'' +
-                ", contents='" + contents + '\'' +
                 ", ownProduct='" + ownProduct + '\'' +
                 ", ownTag=" + ownTag +
                 ", wantProduct='" + wantProduct + '\'' +
                 ", wantTag=" + wantTag +
                 ", allowOther=" + allowOther +
-                ", nowTime=" + nowTime +
                 '}';
     }
 }
