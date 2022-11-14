@@ -2,6 +2,8 @@ package com.echo.echofarm.Data.Entity;
 
 import android.net.Uri;
 
+import java.time.LocalDateTime;
+import java.util.Date;
 import java.util.List;
 
 public class Post {
@@ -14,8 +16,10 @@ public class Post {
     private String wantProduct;
     private List<String> wantTag;
     private boolean allowOther;
+    private Date nowTime;
 
     public Post() {
+        nowTime = new Date();
     }
 
     public Post(String uid, String title, List<Uri> imgSrc, String contents, String ownProduct, List<String> ownTag,
@@ -28,6 +32,8 @@ public class Post {
         this.wantProduct = wantProduct;
         this.wantTag = wantTag;
         this.allowOther = allowOther;
+
+        nowTime = new Date();
     }
 
     public String getUid() {
@@ -94,6 +100,7 @@ public class Post {
         this.allowOther = allowOther;
     }
 
+    public Date getNowTime() {return nowTime;}
 
     @Override
     public String toString() {
@@ -106,6 +113,7 @@ public class Post {
                 ", wantProduct='" + wantProduct + '\'' +
                 ", wantTag=" + wantTag +
                 ", allowOther=" + allowOther +
+                ", nowTime=" + nowTime +
                 '}';
     }
 }

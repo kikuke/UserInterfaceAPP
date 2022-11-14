@@ -5,18 +5,26 @@ import android.util.Log;
 
 import androidx.annotation.NonNull;
 
+import com.echo.echofarm.Activity.PostInfo;
 import com.echo.echofarm.Data.Dto.GetPostDto;
+import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Data.Entity.Post;
 import com.echo.echofarm.Interface.GetImgUrlListener;
+import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.Service.PostService;
 import com.echo.echofarm.Service.StoreService;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
+import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +37,38 @@ public class PostServiceImpl implements PostService {
     public PostServiceImpl(){
         db = FirebaseFirestore.getInstance();
         storeService = new StoreServiceImpl();
+    }
+
+    @Override
+    public void getPostList(GetPostListDto getPostListDto, String beforePostId, Integer limitSize, List<PostInfo> postInfoList, GetPostInfoListener getPostInfoListener){
+        CollectionReference colRef = db.collection("post");
+        Query query = colRef.orderBy("nowTime", Query.Direction.DESCENDING).limit(limitSize);
+        if(beforePostId != null)
+            query.startAfter(colRef.document(beforePostId));
+        if(getPostListDto.getUid() != null)
+            query.whereEqualTo("uid", getPostListDto.getUid());
+
+        getPostList(query, postInfoList, getPostInfoListener);
+    }
+
+    private void getPostList(Query query, List<PostInfo> postInfoList, GetPostInfoListener getPostInfoListener){
+        query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+            @Override
+            public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                if(task.isSuccessful()) {
+                    if(task.getResult().size() <= 0) {
+                        //데이터 끝
+                    } else {
+                        for(DocumentSnapshot document : task.getResult()) {
+                            Post post = document.toObject(Post.class);
+                            PostInfo postInfo = new PostInfo(document.getId(), post.getUid(), post.getTitle(), post.getOwnTag().toString());
+                            postInfoList.add(postInfo);
+                            storeService.getImageUrl(document.getId(), "1.png", postInfo, getPostInfoListener);
+                        }
+                    }
+
+                    Log.d(TAG, "PostInfoList: " + postInfoList);
+                }}});
     }
 
     //중간 인터페이스 만들어서 서비스 연결시켜주기
@@ -86,6 +126,7 @@ public class PostServiceImpl implements PostService {
                 getPostDto.setWantProduct(post.getWantProduct());
                 getPostDto.setWantTag(post.getWantTag());
                 getPostDto.setAllowOther(post.isAllowOther());
+                getPostDto.setNowTime(post.getNowTime());
 
                 getPostDto.setImgSrc(new ArrayList<>());
                 storeService.getAllImageUrl(postId, getPostDto, getImgUrlListener);
