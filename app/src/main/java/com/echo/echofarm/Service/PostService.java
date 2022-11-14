@@ -6,7 +6,6 @@ import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Interface.GetImgUrlListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.StoreImgListener;
-import com.google.firebase.firestore.Query;
 
 import java.util.List;
 

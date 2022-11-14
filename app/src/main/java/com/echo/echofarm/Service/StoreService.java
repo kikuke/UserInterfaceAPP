@@ -8,8 +8,6 @@ import com.echo.echofarm.Interface.GetImgUrlListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.StoreImgListener;
 
-import java.util.List;
-
 public interface StoreService {
 
     void storeImage(Uri imageUri, String forderName, String photoName, StoreImgListener storeImgListener);

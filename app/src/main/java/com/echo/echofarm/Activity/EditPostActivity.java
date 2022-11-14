@@ -270,7 +270,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             if (photoFile != null) {
                 Log.i("my", "photofile != null", null);
                 photoURI = FileProvider.getUriForFile(this,
-                        "com.echo.echofarm.fileprovider",
+                        "com.example.android.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, RESULT_TAKE_PHOTO);
