@@ -40,6 +40,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.echo.echofarm.Data.Entity.Post;
 import com.echo.echofarm.Interface.UploadPhotoClickListener;
 import com.echo.echofarm.R;
 
@@ -52,6 +53,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 public class EditPostActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -306,7 +308,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         });
 
         // 교환 tag
-        Spinner exchangeTag = findViewById(R.id.exchange_tag);
+        Spinner exchangeTag = findViewById(R.id.wanted_tags);
         ArrayAdapter<String> exAdapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, tags
         );
@@ -409,6 +411,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                 String title = titleEditText.getText().toString();
                 String contents = contentsEditText.getText().toString();
                 Boolean isDisallowOtherTags = disallowOtherTags.isChecked();
+
             }
         }
     }
