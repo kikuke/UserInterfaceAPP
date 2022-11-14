@@ -6,6 +6,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
+import androidx.core.content.FileProvider;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.Manifest;
@@ -40,26 +49,21 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.echo.echofarm.Data.Entity.Post;
 import com.echo.echofarm.Interface.UploadPhotoClickListener;
 import com.echo.echofarm.R;
 
-import org.w3c.dom.Text;
 
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.List;
 
 public class EditPostActivity extends AppCompatActivity implements View.OnClickListener{
 
     private String[] tags = {"IT / 가전", "패션의류", "패션잡화", "식품", "스포츠 / 레저", "애완용품", "기타"};
-    private String userSelectedTag = tags[0], wantedSelectedTag = tags[0];
-    private ImageButton firstUploadBtn, additionalUploadBtn;
+    private String userSelectedTag = tags[0];
+    private ImageButton firstUploadBtn, additionalUploadBtn, moreWantedProductBtn;
     private Button postUploadBtn;
     private EditText titleEditText, contentsEditText;
     private CheckBox disallowOtherTags;
@@ -70,6 +74,10 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
     private ArrayList<UploadedPhotoData> list;
     private Uri photoURI;
     private String currentPhotoPath;
+
+    private ArrayList<String> wantedProductsList;
+    private ArrayList<Integer> wantedTagsIdxList;
+    private RecyclerView recyclerView;
 
     private final int RESULT_TAKE_PHOTO = 0;
     private final int RESULT_SELECT_PHOTO = 1;
@@ -123,18 +131,23 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
     private boolean checkCameraHardware(Context context) {
         if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
             // this device has a camera
+            Log.i("my", "true", null);
             return true;
         } else {
             // no camera on this device
             Toast.makeText(EditPostActivity.this, "이 디바이스에서 카메라 기능을 지원하지 않습니다.",
                     Toast.LENGTH_SHORT).show();
+            Log.i("my", "false", null);
             return false;
         }
     }
     private void setFirstPhoto(Bitmap bitmap) {
         if (bitmap != null) {
+            Log.i("my", "bitmap is not null", null);
             firstUploadBtn.setImageBitmap(bitmap);
             firstUploadBtn.setPadding(0, 0, 0, 0);
+        } else {
+            Log.i("my", "bitmap is null", null);
         }
     }
     @Override
@@ -169,7 +182,6 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                 case RESULT_SELECT_PHOTO: {
 
                     boolean isFirst = false;
-
                     if (intent != null) {
                         if(list == null) {
                             isFirst = true;
@@ -180,6 +192,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                         if (intent.getClipData() == null) {     // 이미지를 하나만 선택한 경우
                             Log.e("single choice: ", String.valueOf(intent.getData()));
                             Uri imageUri = intent.getData();
+                            Log.i("my", "" + imageUri.toString(), null);
                             list.add(new UploadedPhotoData(imageUri));
 
                             if(isFirst) {
@@ -198,12 +211,14 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                                 for (int i = 0; i < clipData.getItemCount(); i++) {
                                     Uri imageUri = clipData.getItemAt(i).getUri();  // 선택한 이미지들의 uri를 가져온다.
-
+                                    Log.e("", "" + imageUri.toString(), null);
                                     if(isFirst) {
-                                        Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(),
-                                                imageUri));
+                                        Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), imageUri));
                                         setFirstPhoto(bitmap);
+                                        isFirst = false;
                                     }
+
+
 
                                     try {
                                         list.add(new UploadedPhotoData(imageUri));  //uri를 list에 담는다.
@@ -255,7 +270,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             if (photoFile != null) {
                 Log.i("my", "photofile != null", null);
                 photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
+                        "com.echo.echofarm.fileprovider",
                         photoFile);
                 takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
                 startActivityForResult(takePictureIntent, RESULT_TAKE_PHOTO);
@@ -273,15 +288,19 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         firstUploadBtn = findViewById(R.id.first_upload_photo_btn);
         additionalUploadBtn = findViewById(R.id.additional_upload_btn);
         postUploadBtn = findViewById(R.id.post_upload_btn);
+        moreWantedProductBtn = findViewById(R.id.more_wanted_product_btn);
         titleEditText = findViewById(R.id.post_title_edittext);
         contentsEditText = findViewById(R.id.post_contents_edittext);
         disallowOtherTags = findViewById(R.id.other_tag_disallow_checkbox);
         photoCheck = findViewById(R.id.uploaded_check_text);
         titleCheck = findViewById(R.id.post_title_check_text);
 
+        recyclerView = findViewById(R.id.wanted_product_recyclerview);
+
         firstUploadBtn.setOnClickListener(this);
         additionalUploadBtn.setOnClickListener(this);
         postUploadBtn.setOnClickListener(this);
+        moreWantedProductBtn.setOnClickListener(this);
 
         // 액션바 제목
         ActionBar actionBar = getSupportActionBar();
@@ -308,24 +327,15 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         });
 
         // 교환 tag
-        Spinner exchangeTag = findViewById(R.id.wanted_tags);
-        ArrayAdapter<String> exAdapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, tags
-        );
-        exAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        exchangeTag.setAdapter(exAdapter);
-
-        exchangeTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                wantedSelectedTag = tags[i];
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
+        wantedProductsList = new ArrayList<>();
+        wantedTagsIdxList = new ArrayList<>();
+        wantedProductsList.add("");
+        wantedTagsIdxList.add(0);
+        UserWantProductAdapter userWantProductAdapter =
+                new UserWantProductAdapter(this, wantedProductsList, wantedTagsIdxList);
+        recyclerView.setAdapter(userWantProductAdapter);
+        LinearLayoutManager manager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(manager);
     }
     private View.OnClickListener TakeAPhoto = new View.OnClickListener() {
         @Override
@@ -350,6 +360,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                     new UploadPhotoClickListener() {
                         @Override
                         public void onTakePhotoClick() {
+                            Log.i("my", "pic", null);
                             // 모든권한 획득, 사진찍기
                             if (cameraPermission && fileWritePermission) {
                                 // 업로드사진 10장으로 제한
@@ -357,6 +368,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                                     Toast.makeText(EditPostActivity.this, "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_SHORT).show();
                                 }
                                 else if (checkCameraHardware(EditPostActivity.this)) {
+                                    Log.i("my", "pic3", null);
                                     dispatchTakePictureIntent();
                                 }
                             }
@@ -382,8 +394,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             uploadPhotoDialog.show();
         } else if(view == firstUploadBtn){
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName("com.echo.echofarm",
-                    "com.echo.echofarm.Activity.UploadedPhotosActivity"));
+            intent.setComponent(new ComponentName("com.echo.echofarm", "com.echo.echofarm.Activity.UploadedPhotosActivity"));
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("URI_ARRAY", list);
             intent.putExtra("BUNDLE", bundle);
@@ -403,6 +414,11 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             } else
                 titleCheck.setVisibility(View.INVISIBLE);
 
+            for(int i = 0; i < wantedTagsIdxList.size(); i++) {
+                Log.i("my", wantedProductsList.get(i), null);
+                Log.i("my", tags[wantedTagsIdxList.get(i)], null);
+            }
+
             if(isPostable) {
                 ArrayList<Uri> uriList = new ArrayList<>();
                 for(UploadedPhotoData data : list)
@@ -413,6 +429,12 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                 Boolean isDisallowOtherTags = disallowOtherTags.isChecked();
 
             }
+        } else if(view == moreWantedProductBtn) {
+            wantedProductsList.add("");
+            wantedTagsIdxList.add(0);
+            UserWantProductAdapter userWantProductAdapter =
+                    new UserWantProductAdapter(this, wantedProductsList, wantedTagsIdxList);
+            recyclerView.setAdapter(userWantProductAdapter);
         }
     }
 }

@@ -38,6 +38,16 @@ public class PhotoViewPageAdapter extends RecyclerView.Adapter<PhotoViewPageAdap
             ViewHolderPage viewHolder = (ViewHolderPage) holder;
             viewHolder.onBind(listData.get(position));
         }
+        /*
+        holder.image.setImageURI(listData.get(position).getPhotoUri());
+        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listData.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+                notifyItemRangeChanged(holder.getAdapterPosition(), listData.size());
+            }
+        });*/
     }
 
     @Override

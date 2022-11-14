@@ -18,10 +18,8 @@ public class UploadedPhotosActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uploaded_photos);
 
-        Log.i("my", "create", null);
         Intent intent = getIntent();
         ArrayList<UploadedPhotoData> list = intent.getBundleExtra("BUNDLE").getParcelableArrayList("URI_ARRAY");
-        Log.i("my", "get Array", null);
 
         ViewPager2 viewPager2 = findViewById(R.id.viewpager);
         PhotoViewPageAdapter photoViewPageAdapter = new PhotoViewPageAdapter(UploadedPhotosActivity.this, list);
