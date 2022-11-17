@@ -1,0 +1,26 @@
+*   [33m4c7497b[m[33m ([m[1;36mHEAD -> [m[1;32mmaster[m[33m, [m[1;31morigin/master[m[33m)[m Merge branch 'main' of https://github.com/kikuke/UserInterfaceAPP
+[31m|[m[32m\[m  
+[31m|[m * [33m8ec792a[m[33m ([m[1;31mupstream/main[m[33m)[m 찬호-게시글 확인 액티비티 추가
+[31m|[m * [33m2381306[m 게시글 확인 액티비티 추가
+[31m|[m * [33m5ed0d46[m mainServer
+[31m|[m *   [33mf957180[m Merge pull request #1 from coddingdog/master
+[31m|[m [33m|[m[34m\[m  
+* [33m|[m [34m|[m [33m364dd55[m 석희 - EditPost(미완성)
+[34m|[m [33m|[m[34m/[m  
+[34m|[m[34m/[m[33m|[m   
+* [33m|[m [33maaa1a89[m 석희 - post clickListener
+* [33m|[m [33m78a763a[m 석희 - test
+* [33m|[m [33m7167788[m 석희 - mainActivity 수정
+* [33m|[m [33m9afb7a0[m 석희 - mainActivity 수정
+* [33m|[m [33m42eba52[m 석희 - mainActivity, Login
+* [33m|[m [33m8064400[m 석희 - mainActivity, Login
+* [33m|[m [33m3f8b578[m 석희 - mainActivity, Login
+* [33m|[m [33m3f5e003[m 석희 - mainActivity, Login
+* [33m|[m [33mdb09093[m 석희 push test
+[33m|[m[33m/[m  
+* [33mb713d46[m final
+* [33m4c93e9d[m fixed
+* [33mfb20c77[m post
+* [33m2167efb[m post
+* [33m3ccb4c8[m Login, Join
+* [33mefdeacd[m Initial commit
