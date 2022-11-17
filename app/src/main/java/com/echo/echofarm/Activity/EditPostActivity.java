@@ -41,6 +41,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Interface.UploadPhotoClickListener;
 import com.echo.echofarm.R;
 
@@ -51,6 +52,7 @@ import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.Locale;
 
 public class EditPostActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -58,13 +60,14 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
     private String userSelectedTag = tags[0];
     private ImageButton firstUploadBtn, additionalUploadBtn, moreWantedProductBtn;
     private Button postUploadBtn;
-    private EditText titleEditText, contentsEditText;
+    private EditText titleEditText, contentsEditText, myProductEditText;
     private CheckBox disallowOtherTags;
     private TextView photoCheck, titleCheck;
     private boolean cameraPermission;
     private boolean fileReadPermission;
     private boolean fileWritePermission;
     private ArrayList<UploadedPhotoData> PhotoDataList;
+    private Spinner myTag;
     private Uri photoURI;
     private String currentPhotoPath;
 
@@ -273,6 +276,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         moreWantedProductBtn = findViewById(R.id.more_wanted_product_btn);
         titleEditText = findViewById(R.id.post_title_edittext);
         contentsEditText = findViewById(R.id.post_contents_edittext);
+        myProductEditText = findViewById(R.id.myProduct_editText);
         disallowOtherTags = findViewById(R.id.other_tag_disallow_checkbox);
         photoCheck = findViewById(R.id.uploaded_check_text);
         titleCheck = findViewById(R.id.post_title_check_text);
@@ -292,7 +296,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         actionBar.setTitle(Html.fromHtml("<font color='#000'>게시물 작성</font>"));
 
         // 내 tag
-        Spinner myTag = findViewById(R.id.my_tag);
+        myTag = findViewById(R.id.my_tag);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
                 this, android.R.layout.simple_spinner_item, tags
         );
@@ -404,17 +408,41 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                 Log.i("my", wantedProductsList.get(i), null);
                 Log.i("my", tags[wantedTagsIdxList.get(i)], null);
             }
-
+            // post 서버에 업로드
             if(isPostable) {
+
                 ArrayList<Uri> uriList = new ArrayList<>();
+                ArrayList<String> wantedTagList = new ArrayList<>();
+
                 for(UploadedPhotoData data : PhotoDataList)
                     uriList.add(data.getPhotoUri());
+                for(int idx : wantedTagsIdxList)
+                    wantedTagList.add(tags[idx]);
+
 
                 String title = titleEditText.getText().toString();
                 String contents = contentsEditText.getText().toString();
                 Boolean isDisallowOtherTags = disallowOtherTags.isChecked();
 
-            }
+                /*
+                SendPostDto sendPostDto = new SendPostDto(
+                        "id",
+                        title,
+                        uriList,
+                        contents,
+                        myProductEditText.getText().toString(),
+                        myTag,
+                        wantedProductsList,
+                        wantedTagList,
+                        !isDisallowOtherTags);
+                        }
+
+                 postService.sendPostDto(sendPostDto, new
+                 */
+
+                }
+
+
         }
     }
 }
