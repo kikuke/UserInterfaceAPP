@@ -375,7 +375,10 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             startActivityForResult(intent, RESULT_FROM_UPLOADED_PHOTOS_ACTIVITY);
 
         }  else if(view == moreWantedProductBtn) {
-
+            // 원하는 물품-태그 최대 3개
+            if(wantedProductsList.size() == 2) {
+                moreWantedProductBtn.setVisibility(View.GONE);
+            }
             wantedProductsList.add("");
             wantedTagsIdxList.add(0);
             UserWantProductAdapter userWantProductAdapter =
