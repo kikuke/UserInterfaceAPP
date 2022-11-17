@@ -17,6 +17,8 @@
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/camera"
+            android:minHeight="0dp"
+            android:minWidth="0dp"
             android:scaleType="fitXY"
             android:padding="25dp"/>
 
@@ -27,6 +29,7 @@
                 android:src="@drawable/plus_icon"
                 android:scaleType="fitXY"
                 android:padding="30dp"
+                android:layout_marginLeft="10dp"
                 android:visibility="gone"/>
         </LinearLayout>
         <TextView
@@ -72,28 +75,30 @@
 
         </LinearLayout>
 
-        <LinearLayout
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="원하는 태그 설정"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:layout_marginTop="20dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/wanted_product_recyclerview"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content">
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
 
-            <TextView
-                android:layout_width="180dp"
-                android:layout_height="wrap_content"
-                android:text="교환 태그 설정"
-                android:textColor="@color/black"
-                android:textSize="20dp"
-                android:layout_marginTop="10dp"
-                android:layout_marginRight="15dp"/>
+        </androidx.recyclerview.widget.RecyclerView>
 
-            <Spinner
-                android:id="@+id/exchange_tag"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="10dp"/>
-
-        </LinearLayout>
-
+        <ImageButton
+            android:id="@+id/more_wanted_product_btn"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginTop="15dp"
+            android:layout_gravity="center_horizontal"
+            android:src="@drawable/plus_icon"
+            android:scaleType="fitXY"/>
 
         <CheckBox
             android:id="@+id/other_tag_disallow_checkbox"

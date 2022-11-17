@@ -2,21 +2,15 @@ package com.echo.echofarm.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.net.Uri;
 import android.os.Bundle;
 
-import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
-import com.echo.echofarm.Data.Dto.SendPostDto;
-import com.echo.echofarm.Interface.GetImgUrlListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
-import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.PostService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MakePostActivity extends AppCompatActivity {
@@ -131,6 +125,7 @@ public class MakePostActivity extends AppCompatActivity {
 
          */
 
+        /*
         //유저 이름 조건 검색//나중에 유저 정보창의 거래내역 검색할떄 이걸로 하면 될듯.
         GetPostListDto getPostListDto2 = new GetPostListDto();
         getPostListDto2.setUid("Test3");
@@ -151,6 +146,6 @@ public class MakePostActivity extends AppCompatActivity {
                     public void onFailed() {
                         System.out.println("getPostInfo Failed");
                     }
-                });
+                });*/
     }
 }
