@@ -9,6 +9,7 @@ import android.app.Activity;
 import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
@@ -26,6 +27,10 @@ public class UploadedPhotosActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_uploaded_photos);
+
+        // 액션바 제목
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Html.fromHtml("<font color='#000'>업로드 사진</font>"));
 
         Intent intent = getIntent();
         list = intent.getBundleExtra("BUNDLE").getParcelableArrayList("URI_ARRAY");
