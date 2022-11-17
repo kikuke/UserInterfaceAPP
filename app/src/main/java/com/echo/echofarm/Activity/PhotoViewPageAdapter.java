@@ -4,11 +4,13 @@ package com.echo.echofarm.Activity;
 import android.content.ComponentName;
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -38,6 +40,21 @@ public class PhotoViewPageAdapter extends RecyclerView.Adapter<PhotoViewPageAdap
             ViewHolderPage viewHolder = (ViewHolderPage) holder;
             viewHolder.onBind(listData.get(position));
         }
+
+        holder.image.setImageURI(listData.get(position).getPhotoUri());
+        holder.deleteBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                listData.remove(holder.getAdapterPosition());
+                notifyItemRemoved(holder.getAdapterPosition());
+                notifyItemRangeChanged(holder.getAdapterPosition(), listData.size());
+
+                Log.i("my", "size in Adapter : " + listData.size(), null);
+                for(int i = 0; i < listData.size(); i++) {
+                    Log.i("my", ""+listData.get(i).getPhotoUri().toString(), null);
+                }
+            }
+        });
     }
 
     @Override
@@ -60,12 +77,11 @@ public class PhotoViewPageAdapter extends RecyclerView.Adapter<PhotoViewPageAdap
 
         public void onBind(UploadedPhotoData data){
             this.data = data;
-            image.setImageURI(data.getPhotoUri());
-            deleteBtn.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                }
-            });
+            try {
+                image.setImageURI(data.getPhotoUri());
+            } catch (Exception e) {
+                Log.i("my", "" + e, null);
+            }
         }
     }
 }

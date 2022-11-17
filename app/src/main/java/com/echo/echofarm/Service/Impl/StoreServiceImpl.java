@@ -18,8 +18,6 @@ import com.google.firebase.storage.ListResult;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.storage.UploadTask;
 
-import java.util.List;
-
 public class StoreServiceImpl implements StoreService {
     private static final String TAG = "StoreService";
     FirebaseStorage storage;
