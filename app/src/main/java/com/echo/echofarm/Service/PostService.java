@@ -10,6 +10,8 @@ import com.google.firebase.firestore.Query;
 
 import java.util.List;
 
+import java.util.List;
+
 public interface PostService {
 
     void getPostList(GetPostListDto getPostListDto,
