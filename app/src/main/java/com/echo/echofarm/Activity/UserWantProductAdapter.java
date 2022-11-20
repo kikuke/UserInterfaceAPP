@@ -25,12 +25,13 @@ public class UserWantProductAdapter extends RecyclerView.Adapter<UserWantProduct
     private Context context;
     private ArrayList<String> wantedProductsList;
     private ArrayList<Integer> wantedTagsList;
-    private String[] tags = {"IT / 가전", "패션의류", "패션잡화", "식품", "스포츠 / 레저", "애완용품", "기타"};
+    private String[] tags;
 
-    public UserWantProductAdapter(Context context, ArrayList<String> productsList, ArrayList<Integer> tagsList) {
+    public UserWantProductAdapter(Context context, ArrayList<String> productsList, ArrayList<Integer> tagsList, String[] tags) {
         this.context = context;
         this.wantedProductsList = productsList;
         this.wantedTagsList = tagsList;
+        this.tags = tags;
     }
 
     @NonNull

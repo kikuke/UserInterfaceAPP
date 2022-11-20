@@ -95,9 +95,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(view == editPostBtn) {
             startActivity(new Intent(this, EditPostActivity.class));
         } else if(view == chattingBtn) {
-
+            startActivity(new Intent(this, ChattingListActivity.class));
         } else if(view == settingBtn) {
-
+            startActivity(new Intent(this, UserProfileActivity.class));
         }
     }
     private void getData() {

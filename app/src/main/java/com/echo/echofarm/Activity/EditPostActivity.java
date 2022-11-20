@@ -56,8 +56,8 @@ import java.util.Locale;
 
 public class EditPostActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String[] tags = {"IT / 가전", "패션의류", "패션잡화", "식품", "스포츠 / 레저", "애완용품", "기타"};
-    private String userSelectedTag = tags[0];
+    private String[] tags;
+    private String userSelectedTag;
     private ImageButton firstUploadBtn, additionalUploadBtn, moreWantedProductBtn;
     private Button postUploadBtn;
     private EditText titleEditText, contentsEditText, myProductEditText;
@@ -129,7 +129,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
     }
 
     private boolean checkCameraHardware(Context context) {
-        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA)){
+        if (context.getPackageManager().hasSystemFeature(PackageManager.FEATURE_CAMERA_ANY)){
             // this device has a camera
             return true;
         } else {
@@ -297,9 +297,9 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
         // 내 tag
         myTag = findViewById(R.id.my_tag);
+        tags = getResources().getStringArray(R.array.tags);
         ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, tags
-        );
+                this, android.R.layout.simple_spinner_item, tags);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         myTag.setAdapter(adapter);
 
@@ -321,7 +321,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         wantedProductsList.add("");
         wantedTagsIdxList.add(0);
         UserWantProductAdapter userWantProductAdapter =
-                new UserWantProductAdapter(this, wantedProductsList, wantedTagsIdxList);
+                new UserWantProductAdapter(this, wantedProductsList, wantedTagsIdxList, tags);
         recyclerView.setAdapter(userWantProductAdapter);
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -386,7 +386,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             wantedProductsList.add("");
             wantedTagsIdxList.add(0);
             UserWantProductAdapter userWantProductAdapter =
-                    new UserWantProductAdapter(this, wantedProductsList, wantedTagsIdxList);
+                    new UserWantProductAdapter(this, wantedProductsList, wantedTagsIdxList, tags);
             recyclerView.setAdapter(userWantProductAdapter);
 
         } else if(view == postUploadBtn) {
@@ -440,8 +440,12 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                  postService.sendPostDto(sendPostDto, new
                  */
 
+                Intent intent = new Intent();
+                intent.setClass(this, MainActivity.class);
+                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                Toast.makeText(EditPostActivity.this, "게시물 업로드 완료", Toast.LENGTH_SHORT).show();
+                startActivity(intent);
                 }
-
 
         }
     }
