@@ -2,9 +2,9 @@ package com.echo.echofarm.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.net.Uri;
 import android.os.Bundle;
 
+<<<<<<< HEAD
 import com.echo.echofarm.Data.Dto.GetChatDto;
 import com.echo.echofarm.Data.Dto.GetChatResultDto;
 import com.echo.echofarm.Data.Dto.GetPostDto;
@@ -13,8 +13,10 @@ import com.echo.echofarm.Data.Dto.SendChatDto;
 import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.Interface.GetImgUrlListener;
+=======
+import com.echo.echofarm.Data.Dto.GetPostListDto;
+>>>>>>> ed0d2bbd0dac139e7816e67dcbffced5c731e85a
 import com.echo.echofarm.Interface.GetPostInfoListener;
-import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.ChatService;
 import com.echo.echofarm.Service.Impl.ChatServiceImpl;
@@ -22,7 +24,6 @@ import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.PostService;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class MakePostActivity extends AppCompatActivity {
@@ -218,8 +219,12 @@ public class MakePostActivity extends AppCompatActivity {
                     public void onFailed() {
                         System.out.println("getPostInfo Failed");
                     }
+<<<<<<< HEAD
                 });
 
          */
+=======
+                });*/
+>>>>>>> ed0d2bbd0dac139e7816e67dcbffced5c731e85a
     }
 }

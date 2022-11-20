@@ -105,7 +105,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for(int i = 0; i < 5; i++) {
             //postInfoArrayList.add(new PostInfo(++postCount, titles[i], message[i]));
 
-
             postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
             recyclerView.setAdapter(postAdapter);
         }

@@ -12,8 +12,8 @@ public class SendPostDto {
     private List<Uri> imgSrc;
     private String contents;
     private String ownProduct;
-    private List<String> ownTag;
-    private String wantProduct;
+    private List<String> ownTag; // String
+    private String wantProduct; // List<String>
     private List<String> wantTag;
     private boolean allowOther;
 

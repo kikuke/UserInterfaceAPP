@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:id="@+id/user_chat_textView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:maxWidth="280dp"
+        android:background="#22000000"
+        android:text="test"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:padding="10dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginTop="20dp"
+        android:layout_gravity="right"/>
+
+
+    <LinearLayout
+        android:id="@+id/opponent_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/opponent_name_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="200dp"
+            android:text="상대방 이름"
+            android:textColor="@color/black"
+            android:layout_marginTop="8dp"
+            android:layout_marginLeft="20dp"
+            android:textSize="18dp"/>
+
+        <TextView
+            android:id="@+id/opponent_chat_textView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="280dp"
+            android:background="#90C5F9"
+            android:text="test"
+            android:textColor="@color/black"
+            android:textSize="20dp"
+            android:padding="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginBottom="20dp"/>
+    </LinearLayout>
+
+</FrameLayout>

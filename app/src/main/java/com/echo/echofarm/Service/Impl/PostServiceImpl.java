@@ -78,7 +78,7 @@ public class PostServiceImpl implements PostService {
 
                             PostInfo postInfo = new PostInfo(document.getId(), post.getUid(), post.getTitle(), post.getOwnTag().toString());
                             postInfoList.add(postInfo);
-                            storeService.getImageUrl(document.getId(), "1.png", postInfo, getPostInfoListener);
+                            //storeService.getImageUrl(document.getId(), "1.png", postInfo, getPostInfoListener);
                         }
                     }
 
