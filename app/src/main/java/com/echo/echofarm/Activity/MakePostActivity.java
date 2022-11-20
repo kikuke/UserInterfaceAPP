@@ -5,13 +5,19 @@ import androidx.appcompat.app.AppCompatActivity;
 import android.net.Uri;
 import android.os.Bundle;
 
+import com.echo.echofarm.Data.Dto.GetChatDto;
+import com.echo.echofarm.Data.Dto.GetChatResultDto;
 import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
+import com.echo.echofarm.Data.Dto.SendChatDto;
 import com.echo.echofarm.Data.Dto.SendPostDto;
+import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.Interface.GetImgUrlListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.ChatService;
+import com.echo.echofarm.Service.Impl.ChatServiceImpl;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.PostService;
 
@@ -21,17 +27,72 @@ import java.util.List;
 
 public class MakePostActivity extends AppCompatActivity {
     PostService postService;
+    ChatService chatService;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         postService = new PostServiceImpl();
+        chatService = new ChatServiceImpl();
 
         setContentView(R.layout.activity_make_post);
+
+        /* 메시지 보내는 방법
+        chatService.sendChat("user1", "user2", new SendChatDto("안녕"));
+        chatService.sendChat("user2", "user1", new SendChatDto("이라고"));
+        chatService.sendChat("user1", "user2", new SendChatDto("말하지마"));
+
+        chatService.sendChat("user1", "user3", new SendChatDto("안녕"));
+        
+         */
+
+        //채팅 처음부터 받기
+        chatService.getChatList("user1", "user3", null, new GetChatDtoListener() {
+            @Override
+            public void onSuccess(GetChatResultDto getChatDtoResult) {
+                System.out.println(getChatDtoResult);
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
+
+        chatService.getChatList("user1", "user2", null, new GetChatDtoListener() {
+            @Override
+            public void onSuccess(GetChatResultDto getChatDtoResult) {
+                System.out.println(getChatDtoResult);
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
+
+        //얘는 자동으로 채워지는 객체라 작성x 테스트를 위해 임시로 넣는 것. 이런식으로 활용하는 예시.
+        GetChatDto getChatDto = new GetChatDto();
+        getChatDto.setChatId("T8XZQGeTgzwV1foSenvR");
+
+        //이렇게 하면 이것 이후의 채팅들을 새로 리스트로 받게됨.
+        //post와 동일한 로직으로 진행했지만 되지않음. 나중에 체크함.
+        chatService.getChatList("user1", "user2", getChatDto.getChatId(), new GetChatDtoListener() {
+            @Override
+            public void onSuccess(GetChatResultDto getChatDtoResult) {
+                System.out.println(getChatDtoResult);
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
 
         //Test용 작업들.
         //테스트 이미지들 업로드임! 실제로는 리소스가 아닌 갤러기같은데서 받도록하기!
         //일단 png만 업로드 되도록함ㅅ
+
         /*
         Uri uri1 = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.test1);
         Uri uri2 = Uri.parse("android.resource://" + getPackageName() + "/" + R.drawable.test2);
@@ -69,7 +130,9 @@ public class MakePostActivity extends AppCompatActivity {
 
             }
         });
-        */
+
+         */
+
 
         List<PostInfo> postInfoList = new ArrayList<>();
 
@@ -131,13 +194,17 @@ public class MakePostActivity extends AppCompatActivity {
 
          */
 
+        /*
         //유저 이름 조건 검색//나중에 유저 정보창의 거래내역 검색할떄 이걸로 하면 될듯.
         GetPostListDto getPostListDto2 = new GetPostListDto();
         getPostListDto2.setUid("Test3");
+        getPostListDto2.setTitle("st");
+        getPostListDto2.setWantTag(Arrays.asList("tag3"));
 
         postService.getPostList(getPostListDto2,
                 null, 3, postInfoList, new GetPostInfoListener() {
                     //데이터는 일괄 로딩되지만, 사진은 한장씩 로딩됨.
+                    //넉넉하게 로딩해야됨. 필터링되는게 있어서
                     @Override
                     public void onSuccess(PostInfo postInfo) {
                         //현재 postInfoList 다 다운 되있을거임
@@ -152,5 +219,7 @@ public class MakePostActivity extends AppCompatActivity {
                         System.out.println("getPostInfo Failed");
                     }
                 });
+
+         */
     }
 }

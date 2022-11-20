@@ -16,11 +16,9 @@ public class Post {
     private String wantProduct;
     private List<String> wantTag;
     private boolean allowOther;
-    private Date nowTime;
+    private Date nowTime = new Date();
 
-    public Post() {
-        nowTime = new Date();
-    }
+    public Post() { }
 
     public Post(String uid, String title, List<Uri> imgSrc, String contents, String ownProduct, List<String> ownTag,
                 String wantProduct, List<String> wantTag, boolean allowOther) {
@@ -32,8 +30,6 @@ public class Post {
         this.wantProduct = wantProduct;
         this.wantTag = wantTag;
         this.allowOther = allowOther;
-
-        nowTime = new Date();
     }
 
     public String getUid() {

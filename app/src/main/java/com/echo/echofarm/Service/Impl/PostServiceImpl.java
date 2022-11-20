@@ -44,14 +44,18 @@ public class PostServiceImpl implements PostService {
         CollectionReference colRef = db.collection("post");
         Query query = colRef.orderBy("nowTime", Query.Direction.DESCENDING).limit(limitSize);
         if(beforePostId != null)
-            query.startAfter(colRef.document(beforePostId));
+            query = query.startAfter(colRef.document(beforePostId));
         if(getPostListDto.getUid() != null)
-            query.whereEqualTo("uid", getPostListDto.getUid());
+            query = query.whereEqualTo("uid", getPostListDto.getUid());
+        if(getPostListDto.getOwnProduct() != null)
+            query = query.whereEqualTo("ownProduct", getPostListDto.getOwnProduct());
+        if(getPostListDto.getWantProduct() != null)
+            query = query.whereEqualTo("wantProduct", getPostListDto.getWantProduct());
 
-        getPostList(query, postInfoList, getPostInfoListener);
+        getPostList(query, getPostListDto, postInfoList, getPostInfoListener);
     }
 
-    private void getPostList(Query query, List<PostInfo> postInfoList, GetPostInfoListener getPostInfoListener){
+    private void getPostList(Query query, GetPostListDto getPostListDto, List<PostInfo> postInfoList, GetPostInfoListener getPostInfoListener){
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
@@ -61,6 +65,17 @@ public class PostServiceImpl implements PostService {
                     } else {
                         for(DocumentSnapshot document : task.getResult()) {
                             Post post = document.toObject(Post.class);
+
+                            if(getPostListDto.getTitle() != null){
+                                if(!compareContainWord(post.getTitle(), getPostListDto.getTitle())){
+                                    continue;
+                                }
+                            }
+                            if(!compareContainTags(post.getOwnTag(), getPostListDto.getOwnTag()))
+                                continue;
+                            if(!compareContainTags(post.getWantTag(), getPostListDto.getWantTag()))
+                                continue;
+
                             PostInfo postInfo = new PostInfo(document.getId(), post.getUid(), post.getTitle(), post.getOwnTag().toString());
                             postInfoList.add(postInfo);
                             storeService.getImageUrl(document.getId(), "1.png", postInfo, getPostInfoListener);
@@ -71,7 +86,34 @@ public class PostServiceImpl implements PostService {
                 }}});
     }
 
+    private boolean compareContainTags(List<String> source, List<String> target){
+        boolean isContain;
+        if(target == null)
+            return true;
+        if(source == null)
+            return false;
+
+        for(String sTag: target){
+            isContain = false;
+            for(String pTag: source){
+                if(compareContainWord(pTag, sTag)){
+                    isContain=true;
+                    break;
+                }
+            }
+            if(!isContain)
+                return false;
+        }
+
+        return true;
+    }
+
+    private boolean compareContainWord(String source, String target){
+        return source.toLowerCase().contains(target.toLowerCase());
+    }
+
     //중간 인터페이스 만들어서 서비스 연결시켜주기
+    //uid는 외부에서 빼기. sendPostDto가 아닌 별개 인자로 받기
     public void sendPostDto(SendPostDto sendPostDto, StoreImgListener storeImgListener){
         Post post = new Post();
 
