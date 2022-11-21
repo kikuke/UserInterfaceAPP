@@ -42,8 +42,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.echo.echofarm.Data.Dto.SendPostDto;
+import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.Interface.UploadPhotoClickListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.Impl.PostServiceImpl;
+import com.echo.echofarm.Service.PostService;
 
 
 import java.io.File;
@@ -51,6 +54,7 @@ import java.io.IOException;
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
 import java.util.Locale;
 
@@ -424,21 +428,31 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                 String contents = contentsEditText.getText().toString();
                 Boolean isDisallowOtherTags = disallowOtherTags.isChecked();
 
-                /*
+
                 SendPostDto sendPostDto = new SendPostDto(
                         "id",
                         title,
                         uriList,
                         contents,
                         myProductEditText.getText().toString(),
-                        myTag,
-                        wantedProductsList,
+                        Arrays.asList(userSelectedTag),
+                        wantedProductsList.get(0),
                         wantedTagList,
                         !isDisallowOtherTags);
-                        }
 
-                 postService.sendPostDto(sendPostDto, new
-                 */
+                PostService postService = new PostServiceImpl();
+
+                postService.sendPostDto(sendPostDto, new StoreImgListener() {
+                             @Override
+                             public void onSuccess(String postId) {
+
+                             }
+
+                             @Override
+                             public void onFailed() {
+
+                             }
+                         });
 
                 Intent intent = new Intent();
                 intent.setClass(this, MainActivity.class);
