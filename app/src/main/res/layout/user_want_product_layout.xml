@@ -7,7 +7,9 @@
     <EditText
         android:id="@+id/wanted_product_edittext"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="42dp"
+        android:background="@drawable/black_edittext"
+        android:padding="10dp"
         android:hint="교환을 원하는 물품1"
         android:layout_marginTop="20dp"/>
 

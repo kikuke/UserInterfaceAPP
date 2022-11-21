@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">EchoFarm</string>
+    <string-array name="tags">
+        <item>IT / 가전</item>
+        <item>패션의류</item>
+        <item>패션잡화</item>
+        <item>식품</item>
+        <item>스포츠 / 레저</item>
+        <item>애완용품</item>
+        <item>기타</item>
+    </string-array>
 </resources>
