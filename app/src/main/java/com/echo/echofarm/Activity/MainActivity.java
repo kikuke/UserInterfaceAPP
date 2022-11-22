@@ -26,7 +26,7 @@ import com.echo.echofarm.Service.PostService;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     private static final String TAG = "MainActivity";
 
@@ -77,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
+
         nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
@@ -106,13 +107,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else if(view == settingBtn) {
             startActivity(new Intent(this, UserProfileActivity.class));
         }
-    }
-
-    @Override
-    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-        Intent intent = new Intent(this, ViewPostActivity.class);
-        //intent.putExtra("postId",postInfoArrayList.get(position).getPostId());
-        startActivity(intent);
     }
 
     private void getData() {

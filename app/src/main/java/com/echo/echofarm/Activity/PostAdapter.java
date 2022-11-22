@@ -2,6 +2,7 @@ package com.echo.echofarm.Activity;
 
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.provider.MediaStore;
@@ -66,21 +67,28 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postImage = itemView.findViewById(R.id.imageView_postLayout);
             title = itemView.findViewById(R.id.title_postLayout);
             tags = itemView.findViewById(R.id.tags_postLayout);
-/*
-            //click 이벤트 처리
-            itemView.setOnClickListener(new View.OnClickListener() {
+
+            postImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    int pos = getAdapterPosition();
-                    if(pos != RecyclerView.NO_POSITION) {
-                        Log.i("my", "" + pos, null);
-                        Log.i("my", ""+postInfoArrayList.get(pos).getId(),null);
-                    }
+                    int position = getAdapterPosition();
+                    Intent intent = new Intent(context, ViewPostActivity.class);
+                    intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
+                    context.startActivity(intent);
                 }
             });
-
- */
+            title.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    Intent intent = new Intent(context, ViewPostActivity.class);
+                    intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
+                    Log.i("my", "pos : " + position, null);
+                    context.startActivity(intent);
+                }
+            });
         }
+
     }
 }
 
