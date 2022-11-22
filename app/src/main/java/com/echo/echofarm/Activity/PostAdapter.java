@@ -1,6 +1,10 @@
 package com.echo.echofarm.Activity;
 
+import android.content.ContentResolver;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,8 +16,14 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.echo.echofarm.R;
 
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
 
 public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
@@ -38,7 +48,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         PostInfo postInfo = postInfoArrayList.get(position);
         holder.title.setText(postInfo.getTitle());
         holder.tags.setText(postInfo.getTags());
-        holder.postImage.setImageURI(postInfo.getImageUri());
+        Glide.with(context).load(postInfo.getImageUri()).into(holder.postImage);
     }
 
     @Override
@@ -56,6 +66,20 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postImage = itemView.findViewById(R.id.imageView_postLayout);
             title = itemView.findViewById(R.id.title_postLayout);
             tags = itemView.findViewById(R.id.tags_postLayout);
+/*
+            //click 이벤트 처리
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int pos = getAdapterPosition();
+                    if(pos != RecyclerView.NO_POSITION) {
+                        Log.i("my", "" + pos, null);
+                        Log.i("my", ""+postInfoArrayList.get(pos).getId(),null);
+                    }
+                }
+            });
+
+ */
         }
     }
 }

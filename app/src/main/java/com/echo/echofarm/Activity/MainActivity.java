@@ -28,6 +28,8 @@ import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
+    private static final String TAG = "MainActivity";
+
     // xml 뷰, 뷰그룹
     private RecyclerView recyclerView;
     private ProgressBar loadingPB;
@@ -110,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
         Log.i("my", "" + position, null);
         Intent intent = new Intent(this, ViewPostActivity.class);
-        intent.putExtra("postId",postInfoArrayList.get(position).getPostId());
+        //intent.putExtra("postId",postInfoArrayList.get(position).getPostId());
         startActivity(intent);
     }
 
@@ -132,8 +134,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             public void onSuccess(PostInfo postInfo) {
                                 //현재 postInfoList 다 다운 되있을거임
                                 //System.out.println(postInfoList);
-                                //현재 한장씩 다운로드 되는 사진들. 각 사진마다 해당 사진에 대해 다시 액티비티에 띄워야 함.
-                                Log.i("my", "success", null);
+
+                                postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
+                                recyclerView.setAdapter(postAdapter);
+                                Log.d(TAG, "GetPostInfo: " + postInfo);
                                 postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                                 recyclerView.setAdapter(postAdapter);
                             }
