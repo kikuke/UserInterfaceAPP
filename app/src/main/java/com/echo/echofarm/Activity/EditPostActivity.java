@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.Color;
 import android.graphics.ImageDecoder;
 import android.media.ExifInterface;
 import android.net.Uri;
@@ -60,24 +61,20 @@ import java.util.Locale;
 
 public class EditPostActivity extends AppCompatActivity implements View.OnClickListener {
 
-    private String[] tags;
-    private String userSelectedTag;
-    private ImageButton firstUploadBtn, additionalUploadBtn, moreWantedProductBtn;
+    private ImageButton firstUploadBtn, additionalUploadBtn, moreUserKeyWordBtn, moreWantedKeywordBtn;
     private Button postUploadBtn;
-    private EditText titleEditText, contentsEditText, myProductEditText;
+    private EditText titleEditText, contentsEditText;
     private CheckBox disallowOtherTags;
     private TextView photoCheck, titleCheck;
     private boolean cameraPermission;
     private boolean fileReadPermission;
     private boolean fileWritePermission;
     private ArrayList<UploadedPhotoData> PhotoDataList;
-    private Spinner myTag;
     private Uri photoURI;
     private String currentPhotoPath;
 
-    private ArrayList<String> wantedProductsList;
-    private ArrayList<Integer> wantedTagsIdxList;
-    private RecyclerView recyclerView;
+    private ArrayList<String> userKeywordList, wantedKeywordsList;
+    private RecyclerView userRecyclerView, wantedRecyclerView;
 
     private final int RESULT_TAKE_PHOTO = 0;
     private final int RESULT_SELECT_PHOTO = 1;
@@ -175,6 +172,9 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                         }
 
                         PhotoDataList.add(new UploadedPhotoData(photoURI));
+                        photoCheck.setVisibility(View.VISIBLE);
+                        photoCheck.setText("( " + PhotoDataList.size() + " / 10 )");
+                        photoCheck.setTextColor(getColor(R.color.black));
                     }
                     break;
                 }
@@ -208,6 +208,9 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                                 }
                             }
                         }
+                        photoCheck.setVisibility(View.VISIBLE);
+                        photoCheck.setText("( " + PhotoDataList.size() + " / 10 )");
+                        photoCheck.setTextColor(getColor(R.color.black));
                     }
                     break;
                 }
@@ -218,10 +221,13 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                             firstUploadBtn.setImageResource(R.drawable.camera);
                             firstUploadBtn.setPadding(50,50,50,50);
                             additionalUploadBtn.setVisibility(View.GONE);
+                            photoCheck.setVisibility(View.GONE);
                         } else {
                             Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(),
                                     PhotoDataList.get(0).getPhotoUri()));
                             setFirstPhoto(bitmap);
+                            photoCheck.setText("( " + PhotoDataList.size() + " / 10 )");
+                            photoCheck.setTextColor(getColor(R.color.black));
                         }
                 }
                 break;
@@ -277,20 +283,22 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         firstUploadBtn = findViewById(R.id.first_upload_photo_btn);
         additionalUploadBtn = findViewById(R.id.additional_upload_btn);
         postUploadBtn = findViewById(R.id.post_upload_btn);
-        moreWantedProductBtn = findViewById(R.id.more_wanted_product_btn);
+        moreUserKeyWordBtn = findViewById(R.id.more_user_keyword_btn);
+        moreWantedKeywordBtn = findViewById(R.id.more_wanted_keyword_btn);
         titleEditText = findViewById(R.id.post_title_edittext);
         contentsEditText = findViewById(R.id.post_contents_edittext);
-        myProductEditText = findViewById(R.id.myProduct_editText);
         disallowOtherTags = findViewById(R.id.other_tag_disallow_checkbox);
         photoCheck = findViewById(R.id.uploaded_check_text);
         titleCheck = findViewById(R.id.post_title_check_text);
 
-        recyclerView = findViewById(R.id.wanted_product_recyclerview);
+        userRecyclerView = findViewById(R.id.user_keyword_recyclerview);
+        wantedRecyclerView = findViewById(R.id.wanted_keyword_recyclerview);
 
         firstUploadBtn.setOnClickListener(this);
         additionalUploadBtn.setOnClickListener(this);
         postUploadBtn.setOnClickListener(this);
-        moreWantedProductBtn.setOnClickListener(this);
+        moreUserKeyWordBtn.setOnClickListener(this);
+        moreWantedKeywordBtn.setOnClickListener(this);
 
         // PhotoDataList 초기화
         PhotoDataList = new ArrayList<>();
@@ -300,35 +308,24 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         actionBar.setTitle(Html.fromHtml("<font color='#000'>게시물 작성</font>"));
 
         // 내 tag
-        myTag = findViewById(R.id.my_tag);
-        tags = getResources().getStringArray(R.array.tags);
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(
-                this, android.R.layout.simple_spinner_item, tags);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        myTag.setAdapter(adapter);
+        userKeywordList = new ArrayList<>();
+        userKeywordList.add("");
+        UserWantProductAdapter userProductAdapter =
+                new UserWantProductAdapter(this, userKeywordList);
+        userRecyclerView.setAdapter(userProductAdapter);
+        LinearLayoutManager userManager = new LinearLayoutManager(this);
+        userRecyclerView.setLayoutManager(userManager);
 
-        myTag.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                userSelectedTag = tags[i];
-            }
 
-            @Override
-            public void onNothingSelected(AdapterView<?> adapterView) {
-
-            }
-        });
 
         // 교환 tag
-        wantedProductsList = new ArrayList<>();
-        wantedTagsIdxList = new ArrayList<>();
-        wantedProductsList.add("");
-        wantedTagsIdxList.add(0);
+        wantedKeywordsList = new ArrayList<>();
+        wantedKeywordsList.add("");
         UserWantProductAdapter userWantProductAdapter =
-                new UserWantProductAdapter(this, wantedProductsList, wantedTagsIdxList, tags);
-        recyclerView.setAdapter(userWantProductAdapter);
-        LinearLayoutManager manager = new LinearLayoutManager(this);
-        recyclerView.setLayoutManager(manager);
+                new UserWantProductAdapter(this, wantedKeywordsList);
+        wantedRecyclerView.setAdapter(userWantProductAdapter);
+        LinearLayoutManager wantedManager = new LinearLayoutManager(this);
+        wantedRecyclerView.setLayoutManager(wantedManager);
     }
 
     // 사진업로드 버튼 처리
@@ -376,42 +373,39 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         } else if(view == firstUploadBtn){
 
             Intent intent = new Intent();
-            intent.setComponent(new ComponentName("com.echo.echofarm", "com.echo.echofarm.Activity.UploadedPhotosActivity"));
+            intent.setClass(this, UploadedPhotosActivity.class);
             Bundle bundle = new Bundle();
             bundle.putParcelableArrayList("URI_ARRAY", PhotoDataList);
             intent.putExtra("BUNDLE", bundle);
             startActivityForResult(intent, RESULT_FROM_UPLOADED_PHOTOS_ACTIVITY);
 
-        }  else if(view == moreWantedProductBtn) {
-            // 원하는 물품-태그 최대 3개
-            if(wantedProductsList.size() == 2) {
-                moreWantedProductBtn.setVisibility(View.GONE);
-            }
-            wantedProductsList.add("");
-            wantedTagsIdxList.add(0);
+        } else if(view == moreUserKeyWordBtn) {
+            userKeywordList.add("");
             UserWantProductAdapter userWantProductAdapter =
-                    new UserWantProductAdapter(this, wantedProductsList, wantedTagsIdxList, tags);
-            recyclerView.setAdapter(userWantProductAdapter);
+                    new UserWantProductAdapter(this, userKeywordList);
+            userRecyclerView.setAdapter(userWantProductAdapter);
+
+        } else if(view == moreWantedKeywordBtn) {
+            wantedKeywordsList.add("");
+            UserWantProductAdapter userWantProductAdapter =
+                    new UserWantProductAdapter(this, wantedKeywordsList);
+            wantedRecyclerView.setAdapter(userWantProductAdapter);
 
         } else if(view == postUploadBtn) {
             boolean isPostable = true;
 
             if(PhotoDataList.size() == 0) {
                 photoCheck.setVisibility(View.VISIBLE);
+                photoCheck.setTextColor(Color.RED);
                 isPostable = false;
             } else
                 photoCheck.setVisibility(View.INVISIBLE);
-
             if(titleEditText.getText().toString().equals("")) {
                 titleCheck.setVisibility(View.VISIBLE);
                 isPostable = false;
             } else
                 titleCheck.setVisibility(View.INVISIBLE);
 
-            for(int i = 0; i < wantedTagsIdxList.size(); i++) {
-                Log.i("my", wantedProductsList.get(i), null);
-                Log.i("my", tags[wantedTagsIdxList.get(i)], null);
-            }
             // post 서버에 업로드
             if(isPostable) {
 
@@ -420,15 +414,18 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                 for(UploadedPhotoData data : PhotoDataList)
                     uriList.add(data.getPhotoUri());
-                for(int idx : wantedTagsIdxList)
-                    wantedTagList.add(tags[idx]);
 
 
                 String title = titleEditText.getText().toString();
                 String contents = contentsEditText.getText().toString();
                 Boolean isDisallowOtherTags = disallowOtherTags.isChecked();
 
+                for(String s : userKeywordList)
+                    Log.i("my", s, null);
 
+                for(String s : wantedKeywordsList)
+                    Log.i("my", s, null);
+/*
                 SendPostDto sendPostDto = new SendPostDto(
                         "id",
                         title,
@@ -453,6 +450,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                              }
                          });
+                         */
 
                 Intent intent = new Intent();
                 intent.setClass(this, MainActivity.class);
