@@ -8,7 +8,16 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
 
+import com.echo.echofarm.Data.Dto.GetPostDto;
+import com.echo.echofarm.Data.Dto.GetPostListDto;
+import com.echo.echofarm.Interface.GetImgUrlListener;
+import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.Impl.PostServiceImpl;
+import com.echo.echofarm.Service.PostService;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class ViewPostActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -23,6 +32,9 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     TextView productName;
     TextView productDesc;
     TextView postTime;
+    PostService postService;
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +57,19 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         profileButton.setOnClickListener(this);
         likeButton.setOnClickListener(this);
         chatButton.setOnClickListener(this);
+
+        postService.getPostDto("123", new GetImgUrlListener() {
+            @Override
+            public void onSuccess(GetPostDto getPostDto) {
+
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
+
 
         }
     @Override
