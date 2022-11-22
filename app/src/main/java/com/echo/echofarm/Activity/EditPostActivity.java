@@ -20,6 +20,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Color;
 import android.graphics.ImageDecoder;
 import android.media.ExifInterface;
@@ -42,6 +43,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.echo.echofarm.BuildConfig;
 import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.Interface.UploadPhotoClickListener;
@@ -52,8 +54,11 @@ import com.echo.echofarm.Service.PostService;
 import com.echo.echofarm.Service.UserService;
 
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -73,7 +78,9 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
     private boolean fileWritePermission;
     private ArrayList<UploadedPhotoData> PhotoDataList;
     private Uri photoURI;
-    private String currentPhotoPath;
+    private File filePath;
+    private int reqWidth;
+    private int reqHeight;
 
     private ArrayList<String> userKeywordList, wantedKeywordsList;
     private RecyclerView userRecyclerView, wantedRecyclerView;
@@ -150,6 +157,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             Log.i("my", "bitmap is null", null);
         }
     }
+
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
         super.onActivityResult(requestCode, resultCode, intent);
@@ -157,62 +165,76 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             //after capture
             switch (requestCode) {
                 case RESULT_TAKE_PHOTO: {
-                    if (resultCode == RESULT_OK && intent != null) {
-                        // 처음 업로드한 사진 처리
-                        if(PhotoDataList.size() == 0) {
-                            additionalUploadBtn.setVisibility(View.VISIBLE);
+                    if (resultCode == RESULT_OK && filePath != null) {
 
-                            File file = new File(currentPhotoPath);
-                            Bitmap bitmap = MediaStore.Images.Media
-                                    .getBitmap(getContentResolver(), Uri.fromFile(file));
-
-                            ExifInterface ei = new ExifInterface(currentPhotoPath);
-                            int orientation = ei.getAttributeInt(ExifInterface.TAG_ORIENTATION,
-                                    ExifInterface.ORIENTATION_UNDEFINED);
-
-                            setFirstPhoto(bitmap);
+                        if (PhotoDataList.size() == 0) {
+                            BitmapFactory.Options options = new BitmapFactory.Options();
+                            options.inJustDecodeBounds = true; // to avoid memory allocation for the bitmap object
+                            try {
+                                InputStream in = new FileInputStream(filePath);
+                                BitmapFactory.decodeStream(in, null, options);
+                                in.close();
+                            } catch (Exception e) {
+                                e.printStackTrace();
+                            }
+                            final int height = options.outHeight;
+                            final int width = options.outWidth;
+                            int inSampleSize = 1;
+                            if (height > reqHeight || width > reqWidth) {
+                                final int heightRatio = Math.round((float) height / (float) reqHeight);
+                                final int widthtRatio = Math.round((float) width / (float) reqWidth);
+                                inSampleSize = heightRatio > widthtRatio ? heightRatio : widthtRatio;
+                            }
+                            BitmapFactory.Options imgOptions = new BitmapFactory.Options();
+                            imgOptions.inSampleSize = inSampleSize; // 1/inSampleSize
+                            Bitmap bitmap = BitmapFactory.decodeFile(filePath.getAbsolutePath(), imgOptions);
+                            firstUploadBtn.setImageBitmap(bitmap);
+                            firstUploadBtn.setPadding(0, 0, 0, 0);
+                            photoCheck.setVisibility(View.VISIBLE);
+                            photoCheck.setTextColor(getColor(R.color.black));
                         }
 
                         PhotoDataList.add(new UploadedPhotoData(photoURI));
-                        photoCheck.setVisibility(View.VISIBLE);
                         photoCheck.setText("( " + PhotoDataList.size() + " / 10 )");
-                        photoCheck.setTextColor(getColor(R.color.black));
                     }
                     break;
                 }
                 case RESULT_SELECT_PHOTO: {
 
                     if (intent != null) {
+                        if (intent.getClipData() == null) {     // 이미지를 하나만 선택한 경우
+                            Log.e("single choice: ", String.valueOf(intent.getData()));
+                            Uri imageUri = intent.getData();
+                            PhotoDataList.add(new UploadedPhotoData(imageUri));
+                        } else {
+                            ClipData clipData = intent.getClipData();
 
-                        ClipData clipData = intent.getClipData();
+                            if (clipData.getItemCount() + PhotoDataList.size() > 10) {   // 선택한 이미지가 11장 이상인 경우
+                                Toast.makeText(getApplicationContext(), "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_LONG).show();
+                            } else {   // 선택한 이미지가 1장 이상 10장 이하인 경우
 
-                        if (clipData.getItemCount() + PhotoDataList.size() > 10) {   // 선택한 이미지가 11장 이상인 경우
-                            Toast.makeText(getApplicationContext(), "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_LONG).show();
-                        } else {   // 선택한 이미지가 1장 이상 10장 이하인 경우
+                                for (int i = 0; i < clipData.getItemCount(); i++) {
+                                    Uri imageUri = clipData.getItemAt(i).getUri();  // 선택한 이미지들의 uri를 가져온다.
+                                    Log.e("", "" + imageUri.toString(), null);
 
-                            for (int i = 0; i < clipData.getItemCount(); i++) {
-                                Uri imageUri = clipData.getItemAt(i).getUri();  // 선택한 이미지들의 uri를 가져온다.
-                                Log.e("", "" + imageUri.toString(), null);
-
-
-                                // 첫 이미지 처리
-                                if(PhotoDataList.size() == 0) {
-                                    additionalUploadBtn.setVisibility(View.VISIBLE);
-                                    Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), imageUri));
-                                    setFirstPhoto(bitmap);
-                                }
-
-                                try {
-                                    PhotoDataList.add(new UploadedPhotoData(imageUri));
-                                    Log.i("my", ""+PhotoDataList.get(i).getPhotoUri().toString(), null);
-                                } catch (Exception e) {
-                                    Log.e("my", "File select error", e);
+                                    try {
+                                        PhotoDataList.add(new UploadedPhotoData(imageUri));
+                                        Log.i("my", "" + PhotoDataList.get(i).getPhotoUri().toString(), null);
+                                    } catch (Exception e) {
+                                        Log.e("my", "File select error", e);
+                                    }
                                 }
                             }
                         }
                         photoCheck.setVisibility(View.VISIBLE);
                         photoCheck.setText("( " + PhotoDataList.size() + " / 10 )");
                         photoCheck.setTextColor(getColor(R.color.black));
+                    }
+                    // 첫 이미지 처리
+                    if (PhotoDataList.size() != 0) {
+                        additionalUploadBtn.setVisibility(View.VISIBLE);
+                        Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), PhotoDataList.get(0).getPhotoUri()));
+                        setFirstPhoto(bitmap);
                     }
                     break;
                 }
@@ -239,43 +261,6 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
         }
     }
 
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        currentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-                Log.i("my", "create imagefile", null);
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                photoURI = FileProvider.getUriForFile(this,
-                        "com.echo.echofarm.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                startActivityForResult(takePictureIntent, RESULT_TAKE_PHOTO);
-            }
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -295,6 +280,9 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
         userRecyclerView = findViewById(R.id.user_keyword_recyclerview);
         wantedRecyclerView = findViewById(R.id.wanted_keyword_recyclerview);
+
+        reqWidth = getResources().getDimensionPixelSize(R.dimen.request_image_width);
+        reqHeight = getResources().getDimensionPixelSize(R.dimen.request_image_height);
 
         firstUploadBtn.setOnClickListener(this);
         additionalUploadBtn.setOnClickListener(this);
@@ -348,7 +336,24 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                                     Toast.makeText(EditPostActivity.this, "사진은 10장까지 선택 가능합니다.", Toast.LENGTH_SHORT).show();
                                 }
                                 else if (checkCameraHardware(EditPostActivity.this)) {
-                                    dispatchTakePictureIntent();
+                                    try{
+                                        if(PhotoDataList.size() == 0) additionalUploadBtn.setVisibility(View.VISIBLE);
+
+                                        String dirPath = getExternalFilesDir(null).getAbsolutePath() + "/myApp";
+                                        File dir = new File(dirPath);
+                                        if (!dir.exists()) {
+                                            dir.mkdir();
+                                        }
+                                        filePath = File.createTempFile("IMG", ".jpg", dir);
+                                        if (!filePath.exists()) {
+                                            filePath.createNewFile();
+                                        }
+                                        photoURI = FileProvider.getUriForFile(EditPostActivity.this,
+                                                BuildConfig.APPLICATION_ID + ".fileprovider", filePath);
+                                        Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+                                        intent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
+                                        startActivityForResult(intent, RESULT_TAKE_PHOTO);
+                                    } catch (Exception e) {e.printStackTrace();}
                                 }
                             }
                         }
