@@ -427,17 +427,16 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                 for(String s : wantedKeywordsList)
                     Log.i("my", s, null);
-                UserService userService = new UserServiceImpl();
-
+/*
                 SendPostDto sendPostDto = new SendPostDto(
-                        userService.GetUserUid(),
+                        "id",
                         title,
                         uriList,
                         contents,
-                        "",
-                        userKeywordList,
-                        "",
-                        wantedKeywordsList,
+                        myProductEditText.getText().toString(),
+                        Arrays.asList(userSelectedTag),
+                        wantedProductsList.get(0),
+                        wantedTagList,
                         !isDisallowOtherTags);
 
                 PostService postService = new PostServiceImpl();
@@ -445,7 +444,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                 postService.sendPostDto(sendPostDto, new StoreImgListener() {
                              @Override
                              public void onSuccess(String postId) {
-                                 Log.i("my", postId, null);
+
                              }
 
                              @Override
@@ -453,7 +452,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                              }
                          });
-
+                         */
 
                 Intent intent = new Intent();
                 intent.setClass(this, MainActivity.class);

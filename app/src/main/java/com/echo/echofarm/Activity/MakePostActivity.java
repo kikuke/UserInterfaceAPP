@@ -20,6 +20,7 @@ import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.PostService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 public class MakePostActivity extends AppCompatActivity {
@@ -42,7 +43,7 @@ public class MakePostActivity extends AppCompatActivity {
         chatService.sendChat("user1", "user3", new SendChatDto("안녕"));
         
          */
-
+/*
         //채팅 처음부터 받기
         chatService.getChatList("user1", "user3", null, new GetChatDtoListener() {
             @Override
@@ -190,8 +191,7 @@ public class MakePostActivity extends AppCompatActivity {
                 });
 
          */
-
-        /*
+/*
         //유저 이름 조건 검색//나중에 유저 정보창의 거래내역 검색할떄 이걸로 하면 될듯.
         GetPostListDto getPostListDto2 = new GetPostListDto();
         getPostListDto2.setUid("Test3");
@@ -217,6 +217,6 @@ public class MakePostActivity extends AppCompatActivity {
                     }
                 });
 
-         */
+ */
     }
 }
