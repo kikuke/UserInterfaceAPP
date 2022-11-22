@@ -108,6 +108,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        Log.i("my", "" + position, null);
         Intent intent = new Intent(this, ViewPostActivity.class);
         intent.putExtra("postId",postInfoArrayList.get(position).getPostId());
         startActivity(intent);
