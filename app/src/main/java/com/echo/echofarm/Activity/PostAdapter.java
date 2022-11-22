@@ -38,7 +38,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         PostInfo postInfo = postInfoArrayList.get(position);
         holder.title.setText(postInfo.getTitle());
         holder.tags.setText(postInfo.getTags());
-        //holder.postImage.setImageResource(postInfo.getImageUri());
+        holder.postImage.setImageURI(postInfo.getImageUri());
     }
 
     @Override
@@ -56,18 +56,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postImage = itemView.findViewById(R.id.imageView_postLayout);
             title = itemView.findViewById(R.id.title_postLayout);
             tags = itemView.findViewById(R.id.tags_postLayout);
-
-            //click 이벤트 처리
-            itemView.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int pos = getAdapterPosition();
-                    if(pos != RecyclerView.NO_POSITION) {
-                        Log.i("my", "" + pos, null);
-                        Log.i("my", ""+postInfoArrayList.get(pos).getId(),null);
-                    }
-                }
-            });
         }
     }
 }

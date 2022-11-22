@@ -11,6 +11,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
@@ -25,7 +26,7 @@ import com.echo.echofarm.Service.PostService;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, AdapterView.OnItemClickListener {
 
     // xml 뷰, 뷰그룹
     private RecyclerView recyclerView;
@@ -104,6 +105,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             startActivity(new Intent(this, UserProfileActivity.class));
         }
     }
+
+    @Override
+    public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+        Intent intent = new Intent(this, ViewPostActivity.class);
+        intent.putExtra("postId",postInfoArrayList.get(position).getPostId());
+        startActivity(intent);
+    }
+
     private void getData() {
         postInfoArrayList = new ArrayList<>();
         GetPostListDto getPostListDto = new GetPostListDto();
@@ -124,6 +133,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 //System.out.println(postInfoList);
                                 //현재 한장씩 다운로드 되는 사진들. 각 사진마다 해당 사진에 대해 다시 액티비티에 띄워야 함.
                                 Log.i("my", "success", null);
+                                postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
+                                recyclerView.setAdapter(postAdapter);
                             }
 
                             @Override
@@ -138,8 +149,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.i("my", "failed", null);
             }
         });
-        postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
-        recyclerView.setAdapter(postAdapter);
 
     }
 }
