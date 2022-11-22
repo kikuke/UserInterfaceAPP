@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.Spinner;
 import android.widget.TextView;
 
@@ -24,14 +26,10 @@ public class UserWantProductAdapter extends RecyclerView.Adapter<UserWantProduct
 
     private Context context;
     private ArrayList<String> wantedProductsList;
-    private ArrayList<Integer> wantedTagsList;
-    private String[] tags;
 
-    public UserWantProductAdapter(Context context, ArrayList<String> productsList, ArrayList<Integer> tagsList, String[] tags) {
+    public UserWantProductAdapter(Context context, ArrayList<String> productsList) {
         this.context = context;
         this.wantedProductsList = productsList;
-        this.wantedTagsList = tagsList;
-        this.tags = tags;
     }
 
     @NonNull
@@ -44,12 +42,9 @@ public class UserWantProductAdapter extends RecyclerView.Adapter<UserWantProduct
 
     @Override
     public void onBindViewHolder(@NonNull UserWantProductAdapter.ViewHolder holder, int position) {
-        holder.wantedProduct.setHint("교환을 원하는 물품" + (position+1));
-        holder.wantedProductTagText.setText("물품" + (position+1) + " 태그 설정");
+        holder.wantedProduct.setHint("키워드 " + (position+1));
         holder.editTextListener.updatePosition(holder.getAdapterPosition());
         holder.wantedProduct.setText(wantedProductsList.get(holder.getAdapterPosition()));
-
-        holder.wantedTagsSpinner.setSelection(wantedTagsList.get(holder.getAdapterPosition()));
     }
 
     @Override
@@ -60,8 +55,6 @@ public class UserWantProductAdapter extends RecyclerView.Adapter<UserWantProduct
     public class ViewHolder extends RecyclerView.ViewHolder {
 
         EditText wantedProduct;
-        TextView wantedProductTagText;
-        Spinner wantedTagsSpinner;
         EditTextListener editTextListener;
 
         public ViewHolder(@NonNull View itemView, EditTextListener editTextListener) {
@@ -69,27 +62,7 @@ public class UserWantProductAdapter extends RecyclerView.Adapter<UserWantProduct
 
             this.editTextListener = editTextListener;
             wantedProduct = itemView.findViewById(R.id.wanted_product_edittext);
-            wantedProductTagText = itemView.findViewById(R.id.wanted_product_tag_text);
-            wantedTagsSpinner = itemView.findViewById(R.id.wanted_tags_spinner);
-
             wantedProduct.addTextChangedListener(editTextListener);
-
-            ArrayAdapter<String> exAdapter = new ArrayAdapter<>(context, android.R.layout.simple_spinner_item, tags);
-            exAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            wantedTagsSpinner.setAdapter(exAdapter);
-
-            wantedTagsSpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
-                @Override
-                public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-                    wantedTagsList.set(getAdapterPosition(), i);
-                    Log.i("my", "tag 변경", null);
-                }
-
-                @Override
-                public void onNothingSelected(AdapterView<?> adapterView) {
-                    wantedTagsList.set(getAdapterPosition(), 0);
-                }
-            });
         }
     }
     private class EditTextListener implements  TextWatcher {

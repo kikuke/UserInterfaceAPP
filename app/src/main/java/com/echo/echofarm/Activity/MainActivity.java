@@ -105,18 +105,37 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
     private void getData() {
-
+        postInfoArrayList = new ArrayList<>();
         GetPostListDto getPostListDto = new GetPostListDto();
         PostService postService = new PostServiceImpl();
         postService.getPostList(getPostListDto, null, 3, postInfoArrayList, new GetPostInfoListener() {
             @Override
             public void onSuccess(PostInfo postInfo) {
                 Log.i("my", "success", null);
+                String beforePostId = postInfoArrayList.get(postInfoArrayList.size()-1).getPostId();
+
+                //메인에서 또는 프로필에서 게시글 리스트 불러올때.
+                postService.getPostList(getPostListDto,
+                        beforePostId, 3, postInfoArrayList, new GetPostInfoListener() {
+                            //데이터는 일괄 로딩되지만, 사진은 한장씩 로딩됨.
+                            @Override
+                            public void onSuccess(PostInfo postInfo) {
+                                //현재 postInfoList 다 다운 되있을거임
+                                //System.out.println(postInfoList);
+                                //현재 한장씩 다운로드 되는 사진들. 각 사진마다 해당 사진에 대해 다시 액티비티에 띄워야 함.
+                                Log.i("my", "success", null);
+                            }
+
+                            @Override
+                            public void onFailed() {
+                                Log.i("my", "fail", null);
+                            }
+                        });
             }
 
             @Override
             public void onFailed() {
-
+                Log.i("my", "failed", null);
             }
         });
         postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);

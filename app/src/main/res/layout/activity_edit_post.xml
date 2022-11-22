@@ -1,4 +1,4 @@
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/editPost_scrollView"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
@@ -6,12 +6,13 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical"
-        android:padding="30dp">
+        android:orientation="vertical">
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:paddingTop="30dp"
+            android:paddingLeft="30dp">
         <ImageButton
             android:id="@+id/first_upload_photo_btn"
             android:layout_width="100dp"
@@ -20,6 +21,7 @@
             android:minHeight="0dp"
             android:minWidth="0dp"
             android:scaleType="fitXY"
+            android:background="#90C5F9"
             android:padding="25dp"/>
 
             <ImageButton
@@ -38,6 +40,7 @@
             android:layout_height="wrap_content"
             android:text="사진을 업로드 해주세요."
             android:textColor="#F00"
+            android:layout_marginLeft="30dp"
             android:visibility="invisible"/>
 
         <EditText
@@ -47,6 +50,7 @@
             android:hint="게시물 제목"
             android:layout_marginTop="20dp"
             android:padding="10dp"
+            android:layout_marginHorizontal="30dp"
             android:background="@drawable/black_edittext"/>
 
         <TextView
@@ -54,17 +58,9 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="제목을 입력해 주세요."
+            android:layout_marginHorizontal="30dp"
             android:textColor="#F00"
             android:visibility="invisible"/>
-
-        <EditText
-            android:id="@+id/myProduct_editText"
-            android:layout_width="match_parent"
-            android:layout_height="42dp"
-            android:background="@drawable/black_edittext"
-            android:layout_marginTop="2dp"
-            android:padding="10dp"
-            android:hint="내 물건 입력"/>
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -72,31 +68,16 @@
             <TextView
                 android:layout_width="180dp"
                 android:layout_height="wrap_content"
-                android:text="내 태그 설정"
+                android:text="내 키워드 설정"
                 android:textColor="@color/black"
                 android:textSize="20dp"
-                android:layout_marginTop="20dp"
-                android:layout_marginRight="15dp"/>
-
-            <Spinner
-                android:id="@+id/my_tag"
-                android:layout_weight="1"
-                android:layout_width="0dp"
-                android:layout_height="30dp"
-                android:layout_marginTop="20dp"/>
+                android:layout_marginHorizontal="30dp"
+                android:layout_marginTop="10dp"/>
 
         </LinearLayout>
 
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="원하는 태그 설정"
-            android:textSize="20dp"
-            android:textColor="@color/black"
-            android:layout_marginTop="20dp"/>
-
         <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/wanted_product_recyclerview"
+            android:id="@+id/user_keyword_recyclerview"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
@@ -104,20 +85,51 @@
         </androidx.recyclerview.widget.RecyclerView>
 
         <ImageButton
-            android:id="@+id/more_wanted_product_btn"
-            android:layout_width="50dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="15dp"
-            android:layout_gravity="center_horizontal"
+            android:id="@+id/more_user_keyword_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
             android:src="@drawable/plus_icon"
-            android:scaleType="fitXY"/>
+            android:scaleType="centerInside"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp"
+            android:background="#90C5F9"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="원하는 키워드 설정"
+            android:textSize="20dp"
+            android:textColor="@color/black"
+            android:layout_marginHorizontal="30dp"
+            android:layout_marginTop="20dp"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/wanted_keyword_recyclerview"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+        </androidx.recyclerview.widget.RecyclerView>
+
+        <ImageButton
+            android:id="@+id/more_wanted_keyword_btn"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/plus_icon"
+            android:scaleType="centerInside"
+            android:layout_gravity="center_horizontal"
+            android:padding="10dp"
+            android:background="#90C5F9"/>
 
         <CheckBox
             android:id="@+id/other_tag_disallow_checkbox"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="다른 태그 교환 거부"
-            android:layout_marginTop="10dp"/>
+            android:layout_marginTop="10dp"
+            android:layout_marginHorizontal="30dp"/>
 
         <EditText
             android:id="@+id/post_contents_edittext"
@@ -127,15 +139,15 @@
             android:gravity="left"
             android:padding="10dp"
             android:hint="내용을 입력 해주세요"
-            android:layout_marginTop="20dp"/>
+            android:layout_margin="20dp" />
 
         <Button
             android:id="@+id/post_upload_btn"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:text="업로드"
-            android:layout_marginTop="20dp"
+            android:layout_margin="20dp"
             android:background="#90C5F9"/>
     </LinearLayout>
 
-</ScrollView>
+</androidx.core.widget.NestedScrollView>
