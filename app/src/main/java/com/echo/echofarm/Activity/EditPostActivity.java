@@ -47,7 +47,9 @@ import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.Interface.UploadPhotoClickListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
+import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.PostService;
+import com.echo.echofarm.Service.UserService;
 
 
 import java.io.File;
@@ -425,16 +427,17 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                 for(String s : wantedKeywordsList)
                     Log.i("my", s, null);
-/*
+                UserService userService = new UserServiceImpl();
+
                 SendPostDto sendPostDto = new SendPostDto(
-                        "id",
+                        userService.GetUserUid(),
                         title,
                         uriList,
                         contents,
-                        myProductEditText.getText().toString(),
-                        Arrays.asList(userSelectedTag),
-                        wantedProductsList.get(0),
-                        wantedTagList,
+                        "",
+                        userKeywordList,
+                        "",
+                        wantedKeywordsList,
                         !isDisallowOtherTags);
 
                 PostService postService = new PostServiceImpl();
@@ -442,7 +445,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                 postService.sendPostDto(sendPostDto, new StoreImgListener() {
                              @Override
                              public void onSuccess(String postId) {
-
+                                 Log.i("my", postId, null);
                              }
 
                              @Override
@@ -450,7 +453,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                              }
                          });
-                         */
+
 
                 Intent intent = new Intent();
                 intent.setClass(this, MainActivity.class);
