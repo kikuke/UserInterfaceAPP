@@ -1,6 +1,7 @@
 package com.echo.echofarm.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -17,6 +18,8 @@ import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.PostService;
 
 import java.util.ArrayList;
+import java.util.Date;
+import java.util.Iterator;
 import java.util.List;
 
 public class ViewPostActivity extends AppCompatActivity implements View.OnClickListener{
@@ -24,15 +27,20 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     Button backButton;
     Button homeButton;
     Button profileButton;
-    Button likeButton;
     Button chatButton;
+    Button likeButton;
     TextView myProductTag;
     TextView needProductTag;
     TextView permitOtherProduct;
     TextView productName;
     TextView productDesc;
     TextView postTime;
+    TextView needProduct;
+    TextView ownProduct;
+
+
     PostService postService;
+    String postId;
 
 
 
@@ -43,24 +51,47 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         backButton = (Button) findViewById(R.id.backButton);
         homeButton = (Button) findViewById(R.id.homeButton);
         profileButton = (Button) findViewById(R.id.profileButton);
-        likeButton = (Button) findViewById(R.id.likeButton);
         chatButton = (Button) findViewById(R.id.chatButton);
+        likeButton = (Button) findViewById(R.id.likeButton);
         myProductTag = (TextView) findViewById(R.id.myProductTag);
         needProductTag = (TextView) findViewById(R.id.needProductTag);
         permitOtherProduct = (TextView) findViewById(R.id.permitOtherProduct);
         productName = (TextView) findViewById(R.id.productName);
         productDesc = (TextView) findViewById(R.id.productDesc);
         postTime = (TextView) findViewById(R.id.postTime);
+        ownProduct = (TextView) findViewById(R.id.ownProduct);
+        needProduct = (TextView) findViewById(R.id.needProduct);
 
         backButton.setOnClickListener(this);
         homeButton.setOnClickListener(this);
         profileButton.setOnClickListener(this);
-        likeButton.setOnClickListener(this);
         chatButton.setOnClickListener(this);
+        likeButton.setOnClickListener(this);
 
-        postService.getPostDto("123", new GetImgUrlListener() {
+        Intent intent = getIntent();
+        postId=intent.getStringExtra("postId");
+
+
+
+        postService.getPostDto(postId, new GetImgUrlListener() {
             @Override
             public void onSuccess(GetPostDto getPostDto) {
+                productName.setText(getPostDto.getTitle());
+                productDesc.setText(getPostDto.getContents());
+                myProductTag.setText(tagListToString(getPostDto.getOwnTag()));
+                needProductTag.setText(tagListToString(getPostDto.getWantTag()));
+                if(getPostDto.isAllowOther())
+                    permitOtherProduct.setText("다른 물품 허용");
+                else
+                    permitOtherProduct.setText("다른물품 허용 안함");
+                postTime.setText("업로드 시간:"+ getPostDto.getNowTime().toString());
+
+                /*
+                UploadedPhotoData list = new UploadedPhotoData("uri");
+                ViewPager2 viewPager2 = findViewById(R.id.imageView);
+                PhotoViewPageAdapter photoViewPageAdapter =new PhotoViewPageAdapter(this, list);
+                viewPager2.setAdapter(photoViewPageAdapter);
+                */
 
             }
 
@@ -87,12 +118,20 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         else if(v==profileButton){
 
         }
-        else if(v==likeButton){
-
-        }
         else if(v==chatButton){
-
+            Intent intent = new Intent(getApplicationContext(),ChattingActivity.class);
+            intent.putExtra("postId",postId);
+            startActivity(intent);
         }
 
+    }
+
+    private String tagListToString(List<String> tags){
+        String result = "";
+        for(String tag: tags){
+            result += " #" + tag;
+        }
+
+        return result;
     }
 }

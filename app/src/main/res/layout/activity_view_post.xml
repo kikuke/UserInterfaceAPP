@@ -35,8 +35,7 @@
             <androidx.viewpager.widget.ViewPager
                 android:id="@+id/imageView"
                 android:layout_width="match_parent"
-                android:layout_height="326dp"
-                android:src="@drawable/test1" />
+                android:layout_height="326dp" />
 
             <Button
                 android:id="@+id/profileButton"
@@ -54,6 +53,16 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:text="원하는 물건 태그" />
+            <TextView
+                android:id="@+id/ownProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="내 물건" />
+            <TextView
+                android:id="@+id/needProduct"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="원하는 물건" />
             <TextView
                 android:id="@+id/permitOtherProduct"
                 android:layout_width="match_parent"
@@ -85,14 +94,14 @@
         android:layout_height="50dp"
         android:orientation="horizontal">
         <Button
-            android:id="@+id/likeButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="좋아요"/>
+            android:text="좋아요"
+            android:id="@+id/likeButton"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="교환"
+            android:text="상대방에게 말을 걸어보세요!"
             android:layout_weight="5"/>
         <Button
             android:id="@+id/chatButton"
