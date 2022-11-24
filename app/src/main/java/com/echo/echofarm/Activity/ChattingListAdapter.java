@@ -1,6 +1,7 @@
 package com.echo.echofarm.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -43,6 +44,10 @@ public class ChattingListAdapter extends RecyclerView.Adapter<ChattingListAdapte
             @Override
             public void onClick(View view) {
                 Log.i("my", "" + holder.getAdapterPosition(), null);
+                Intent intent = new Intent();
+                intent.setClass(context, ChattingActivity.class);
+                //intent.putExtra("oppId", )
+                context.startActivity(intent);
             }
         });
     }

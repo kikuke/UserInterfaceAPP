@@ -7,7 +7,8 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:padding="10dp">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -20,7 +21,7 @@
             android:layout_height="wrap_content"
             android:text="user name"
             android:textColor="@color/black"
-            android:textSize="30dp"
+            android:textSize="25dp"
             android:layout_marginTop="30dp"/>
 
         <ImageButton
@@ -45,7 +46,7 @@
             android:layout_gravity="left"
             android:text="관심 태그"
             android:textColor="@color/black"
-            android:textSize="22dp"
+            android:textSize="20dp"
             android:layout_marginLeft="20dp"
             android:layout_marginTop="40dp"/>
 
@@ -55,6 +56,17 @@
             android:background="@drawable/black_edittext"
             android:layout_margin="13dp"
             android:padding="10dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="IT / 가전"
+                android:textSize="15dp"
+                android:textColor="@color/black"
+                android:paddingHorizontal="8dp"
+                android:layout_marginLeft="5dp"
+                android:background="#90C5F9"/>
 
             <LinearLayout
                 android:layout_width="wrap_content"

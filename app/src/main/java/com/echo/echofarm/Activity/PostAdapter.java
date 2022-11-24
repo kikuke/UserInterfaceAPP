@@ -49,6 +49,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         PostInfo postInfo = postInfoArrayList.get(position);
         holder.title.setText(postInfo.getTitle());
         holder.tags.setText(postInfo.getTags());
+        if(postInfo == null)
+            Log.i("my", "postInfo is null", null);
         Glide.with(context).load(postInfo.getImageUri()).into(holder.postImage);
     }
 

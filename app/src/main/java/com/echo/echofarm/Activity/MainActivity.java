@@ -36,13 +36,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private NestedScrollView nestedSV;
     private Button morePostBtn;
     private ImageButton editPostBtn, chattingBtn, settingBtn;
-    //
-    // post에 들어갈 데이터 예제, PostAdapter의 매개변수
-    private String[] titles = {"1", "2", "3", "4", "5"};
-    private String[] message = {"m1", "m2", "m3", "m4", "m5"};
-    private int[] images = {R.drawable.settings, R.drawable.edit, R.drawable.chatting,
-            R.drawable.settings, R.drawable.exchange};
-
     private ArrayList<PostInfo> postInfoArrayList;
     private PostAdapter postAdapter;
     private int postCount = 0;
@@ -131,8 +124,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                                 recyclerView.setAdapter(postAdapter);
                                 Log.d(TAG, "GetPostInfo: " + postInfo);
-                                postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
-                                recyclerView.setAdapter(postAdapter);
                             }
 
                             @Override

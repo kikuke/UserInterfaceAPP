@@ -2,6 +2,7 @@ package com.echo.echofarm.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,6 +11,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.echo.echofarm.R;
@@ -44,6 +46,10 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn.setOnClickListener(this);
         joinBtn = (Button) findViewById(R.id.signupButton);
         joinBtn.setOnClickListener(this);
+
+        // 액션바
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.hide();
     }
 
     @Override

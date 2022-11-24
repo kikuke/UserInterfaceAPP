@@ -1,6 +1,7 @@
 package com.echo.echofarm.Activity;
 
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -8,6 +9,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.echo.echofarm.R;
@@ -36,6 +38,10 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
 
         joinBtn = (Button) findViewById(R.id.signup_okButton);
         joinBtn.setOnClickListener(this);
+
+        // 액션바 제목
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Html.fromHtml("<font color='#000'>회원가입</font>"));
     }
 
     @Override

@@ -34,26 +34,21 @@
         <activity
             android:name=".Activity.ChattingListActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
         </activity>
         <activity
+        android:name=".Activity.UserProfileActivity"
+        android:exported="true">
+        <meta-data
+            android:name="android.app.lib_name"
+            android:value="" />
+        </activity>
+        <activity
             android:name=".Activity.ChattingActivity"
             android:exported="true"
             android:windowSoftInputMode="adjustPan">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -68,10 +63,6 @@
         <activity
             android:name=".Activity.EditPostActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -79,10 +70,6 @@
         <activity
             android:name=".Activity.MainActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />
@@ -90,10 +77,6 @@
         <activity
             android:name=".Activity.UploadedPhotosActivity"
             android:exported="true">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <meta-data
                 android:name="android.app.lib_name"
                 android:value="" />

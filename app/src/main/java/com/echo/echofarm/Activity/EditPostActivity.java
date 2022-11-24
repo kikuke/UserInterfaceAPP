@@ -43,6 +43,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.bumptech.glide.Glide;
 import com.echo.echofarm.BuildConfig;
 import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Interface.StoreImgListener;
@@ -149,14 +150,6 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
             return false;
         }
     }
-    private void setFirstPhoto(Bitmap bitmap) {
-        if (bitmap != null) {
-            firstUploadBtn.setImageBitmap(bitmap);
-            firstUploadBtn.setPadding(0, 0, 0, 0);
-        } else {
-            Log.i("my", "bitmap is null", null);
-        }
-    }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent intent) {
@@ -168,27 +161,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                     if (resultCode == RESULT_OK && filePath != null) {
 
                         if (PhotoDataList.size() == 0) {
-                            BitmapFactory.Options options = new BitmapFactory.Options();
-                            options.inJustDecodeBounds = true; // to avoid memory allocation for the bitmap object
-                            try {
-                                InputStream in = new FileInputStream(filePath);
-                                BitmapFactory.decodeStream(in, null, options);
-                                in.close();
-                            } catch (Exception e) {
-                                e.printStackTrace();
-                            }
-                            final int height = options.outHeight;
-                            final int width = options.outWidth;
-                            int inSampleSize = 1;
-                            if (height > reqHeight || width > reqWidth) {
-                                final int heightRatio = Math.round((float) height / (float) reqHeight);
-                                final int widthtRatio = Math.round((float) width / (float) reqWidth);
-                                inSampleSize = heightRatio > widthtRatio ? heightRatio : widthtRatio;
-                            }
-                            BitmapFactory.Options imgOptions = new BitmapFactory.Options();
-                            imgOptions.inSampleSize = inSampleSize; // 1/inSampleSize
-                            Bitmap bitmap = BitmapFactory.decodeFile(filePath.getAbsolutePath(), imgOptions);
-                            firstUploadBtn.setImageBitmap(bitmap);
+                            Glide.with(this).load(photoURI).into(firstUploadBtn);
                             firstUploadBtn.setPadding(0, 0, 0, 0);
                             photoCheck.setVisibility(View.VISIBLE);
                             photoCheck.setTextColor(getColor(R.color.black));
@@ -215,7 +188,13 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                                 for (int i = 0; i < clipData.getItemCount(); i++) {
                                     Uri imageUri = clipData.getItemAt(i).getUri();  // 선택한 이미지들의 uri를 가져온다.
-                                    Log.e("", "" + imageUri.toString(), null);
+
+                                    // 첫 이미지 처리
+                                    if(PhotoDataList.size() == 0) {
+                                        Glide.with(this).load(imageUri).into(firstUploadBtn);
+                                        firstUploadBtn.setPadding(0, 0, 0, 0);
+                                        additionalUploadBtn.setVisibility(View.VISIBLE);
+                                    }
 
                                     try {
                                         PhotoDataList.add(new UploadedPhotoData(imageUri));
@@ -230,12 +209,6 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                         photoCheck.setText("( " + PhotoDataList.size() + " / 10 )");
                         photoCheck.setTextColor(getColor(R.color.black));
                     }
-                    // 첫 이미지 처리
-                    if (PhotoDataList.size() != 0) {
-                        additionalUploadBtn.setVisibility(View.VISIBLE);
-                        Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(), PhotoDataList.get(0).getPhotoUri()));
-                        setFirstPhoto(bitmap);
-                    }
                     break;
                 }
                 case RESULT_FROM_UPLOADED_PHOTOS_ACTIVITY: {
@@ -247,9 +220,8 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                             additionalUploadBtn.setVisibility(View.GONE);
                             photoCheck.setVisibility(View.GONE);
                         } else {
-                            Bitmap bitmap = ImageDecoder.decodeBitmap(ImageDecoder.createSource(getContentResolver(),
-                                    PhotoDataList.get(0).getPhotoUri()));
-                            setFirstPhoto(bitmap);
+                            Glide.with(this).load(PhotoDataList.get(0).getPhotoUri()).into(firstUploadBtn);
+                            firstUploadBtn.setPadding(0, 0, 0, 0);
                             photoCheck.setText("( " + PhotoDataList.size() + " / 10 )");
                             photoCheck.setTextColor(getColor(R.color.black));
                         }
@@ -432,38 +404,40 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
 
                 for(String s : wantedKeywordsList)
                     Log.i("my", s, null);
-/*
+
+                UserService userService = new UserServiceImpl();
+
                 SendPostDto sendPostDto = new SendPostDto(
-                        "id",
+                        userService.GetUserUid(),
                         title,
                         uriList,
                         contents,
-                        myProductEditText.getText().toString(),
-                        Arrays.asList(userSelectedTag),
-                        wantedProductsList.get(0),
-                        wantedTagList,
+                        "",
+                        userKeywordList,
+                        "",
+                        wantedKeywordsList,
                         !isDisallowOtherTags);
+
+
+                Toast.makeText(this, "업로드중...", Toast.LENGTH_SHORT).show();
 
                 PostService postService = new PostServiceImpl();
 
                 postService.sendPostDto(sendPostDto, new StoreImgListener() {
                              @Override
                              public void onSuccess(String postId) {
-
+                                 Intent intent = new Intent();
+                                 intent.setClass(EditPostActivity.this, MainActivity.class);
+                                 intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+                                 Toast.makeText(EditPostActivity.this, "게시물 업로드 완료", Toast.LENGTH_SHORT).show();
+                                 startActivity(intent);
                              }
 
                              @Override
                              public void onFailed() {
-
+                                 Toast.makeText(EditPostActivity.this, "업로드 실패", Toast.LENGTH_SHORT).show();
                              }
                          });
-                         */
-
-                Intent intent = new Intent();
-                intent.setClass(this, MainActivity.class);
-                intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
-                Toast.makeText(EditPostActivity.this, "게시물 업로드 완료", Toast.LENGTH_SHORT).show();
-                startActivity(intent);
                 }
 
         }
