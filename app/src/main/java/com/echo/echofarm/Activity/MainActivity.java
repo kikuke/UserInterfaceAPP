@@ -38,6 +38,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ImageButton editPostBtn, chattingBtn, settingBtn;
     private ArrayList<PostInfo> postInfoArrayList;
     private PostAdapter postAdapter;
+    private GetPostListDto getPostListDto = new GetPostListDto();
+    private PostService postService = new PostServiceImpl();
     private int postCount = 0;
 
     public MainActivity() {
@@ -67,7 +69,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         morePostBtn = findViewById(R.id.idBtn);
         postInfoArrayList = new ArrayList<>();
 
-        getData(); // 화면에 뿌릴 초기 데이터
+
+        getData(postCount); // 화면에 뿌릴 초기 데이터
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -86,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
 
                     // 데이터 5개씩 불러옴
-                    getData();
+                    getData(postCount);
                 }
             }
         });
@@ -103,11 +106,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void getData() {
-        postInfoArrayList = new ArrayList<>();
-        GetPostListDto getPostListDto = new GetPostListDto();
-        PostService postService = new PostServiceImpl();
-        postService.getPostList(getPostListDto, null, 3, postInfoArrayList, new GetPostInfoListener() {
+    private void getData(int count) {
+
+        String beforeId;
+
+        if(count == 0) beforeId = null;
+        else beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getId();
+
+        postService.getPostList(getPostListDto, beforeId, 2, postInfoArrayList, new GetPostInfoListener() {
             @Override
             public void onSuccess(PostInfo postInfo) {
                 Log.i("my", "success", null);
@@ -115,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                 //메인에서 또는 프로필에서 게시글 리스트 불러올때.
                 postService.getPostList(getPostListDto,
-                        beforePostId, 3, postInfoArrayList, new GetPostInfoListener() {
+                        beforePostId, 2, postInfoArrayList, new GetPostInfoListener() {
                             //데이터는 일괄 로딩되지만, 사진은 한장씩 로딩됨.
                             @Override
                             public void onSuccess(PostInfo postInfo) {
@@ -125,6 +131,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                                 recyclerView.setAdapter(postAdapter);
                                 Log.d(TAG, "GetPostInfo: " + postInfo);
+                                postCount++;
                             }
 
                             @Override
