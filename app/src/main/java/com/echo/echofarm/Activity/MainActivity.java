@@ -78,17 +78,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                Log.e(TAG, "change called", null);
                 // ex) 3 * 5개 게시물 표시시 '더 많은 게시물'버튼 생성
                 if(postCount >= 5*3) {
                     loadingPB.setVisibility(View.GONE);
                     morePostBtn.setVisibility(View.VISIBLE);
+                    Log.e(TAG, "if called", null);
                 }
                 // 스크롤이 끝이라면 데이터 불러옴
                 else if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    Log.i("my", "" + postCount, null);
+                    Log.e(TAG, "" + postCount, null);
                     loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
 
-                    // 데이터 5개씩 불러옴
+                    // 데이터 불러옴
                     getData(postCount);
                 }
             }
@@ -116,29 +118,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         postService.getPostList(getPostListDto, beforeId, 2, postInfoArrayList, new GetPostInfoListener() {
             @Override
             public void onSuccess(PostInfo postInfo) {
-                Log.i("my", "success", null);
+                Log.e(TAG, "success", null);
                 String beforePostId = postInfoArrayList.get(postInfoArrayList.size()-1).getPostId();
 
-                //메인에서 또는 프로필에서 게시글 리스트 불러올때.
-                postService.getPostList(getPostListDto,
-                        beforePostId, 2, postInfoArrayList, new GetPostInfoListener() {
-                            //데이터는 일괄 로딩되지만, 사진은 한장씩 로딩됨.
-                            @Override
-                            public void onSuccess(PostInfo postInfo) {
-                                //현재 postInfoList 다 다운 되있을거임
-                                //System.out.println(postInfoList);
-
-                                postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
-                                recyclerView.setAdapter(postAdapter);
-                                Log.d(TAG, "GetPostInfo: " + postInfo);
-                                postCount++;
-                            }
-
-                            @Override
-                            public void onFailed() {
-                                Log.i("my", "fail", null);
-                            }
-                        });
+                postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
+                recyclerView.setAdapter(postAdapter);
+                Log.e(TAG, "GetPostInfo: " + postInfo);
+                postCount++;
             }
 
             @Override
