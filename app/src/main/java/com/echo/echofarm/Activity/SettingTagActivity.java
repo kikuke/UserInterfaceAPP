@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.echo.echofarm.R;
 
@@ -66,7 +67,12 @@ public class SettingTagActivity extends AppCompatActivity {
             {
                 if(actionId == EditorInfo.IME_ACTION_DONE)
                 {
-                    addTag(inputTag.getText().toString());
+                    String input = inputTag.getText().toString();
+                    if(input.length() > 20) {
+                        Toast.makeText(SettingTagActivity.this, "최대 20글자로 입력 해주세요", Toast.LENGTH_SHORT).show();
+                        inputTag.setText("");
+                    }
+                    else addTag(inputTag.getText().toString());
                     return true;
                 }
                 return false;

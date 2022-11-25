@@ -63,6 +63,11 @@
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/user_profile_recyclerview"
+            android:background="@drawable/black_edittext"
+            android:layout_margin="10dp"
+            android:padding="10dp"
+            android:paddingTop="8dp"
+            android:minHeight="100dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
 

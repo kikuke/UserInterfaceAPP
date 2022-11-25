@@ -86,9 +86,11 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
                     holder.tag2.setText(tagList.get(holder.getAdapterPosition()).get(1));
 
                     if(requestCode == 0) {
+                        holder.delBtn1.setVisibility(View.GONE);
+                        holder.delBtn2.setVisibility(View.GONE);
+                    } else {
                         holder.delBtn1.setOnClickListener(clickListener);
                         holder.delBtn2.setOnClickListener(clickListener);
-                    } else {
                     }
                     break;
                 }

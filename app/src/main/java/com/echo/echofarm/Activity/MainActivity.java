@@ -78,16 +78,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nestedSV.setOnScrollChangeListener(new NestedScrollView.OnScrollChangeListener() {
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                Log.e(TAG, "change called", null);
                 // ex) 3 * 5개 게시물 표시시 '더 많은 게시물'버튼 생성
                 if(postCount >= 5*3) {
                     loadingPB.setVisibility(View.GONE);
                     morePostBtn.setVisibility(View.VISIBLE);
-                    Log.e(TAG, "if called", null);
                 }
                 // 스크롤이 끝이라면 데이터 불러옴
                 else if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
-                    Log.e(TAG, "" + postCount, null);
                     loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
 
                     // 데이터 불러옴
@@ -115,21 +112,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if(count == 0) beforeId = null;
         else beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getId();
 
-        postService.getPostList(getPostListDto, beforeId, 2, postInfoArrayList, new GetPostInfoListener() {
+        Log.i("my", "beforeId : " + beforeId, null);
+
+        postService.getPostList(getPostListDto, beforeId, 3, postInfoArrayList, new GetPostInfoListener() {
             @Override
             public void onSuccess(PostInfo postInfo) {
                 Log.e(TAG, "success", null);
-                String beforePostId = postInfoArrayList.get(postInfoArrayList.size()-1).getPostId();
 
                 postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                 recyclerView.setAdapter(postAdapter);
                 Log.e(TAG, "GetPostInfo: " + postInfo);
                 postCount++;
+
+                // post가 view를 모두 채우지 않으면
+                if(postCount*3 < 5) getData(postCount);
             }
 
             @Override
             public void onFailed() {
-                Log.i("my", "failed", null);
+                morePostBtn.setVisibility(View.VISIBLE);
             }
         });
 

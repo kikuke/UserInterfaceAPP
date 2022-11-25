@@ -40,7 +40,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         separateString(s, list);
 
-        TagAdapter tagAdapter = new TagAdapter(this, list, 1);
+        TagAdapter tagAdapter = new TagAdapter(this, list, 0);
         recyclerView.setAdapter(tagAdapter);
 
         Button button = findViewById(R.id.tag_setting_button);
