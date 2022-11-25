@@ -66,6 +66,7 @@ public class StoreServiceImpl implements StoreService {
     public void getImageUrl(String postId, String photoName, PostInfo postInfo, GetPostInfoListener getPostInfoListener){
         StorageReference storageRef = storage.getReference();
 
+        Log.w(TAG, "photoName: " + photoName);
         storageRef.child("photo/" + postId + "/" + photoName).getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
             @Override
             public void onSuccess(Uri uri) {
