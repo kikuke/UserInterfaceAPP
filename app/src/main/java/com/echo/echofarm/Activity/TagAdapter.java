@@ -1,7 +1,5 @@
 package com.echo.echofarm.Activity;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
@@ -9,7 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,7 +53,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
                     Log.i("my", "remove : " + tagList.get(holder.getAdapterPosition()).get(2), null);
                     tagList.get(holder.getAdapterPosition()).remove(2);
                 }
-                context.startActivity(new Intent(context, SettingTagActivity.class).putExtra("S", tagList)
+                context.startActivity(new Intent(context, TagSettingActivity.class).putExtra("S", tagList)
                         .putExtra("dummy", "dummy")
                         .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
             }

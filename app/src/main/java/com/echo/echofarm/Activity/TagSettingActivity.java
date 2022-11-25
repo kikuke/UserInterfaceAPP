@@ -8,26 +8,21 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
-import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.echo.echofarm.R;
 
-import org.checkerframework.checker.units.qual.A;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public class SettingTagActivity extends AppCompatActivity {
+public class TagSettingActivity extends AppCompatActivity {
 
 
     private ArrayList<ArrayList<String>> list;
@@ -55,7 +50,16 @@ public class SettingTagActivity extends AppCompatActivity {
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                addTag(inputTag.getText().toString());
+
+                String input = inputTag.getText().toString();
+                if(input.length() > 20) {
+                    Toast.makeText(TagSettingActivity.this, "최대 20글자로 입력 해주세요", Toast.LENGTH_SHORT).show();
+                    inputTag.setText("");
+                } else if(input.equals("")) {
+                    // do nothing
+                } else {
+                    addTag(inputTag.getText().toString());
+                }
             }
         });
 
@@ -69,10 +73,14 @@ public class SettingTagActivity extends AppCompatActivity {
                 {
                     String input = inputTag.getText().toString();
                     if(input.length() > 20) {
-                        Toast.makeText(SettingTagActivity.this, "최대 20글자로 입력 해주세요", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(TagSettingActivity.this, "최대 20글자로 입력 해주세요", Toast.LENGTH_SHORT).show();
                         inputTag.setText("");
+                    } else if(input.equals("")) {
+                        // do nothing
                     }
-                    else addTag(inputTag.getText().toString());
+                    else {
+                        addTag(inputTag.getText().toString());
+                    }
                     return true;
                 }
                 return false;
@@ -110,6 +118,12 @@ public class SettingTagActivity extends AppCompatActivity {
         recyclerView.setAdapter(tagAdapter);
     }
 
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, UserProfileActivity.class).putExtra("tagList", list);
+        setResult(RESULT_OK, intent);
+        super.onBackPressed();
+    }
 
     public static void separateString(ArrayList<String> arrayList, ArrayList<ArrayList<String>> result) {
 

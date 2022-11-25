@@ -19,7 +19,7 @@
         android:theme="@style/Theme.EchoFarm"
         tools:targetApi="31">
         <activity
-            android:name=".Activity.SettingTagActivity"
+            android:name=".Activity.TagSettingActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"

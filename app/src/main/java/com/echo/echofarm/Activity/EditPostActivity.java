@@ -161,6 +161,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                     if (resultCode == RESULT_OK && filePath != null) {
 
                         if (PhotoDataList.size() == 0) {
+                            additionalUploadBtn.setVisibility(View.VISIBLE);
                             Glide.with(this).load(photoURI).into(firstUploadBtn);
                             firstUploadBtn.setPadding(0, 0, 0, 0);
                             photoCheck.setVisibility(View.VISIBLE);
@@ -309,7 +310,6 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                                 }
                                 else if (checkCameraHardware(EditPostActivity.this)) {
                                     try{
-                                        if(PhotoDataList.size() == 0) additionalUploadBtn.setVisibility(View.VISIBLE);
 
                                         String dirPath = getExternalFilesDir(null).getAbsolutePath() + "/myApp";
                                         File dir = new File(dirPath);
