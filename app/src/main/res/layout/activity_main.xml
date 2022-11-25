@@ -6,11 +6,10 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-
     <androidx.core.widget.NestedScrollView
         android:id="@+id/idNestedSV"
         android:layout_width="match_parent"
-        android:layout_height="0dp"
+        android:layout_height="wrap_content"
         android:layout_weight="1"
         tools:context=".MainActivity">
 
@@ -25,8 +24,7 @@
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/idRVCourses"
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-                android:layout_weight="1"
+                android:layout_height="match_parent"
                 android:nestedScrollingEnabled="false" />
 
             <ProgressBar
@@ -83,4 +81,6 @@
             android:scaleType="centerInside"
             android:padding="12dp"/>
     </LinearLayout>
+
+
 </LinearLayout>
