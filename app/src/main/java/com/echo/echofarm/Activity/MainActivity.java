@@ -66,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nestedSV = findViewById(R.id.idNestedSV);
         morePostBtn = findViewById(R.id.idBtn);
         postInfoArrayList = new ArrayList<>();
+
         getData(); // 화면에 뿌릴 초기 데이터
 
         LinearLayoutManager manager = new LinearLayoutManager(this);

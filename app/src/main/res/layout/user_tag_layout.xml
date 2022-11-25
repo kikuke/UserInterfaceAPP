@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="8dp">
+
+    <RelativeLayout
+        android:id="@+id/tag_layout_1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="#90C5F9"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/user_tag_1"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="IT / 가전"
+            android:singleLine="true"
+            android:gravity="center"
+            android:layout_marginStart="5dp"/>
+
+        <ImageButton
+            android:id="@+id/delete_tag_button_1"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/close"
+            android:background="#90C5F9"
+            android:padding="8dp"
+            android:scaleType="fitXY"
+            android:gravity="center"
+            android:layout_toEndOf="@id/user_tag_1"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tag_layout_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:background="#90C5F9"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/user_tag_2"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="IT / 가전"
+            android:singleLine="true"
+            android:gravity="center"
+            android:layout_marginStart="5dp"/>
+
+        <ImageButton
+            android:id="@+id/delete_tag_button_2"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/close"
+            android:background="#90C5F9"
+            android:padding="8dp"
+            android:scaleType="fitXY"
+            android:layout_toEndOf="@id/user_tag_2"/>
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/tag_layout_3"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="8dp"
+        android:background="#90C5F9"
+        android:visibility="gone">
+
+        <TextView
+            android:id="@+id/user_tag_3"
+            android:layout_width="wrap_content"
+            android:layout_height="30dp"
+            android:text="IT / 가전"
+            android:singleLine="true"
+            android:gravity="center"
+            android:layout_marginStart="5dp"/>
+
+        <ImageButton
+            android:id="@+id/delete_tag_button_3"
+            android:layout_width="28dp"
+            android:layout_height="28dp"
+            android:src="@drawable/close"
+            android:background="#90C5F9"
+            android:padding="8dp"
+            android:scaleType="fitXY"
+            android:layout_toEndOf="@id/user_tag_3"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

@@ -4,7 +4,9 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
@@ -46,6 +48,20 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
         loginBtn.setOnClickListener(this);
         joinBtn = (Button) findViewById(R.id.signupButton);
         joinBtn.setOnClickListener(this);
+
+        editPW.setOnEditorActionListener(new TextView.OnEditorActionListener()
+        {
+            @Override
+            public boolean onEditorAction(TextView v, int actionId, KeyEvent event)
+            {
+                if(actionId == EditorInfo.IME_ACTION_DONE)
+                {
+                    signIn(editID.getText().toString(), editPW.getText().toString());
+                    return true;
+                }
+                return false;
+            }
+        });
 
         // 액션바
         ActionBar actionBar = getSupportActionBar();

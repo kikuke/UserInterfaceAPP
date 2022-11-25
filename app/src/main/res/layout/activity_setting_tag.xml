@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".Activity.SettingTagActivity"
+    android:padding="15dp"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+    <EditText
+        android:id="@+id/input_tag_edittext"
+        android:layout_width="0dp"
+        android:layout_weight="6"
+        android:layout_height="42dp"
+        android:background="@drawable/black_edittext"
+        android:hint="키워드 입력"
+        android:inputType="text"
+        android:padding="10dp"
+        android:layout_marginRight="5dp"
+        android:layout_gravity="center_vertical"/>
+
+        <Button
+            android:id="@+id/add_tag_button"
+            android:layout_width="0dp"
+            android:layout_height="40dp"
+            android:text="등록"
+            android:layout_weight="1"
+            android:layout_gravity="center_vertical"
+            android:background="#90C5F9"/>
+
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="left"
+        android:text="관심 태그"
+        android:textColor="@color/black"
+        android:textSize="20dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="40dp"/>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/black_edittext"
+        android:layout_marginTop="10dp"
+        android:minHeight="100dp"
+        android:padding="10dp">
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/setting_tag_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </androidx.recyclerview.widget.RecyclerView>
+    </LinearLayout>
+    </LinearLayout>
+
+</androidx.core.widget.NestedScrollView>
