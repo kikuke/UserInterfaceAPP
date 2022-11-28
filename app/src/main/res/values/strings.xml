@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="app_name">EchoFarm</string>
     <string-array name="tags">
@@ -9,4 +10,6 @@
         <item>애완용품</item>
         <item>기타</item>
     </string-array>
+    <string name="default_notification_channel_id">Channel ID</string>
+    <string name="default_notification_channel_name" translatable="true">Test</string>
 </resources>

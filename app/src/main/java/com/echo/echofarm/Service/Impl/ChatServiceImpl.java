@@ -1,5 +1,6 @@
 package com.echo.echofarm.Service.Impl;
 
+import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
@@ -10,6 +11,7 @@ import com.echo.echofarm.Data.Dto.SendChatDto;
 import com.echo.echofarm.Data.Entity.Chat;
 import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.Service.ChatService;
+import com.echo.echofarm.Service.FcmService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -20,14 +22,17 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.messaging.RemoteMessage;
 
 public class ChatServiceImpl implements ChatService {
     private static final String TAG = "ChatService";
     private FirebaseFirestore db;
+    private FcmService fcmService;
     //나중에 유저서비스 만들어서 이미지랑 아이디 넣기?
 
     public ChatServiceImpl(){
         db = FirebaseFirestore.getInstance();
+        fcmService = new FcmService();
     }
 
     //유저기능 개발되면 커버함수 만들기(자동으로 파라미터 입력)
@@ -39,7 +44,6 @@ public class ChatServiceImpl implements ChatService {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-
                     }})
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
