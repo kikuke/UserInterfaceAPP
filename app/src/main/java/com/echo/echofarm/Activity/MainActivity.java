@@ -157,10 +157,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 // 뷰가 다 채워지지 않으면 스크롤 리스너가 동작하지 않아서 넣어줘야 함
                 // 지금 beforeId 때문에 에러나서 주석처리함
 
+                /*
                 if(postCount < 3) {
                     Log.i("my", "postCount : " + postCount, null);
                     getData(postCount);
                 }
+
+                 */
             }
 
             @Override
