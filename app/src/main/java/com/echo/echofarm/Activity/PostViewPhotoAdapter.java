@@ -18,10 +18,9 @@ import java.util.List;
 public class PostViewPhotoAdapter extends RecyclerView.Adapter<PostViewPhotoAdapter.ViewHolder> {
 
     private Context context;
-    private List<Uri> listData = new ArrayList<>();
+    private List<Uri> listData;
 
     PostViewPhotoAdapter(Context context, List<Uri> list) {
-        this.context = context;
         this.listData = list;
     }
 
@@ -45,7 +44,9 @@ public class PostViewPhotoAdapter extends RecyclerView.Adapter<PostViewPhotoAdap
     }
 
     public class ViewHolder extends RecyclerView.ViewHolder{
+
         ImageView imageView;
+
         public ViewHolder(@NonNull View itemView) {
             super(itemView);
             imageView = itemView.findViewById(R.id.image);

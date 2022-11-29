@@ -1,6 +1,7 @@
 package com.echo.echofarm.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
@@ -11,6 +12,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.echo.echofarm.Data.Dto.GetPostDto;
@@ -81,6 +83,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = getIntent();
         postId=intent.getStringExtra("postId");
 
+
         postService.getPostDto(postId, new GetImgUrlListener() {
             @Override
             public void onSuccess(GetPostDto getPostDto) {
@@ -110,8 +113,6 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
 
         mPager = findViewById(R.id.imageView);
         mPager.setAdapter(new PostViewPhotoAdapter(this, list));
-
-
         }
     @Override
     public void onClick(View v){
