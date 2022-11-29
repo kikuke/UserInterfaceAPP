@@ -6,23 +6,27 @@ import androidx.core.widget.NestedScrollView;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.app.job.JobInfo;
+import android.app.job.JobScheduler;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ImageButton;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.ScrollView;
 
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.FcmService;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
+import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.PostService;
+import com.echo.echofarm.Service.PushUpdateService;
+import com.echo.echofarm.Service.UserService;
 
 import java.util.ArrayList;
 
@@ -40,6 +44,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private PostAdapter postAdapter;
     private GetPostListDto getPostListDto = new GetPostListDto();
     private PostService postService = new PostServiceImpl();
+    private UserService userService = new UserServiceImpl();
+    private FcmService fcmService = new FcmService();
     private int postCount = 0;
 
     public MainActivity() {
@@ -49,6 +55,23 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        // 채팅 수신
+        fcmService.subscribeTopic("user_" + userService.getUserUid());
+        ComponentName componentName = new ComponentName(this, PushUpdateService.class);
+        JobInfo info = new JobInfo.Builder(999, componentName)
+                .setRequiresCharging(false)
+                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
+                .setPersisted(true)
+                .setPeriodic(5 * 60 * 1000)//5분간격 실행
+                .build();
+        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
+        int resultCode = jobScheduler.schedule(info);
+        if(resultCode == jobScheduler.RESULT_SUCCESS){
+            Log.d(TAG, "푸시업데이트 서비스 실행");
+        } else {
+            Log.d(TAG, "푸시업데이트 서비스 실패");
+        }
 
         // 액션바 제목
         ActionBar actionBar = getSupportActionBar();
