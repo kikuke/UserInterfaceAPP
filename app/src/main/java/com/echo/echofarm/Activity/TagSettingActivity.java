@@ -55,6 +55,8 @@ public class TagSettingActivity extends AppCompatActivity {
                 if(input.length() > 20) {
                     Toast.makeText(TagSettingActivity.this, "최대 20글자로 입력 해주세요", Toast.LENGTH_SHORT).show();
                     inputTag.setText("");
+                } else if(input.length() == 1){
+                    Toast.makeText(TagSettingActivity.this, "두 글자 이상 입력 해주세요", Toast.LENGTH_SHORT).show();
                 } else if(input.equals("")) {
                     // do nothing
                 } else {
@@ -75,6 +77,8 @@ public class TagSettingActivity extends AppCompatActivity {
                     if(input.length() > 20) {
                         Toast.makeText(TagSettingActivity.this, "최대 20글자로 입력 해주세요", Toast.LENGTH_SHORT).show();
                         inputTag.setText("");
+                    } else if(input.length() == 1){
+                        Toast.makeText(TagSettingActivity.this, "두 글자 이상 입력 해주세요", Toast.LENGTH_SHORT).show();
                     } else if(input.equals("")) {
                         // do nothing
                     }
