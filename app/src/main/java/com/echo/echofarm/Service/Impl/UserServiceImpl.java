@@ -12,7 +12,7 @@ public class UserServiceImpl implements UserService {
         mAuth = FirebaseAuth.getInstance();
     }
 
-    public String GetUserUid(){
+    public String getUserUid(){
         return mAuth.getUid();
     }
 }

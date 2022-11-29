@@ -63,7 +63,7 @@ public class ChattingActivity extends AppCompatActivity {
                         sendingMessage.setText("");
 
                         // send message info to server
-                        chatService.sendChat(userService.GetUserUid(), oppId, new SendChatDto(message));
+                        chatService.sendChat(userService.getUserUid(), oppId, new SendChatDto(message));
                     }
                 } catch (Exception e) {
                     Toast.makeText(ChattingActivity.this, "메세지만 입력 가능합니다.", Toast.LENGTH_SHORT);
