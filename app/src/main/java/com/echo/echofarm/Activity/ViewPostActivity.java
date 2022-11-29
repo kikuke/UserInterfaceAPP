@@ -1,10 +1,14 @@
 package com.echo.echofarm.Activity;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager2.adapter.FragmentStateAdapter;
 import androidx.viewpager2.widget.ViewPager2;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.TextView;
@@ -23,6 +27,11 @@ import java.util.Iterator;
 import java.util.List;
 
 public class ViewPostActivity extends AppCompatActivity implements View.OnClickListener{
+
+    private ViewPager2 mPager;
+    private RecyclerView.Adapter pagerAdapter;
+    private int num_page;
+    List<Uri> list;
 
     Button backButton;
     Button homeButton;
@@ -48,6 +57,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_post);
+        postService = new PostServiceImpl();
         backButton = (Button) findViewById(R.id.backButton);
         homeButton = (Button) findViewById(R.id.homeButton);
         profileButton = (Button) findViewById(R.id.profileButton);
@@ -71,8 +81,6 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = getIntent();
         postId=intent.getStringExtra("postId");
 
-
-
         postService.getPostDto(postId, new GetImgUrlListener() {
             @Override
             public void onSuccess(GetPostDto getPostDto) {
@@ -80,26 +88,28 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
                 productDesc.setText(getPostDto.getContents());
                 myProductTag.setText(tagListToString(getPostDto.getOwnTag()));
                 needProductTag.setText(tagListToString(getPostDto.getWantTag()));
+                ownProduct.setText(getPostDto.getOwnProduct());
+                needProduct.setText(getPostDto.getWantProduct());
+                list = getPostDto.getImgSrc();
+
                 if(getPostDto.isAllowOther())
                     permitOtherProduct.setText("다른 물품 허용");
                 else
                     permitOtherProduct.setText("다른물품 허용 안함");
                 postTime.setText("업로드 시간:"+ getPostDto.getNowTime().toString());
 
-                /*
-                UploadedPhotoData list = new UploadedPhotoData("uri");
-                ViewPager2 viewPager2 = findViewById(R.id.imageView);
-                PhotoViewPageAdapter photoViewPageAdapter =new PhotoViewPageAdapter(this, list);
-                viewPager2.setAdapter(photoViewPageAdapter);
-                */
+
 
             }
 
             @Override
             public void onFailed() {
-
+                Log.d("chanhos", "failed");
             }
         });
+
+        mPager = findViewById(R.id.imageView);
+        mPager.setAdapter(new PostViewPhotoAdapter(this, list));
 
 
         }
