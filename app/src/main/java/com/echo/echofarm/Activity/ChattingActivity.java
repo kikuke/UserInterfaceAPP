@@ -13,7 +13,10 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.echo.echofarm.Data.Dto.GetChatDto;
+import com.echo.echofarm.Data.Dto.GetChatResultDto;
 import com.echo.echofarm.Data.Dto.SendChatDto;
+import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.ChatService;
 import com.echo.echofarm.Service.Impl.ChatServiceImpl;
@@ -21,6 +24,7 @@ import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.UserService;
 
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChattingActivity extends AppCompatActivity {
 
@@ -28,6 +32,9 @@ public class ChattingActivity extends AppCompatActivity {
     private EditText sendingMessage;
     private Button sendMessageButton;
     private ArrayList<ChattingData> list;
+
+
+    private List<GetChatDto> chatList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,8 +78,11 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
 
+        chatList = new ArrayList<>();
+
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
+
 
         ArrayList<String> chatting = new ArrayList<>();
         chatting.add("내 채팅1");
