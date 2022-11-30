@@ -57,10 +57,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         // 채팅 수신
+        /*
         fcmService.subscribeTopic("user_" + userService.getUserUid());
         ComponentName componentName = new ComponentName(this, PushUpdateService.class);
         JobInfo info = new JobInfo.Builder(999, componentName)
                 .setRequiresCharging(false)
+                .setRequiresDeviceIdle(false)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setPeriodic(5 * 60 * 1000)//5분간격 실행
@@ -72,6 +74,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Log.d(TAG, "푸시업데이트 서비스 실패");
         }
+        */
 
         // 액션바 제목
         ActionBar actionBar = getSupportActionBar();
@@ -115,6 +118,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
+
+        postService.getPostList(getPostListDto, "N3VuoGDdrRbWwGvFU316", 3, postInfoArrayList, new GetPostInfoListener() {
+            @Override
+            public void onSuccess(PostInfo postInfo) {
+                Log.e(TAG, "GetPostInfo123214: " + postInfo);
+                Log.e(TAG, "GetPostInfoArrayList124124: " + postInfoArrayList.size() + "size" + postInfoArrayList);
+            }
+
+            @Override
+            public void onFailed() {
+            }
+        });
     }
     // 액티비티 수준 onClick
     @Override
@@ -133,9 +148,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String beforeId;
 
         if(count == 0) beforeId = null;
-        else beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getId();
+        else beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId();
 
-        Log.i("my", "beforeId : " + beforeId, null);
+        Log.i("my", "beforeId : " + beforeId + "arrSize : " + postInfoArrayList.size(), null);
 
         postService.getPostList(getPostListDto, beforeId, 3, postInfoArrayList, new GetPostInfoListener() {
             @Override
@@ -145,6 +160,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                 recyclerView.setAdapter(postAdapter);
                 Log.e(TAG, "GetPostInfo: " + postInfo);
+                Log.e(TAG, "GetPostInfoArrayList: " + postInfoArrayList.size() + "size" + postInfoArrayList);
                 postCount++;
 
                 // post가 view를 모두 채우지 않으면
