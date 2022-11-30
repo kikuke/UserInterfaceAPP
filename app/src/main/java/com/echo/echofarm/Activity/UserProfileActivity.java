@@ -41,7 +41,7 @@ public class UserProfileActivity extends AppCompatActivity {
         Intent intent = getIntent();
         if(!TextUtils.isEmpty(intent.getStringExtra("oppUserId"))) {
             UserService userService = new UserServiceImpl();
-            String myId = userService.GetUserUid();
+            //String myId = userService.GetUserUid();
 
             // if user recommend list 에 상대방 아이디가 없다면
             userRecommendImageButton.setImageResource(R.drawable.heart_empty);

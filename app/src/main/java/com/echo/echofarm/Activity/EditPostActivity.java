@@ -395,7 +395,7 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                         !isDisallowOtherTags);
 
 
-                Toast.makeText(this, "업로드중...", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "업로드중...", Toast.LENGTH_LONG).show();
 
                 PostService postService = new PostServiceImpl();
 
