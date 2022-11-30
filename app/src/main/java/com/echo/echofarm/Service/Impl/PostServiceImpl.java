@@ -42,9 +42,38 @@ public class PostServiceImpl implements PostService {
     @Override
     public void getPostList(GetPostListDto getPostListDto, String beforePostId, Integer limitSize, List<PostInfo> postInfoList, GetPostInfoListener getPostInfoListener){
         CollectionReference colRef = db.collection("post");
+
+        if(beforePostId != null) {
+            colRef.document(beforePostId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Query query = postQueryFactory(getPostListDto, limitSize);
+                            query = query.startAfter(document);
+                            Log.d(TAG, "getStartDocument" + document.getId());
+
+                            getPostList(query, getPostListDto, postInfoList, getPostInfoListener);
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+            return;
+        }
+        Query query = postQueryFactory(getPostListDto, limitSize);
+
+        getPostList(query, getPostListDto, postInfoList, getPostInfoListener);
+    }
+
+    private Query postQueryFactory(GetPostListDto getPostListDto, Integer limitSize){
+        CollectionReference colRef = db.collection("post");
+
         Query query = colRef.orderBy("nowTime", Query.Direction.DESCENDING).limit(limitSize);
-        if(beforePostId != null)
-            query = query.startAfter(colRef.document(beforePostId));
         if(getPostListDto.getUid() != null)
             query = query.whereEqualTo("uid", getPostListDto.getUid());
         if(getPostListDto.getOwnProduct() != null)
@@ -52,7 +81,7 @@ public class PostServiceImpl implements PostService {
         if(getPostListDto.getWantProduct() != null)
             query = query.whereEqualTo("wantProduct", getPostListDto.getWantProduct());
 
-        getPostList(query, getPostListDto, postInfoList, getPostInfoListener);
+        return query;
     }
 
     private void getPostList(Query query, GetPostListDto getPostListDto, List<PostInfo> postInfoList, GetPostInfoListener getPostInfoListener){
@@ -79,10 +108,9 @@ public class PostServiceImpl implements PostService {
                             PostInfo postInfo = new PostInfo(document.getId(), post.getUid(), post.getTitle(), post.getOwnTag().toString());
                             postInfoList.add(postInfo);
                             storeService.getImageUrl(document.getId(), "0.png", postInfo, getPostInfoListener);
+                            Log.d(TAG, "PostInfo: " + postInfo);
                         }
                     }
-
-                    Log.d(TAG, "PostInfoList: " + postInfoList);
                 }}});
     }
 

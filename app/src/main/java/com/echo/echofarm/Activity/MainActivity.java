@@ -122,18 +122,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }
         });
-
-        postService.getPostList(getPostListDto, "N3VuoGDdrRbWwGvFU316", 3, postInfoArrayList, new GetPostInfoListener() {
-            @Override
-            public void onSuccess(PostInfo postInfo) {
-                Log.e(TAG, "GetPostInfo123214: " + postInfo);
-                Log.e(TAG, "GetPostInfoArrayList124124: " + postInfoArrayList.size() + "size" + postInfoArrayList);
-            }
-
-            @Override
-            public void onFailed() {
-            }
-        });
     }
     // 액티비티 수준 onClick
     @Override
@@ -172,18 +160,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.e(TAG, "GetPostInfo: " + postInfo);
                 Log.e(TAG, "GetPostInfoArrayList: " + postInfoArrayList.size() + "size" + postInfoArrayList);
                 postCount++;
-
-                // post가 view를 모두 채우지 않으면 재호출
-                // 뷰가 다 채워지지 않으면 스크롤 리스너가 동작하지 않아서 넣어줘야 함
-                // 지금 beforeId 때문에 에러나서 주석처리함
-
-                /*
-                if(postCount < 3) {
-                    Log.i("my", "postCount : " + postCount, null);
-                    getData(postCount);
-                }
-
-                 */
             }
 
             @Override

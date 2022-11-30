@@ -16,12 +16,19 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.echo.echofarm.Data.Dto.GetPostListDto;
+import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.Impl.PostServiceImpl;
+import com.echo.echofarm.Service.PostService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "EmailPassword";
