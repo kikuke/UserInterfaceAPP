@@ -20,11 +20,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.EchoFarm"
         tools:targetApi="31">
+        <activity
+            android:name=".Activity.SearchedPostActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
-            android:value="@string/default_notification_channel_id"/>
+            android:value="@string/default_notification_channel_id" />
+
         <activity
-            android:name=".Activity.SettingTagActivity"
+            android:name=".Activity.TagSettingActivity"
             android:exported="true">
             <meta-data
                 android:name="android.app.lib_name"
@@ -109,11 +118,12 @@
             android:name=".Service.FcmService"
             android:exported="false">
             <intent-filter>
-                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+                <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
         </service>
-        <service android:name=".Service.PushUpdateService"
-            android:permission="android.permission.BIND_JOB_SERVICE"/>
+        <service
+            android:name=".Service.PushUpdateService"
+            android:permission="android.permission.BIND_JOB_SERVICE" />
     </application>
 
 </manifest>

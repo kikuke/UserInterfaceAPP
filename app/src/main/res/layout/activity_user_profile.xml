@@ -30,6 +30,7 @@
             android:layout_marginTop="30dp"/>
 
         <ImageButton
+            android:id="@+id/user_recommend_button"
             android:layout_width="100dp"
             android:layout_height="100dp"
             android:src="@drawable/hear_filled"
@@ -38,13 +39,28 @@
             android:layout_marginTop="20dp"
             android:scaleType="centerInside"/>
 
-        <TextView
+        <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="추천수 : 10"
-            android:textColor="@color/black"
-            android:textSize="20dp"
-            android:layout_marginTop="10dp"/>
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:layout_marginTop="10dp"
+                android:text="추천수 : "/>
+
+            <TextView
+                android:id="@+id/user_recommend_info"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="10"
+                android:textColor="@color/black"
+                android:textSize="20dp"
+                android:layout_marginTop="10dp"/>
+
+        </LinearLayout>
 
         </LinearLayout>
 

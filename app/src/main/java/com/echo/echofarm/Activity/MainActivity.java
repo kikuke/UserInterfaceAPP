@@ -13,10 +13,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Interface.GetPostInfoListener;
@@ -29,6 +32,7 @@ import com.echo.echofarm.Service.PushUpdateService;
 import com.echo.echofarm.Service.UserService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -147,31 +151,61 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         String beforeId;
 
-        if(count == 0) beforeId = null;
-        else beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId();
+        if(count == 0)
+            beforeId = null;
+        else {
+            beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId();
+            postInfoArrayList = new ArrayList<>();
+        }
 
         Log.i("my", "beforeId : " + beforeId + "arrSize : " + postInfoArrayList.size(), null);
 
-        postService.getPostList(getPostListDto, beforeId, 3, postInfoArrayList, new GetPostInfoListener() {
+
+        postService.getPostList(getPostListDto, beforeId, 4, postInfoArrayList, new GetPostInfoListener() {
             @Override
             public void onSuccess(PostInfo postInfo) {
-                Log.e(TAG, "success", null);
+                Log.i("my", "success", null);
 
+                Log.i("my", "size : " + postInfoArrayList.size(), null);
                 postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                 recyclerView.setAdapter(postAdapter);
                 Log.e(TAG, "GetPostInfo: " + postInfo);
                 Log.e(TAG, "GetPostInfoArrayList: " + postInfoArrayList.size() + "size" + postInfoArrayList);
                 postCount++;
 
-                // post가 view를 모두 채우지 않으면
-                if(postCount*3 < 5) getData(postCount);
+                // post가 view를 모두 채우지 않으면 재호출
+                // 뷰가 다 채워지지 않으면 스크롤 리스너가 동작하지 않아서 넣어줘야 함
+                // 지금 beforeId 때문에 에러나서 주석처리함
+
+                /*
+                if(postCount < 3) {
+                    Log.i("my", "postCount : " + postCount, null);
+                    getData(postCount);
+                }
+
+                 */
             }
 
             @Override
             public void onFailed() {
                 morePostBtn.setVisibility(View.VISIBLE);
+                Log.i("my", "failed", null);
             }
         });
 
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.search_btn) {
+            startActivity(new Intent(this, SearchedPostActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }
