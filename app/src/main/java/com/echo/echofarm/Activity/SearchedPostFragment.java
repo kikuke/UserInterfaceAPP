@@ -64,7 +64,7 @@ public class SearchedPostFragment extends Fragment {
 
         postInfoArrayList = new ArrayList<>();
 
-        Log.i("my", "onCreateView", null);
+        Log.i("my", "onCreateView tag : " + tag, null);
         postService.getPostList(getPostListDto, null, 3, postInfoArrayList, new GetPostInfoListener() {
             @Override
             public void onSuccess(PostInfo postInfo) {
