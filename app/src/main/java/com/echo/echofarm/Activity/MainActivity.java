@@ -122,8 +122,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
                 // 스크롤이 끝이라면 데이터 불러옴
                 else if (checkPositionBefore != scrollY && (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
-                    checkPositionBefore = scrollY;
+                    checkPositionBefore = scrollY + 126;
                     Log.i("my", checkPositionBefore + "", null);
+                    loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
 
                     // 데이터 불러옴
                     getData(postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId());
