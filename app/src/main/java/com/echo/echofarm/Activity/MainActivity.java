@@ -13,10 +13,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ProgressBar;
+import android.widget.Toast;
 
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Interface.GetPostInfoListener;
@@ -29,6 +32,7 @@ import com.echo.echofarm.Service.PushUpdateService;
 import com.echo.echofarm.Service.UserService;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -47,6 +51,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private UserService userService = new UserServiceImpl();
     private FcmService fcmService = new FcmService();
     private int postCount = 0;
+    private int checkPositionBefore = 0;
 
     public MainActivity() {
     }
@@ -57,10 +62,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         // 채팅 수신
+        /*
         fcmService.subscribeTopic("user_" + userService.getUserUid());
         ComponentName componentName = new ComponentName(this, PushUpdateService.class);
         JobInfo info = new JobInfo.Builder(999, componentName)
                 .setRequiresCharging(false)
+                .setRequiresDeviceIdle(false)
                 .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
                 .setPersisted(true)
                 .setPeriodic(5 * 60 * 1000)//5분간격 실행
@@ -72,6 +79,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         } else {
             Log.d(TAG, "푸시업데이트 서비스 실패");
         }
+        */
 
         // 액션바 제목
         ActionBar actionBar = getSupportActionBar();
@@ -93,7 +101,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         postInfoArrayList = new ArrayList<>();
 
 
-        getData(postCount); // 화면에 뿌릴 초기 데이터
+        getData(null); // 화면에 뿌릴 초기 데이터
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -105,13 +113,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 if(postCount >= 5*3) {
                     loadingPB.setVisibility(View.GONE);
                     morePostBtn.setVisibility(View.VISIBLE);
+                    morePostBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(MainActivity.this, SearchedPostActivity.class));
+                        }
+                    });
                 }
                 // 스크롤이 끝이라면 데이터 불러옴
-                else if (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight()) {
+                else if (checkPositionBefore != scrollY && (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
+                    checkPositionBefore = scrollY + 126;
+                    Log.i("my", checkPositionBefore + "", null);
                     loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
 
                     // 데이터 불러옴
-                    getData(postCount);
+                    getData(postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId());
                 }
             }
         });
@@ -128,34 +144,73 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void getData(int count) {
+    private void getData(String beforeId) {
 
-        String beforeId;
+        if(beforeId == null) {
+            postService.getPostList(getPostListDto, null, 5, postInfoArrayList, new GetPostInfoListener() {
+                @Override
+                public void onSuccess(PostInfo postInfo) {
+                    postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
+                    recyclerView.setAdapter(postAdapter);
+                    postCount++;
+                }
 
-        if(count == 0) beforeId = null;
-        else beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getId();
+                @Override
+                public void onFailed() {
+                    loadingPB.setVisibility(View.GONE);
+                    morePostBtn.setVisibility(View.VISIBLE);
+                    morePostBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(MainActivity.this, SearchedPostActivity.class));
+                        }
+                    });
+                    Log.i("my", "failed", null);
+                }
+            });
+        } else {
 
-        Log.i("my", "beforeId : " + beforeId, null);
+            int beforePostCount = postCount;
 
-        postService.getPostList(getPostListDto, beforeId, 3, postInfoArrayList, new GetPostInfoListener() {
-            @Override
-            public void onSuccess(PostInfo postInfo) {
-                Log.e(TAG, "success", null);
+            Log.i("my", "beforeId : " + beforeId + " , arrSize : " + postInfoArrayList.size(), null);
 
-                postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
-                recyclerView.setAdapter(postAdapter);
-                Log.e(TAG, "GetPostInfo: " + postInfo);
-                postCount++;
+            postService.getPostList(getPostListDto, beforeId, 3, postInfoArrayList, new GetPostInfoListener() {
+                @Override
+                public void onSuccess(PostInfo postInfo) {
+                    postCount++;
+                    if(beforePostCount + 3 == postCount) {
+                        postAdapter.notifyItemRangeChanged(beforePostCount, 2);
+                    }
+                }
 
-                // post가 view를 모두 채우지 않으면
-                if(postCount*3 < 5) getData(postCount);
-            }
+                @Override
+                public void onFailed() {
+                    loadingPB.setVisibility(View.GONE);
+                    morePostBtn.setVisibility(View.VISIBLE);
+                    morePostBtn.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            startActivity(new Intent(MainActivity.this, SearchedPostActivity.class));
+                        }
+                    });
+                    Log.i("my", "failed", null);
+                }
+            });
+        }
 
-            @Override
-            public void onFailed() {
-                morePostBtn.setVisibility(View.VISIBLE);
-            }
-        });
+    }
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu, menu);
+        return true;
+    }
 
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        if(item.getItemId() == R.id.search_btn) {
+            startActivity(new Intent(this, SearchedPostActivity.class));
+            return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 }

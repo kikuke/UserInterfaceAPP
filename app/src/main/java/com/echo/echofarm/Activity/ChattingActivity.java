@@ -13,14 +13,20 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.echo.echofarm.Data.Dto.GetChatDto;
+import com.echo.echofarm.Data.Dto.GetChatResultDto;
 import com.echo.echofarm.Data.Dto.SendChatDto;
+import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.ChatService;
 import com.echo.echofarm.Service.Impl.ChatServiceImpl;
 import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.UserService;
 
+import org.checkerframework.checker.units.qual.C;
+
 import java.util.ArrayList;
+import java.util.List;
 
 public class ChattingActivity extends AppCompatActivity {
 
@@ -28,6 +34,9 @@ public class ChattingActivity extends AppCompatActivity {
     private EditText sendingMessage;
     private Button sendMessageButton;
     private ArrayList<ChattingData> list;
+
+
+    private List<GetChatDto> chatList;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,9 +80,37 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
 
+
+        chatService.sendChat(userService.getUserUid(), oppId, new SendChatDto("123"));
+
+        chatList = new ArrayList<>();
+
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
 
+        chatService.getChatList(userService.getUserUid(), "oppId", null, new GetChatDtoListener() {
+            @Override
+            public void onSuccess(GetChatResultDto getChatDtoResult) {
+                chatList = getChatDtoResult.getGetChatDtoList();
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
+
+        for(int i = 0; i < chatList.size(); i++) {
+            int code = 0;
+
+            if(chatList.get(i).getUid().equals(userService.getUserUid())) {
+                code = 1;
+            }
+            ChattingData chattingData = new ChattingData(chatList.get(0).getMessage(), code);
+            list.add(chattingData);
+        }
+
+        /*
         ArrayList<String> chatting = new ArrayList<>();
         chatting.add("내 채팅1");
         chatting.add("내 채팅2");
@@ -88,11 +125,10 @@ public class ChattingActivity extends AppCompatActivity {
         code.add(0);
         code.add(1);
 
-
-
         list = new ArrayList<>();
         for(int i = 0; i < 5; i++)
             list.add(new ChattingData(chatting.get(i), code.get(i)));
+         */
 
         ChattingDataAdapter adapter = new ChattingDataAdapter(this, list, "홍석희");
         recyclerView.setAdapter(adapter);

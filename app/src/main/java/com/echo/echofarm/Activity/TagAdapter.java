@@ -1,15 +1,13 @@
 package com.echo.echofarm.Activity;
 
-import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
-
 import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
-import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -56,7 +54,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
                     Log.i("my", "remove : " + tagList.get(holder.getAdapterPosition()).get(2), null);
                     tagList.get(holder.getAdapterPosition()).remove(2);
                 }
-                context.startActivity(new Intent(context, SettingTagActivity.class).putExtra("S", tagList)
+                context.startActivity(new Intent(context, TagSettingActivity.class).putExtra("S", tagList)
                         .putExtra("dummy", "dummy")
                         .setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP));
             }
@@ -73,6 +71,7 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
                     holder.tag1.setText(tagList.get(holder.getAdapterPosition()).get(0));
                     if(requestCode == 0) {
                         holder.delBtn1.setVisibility(View.GONE);
+                        holder.tag1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20.0f);
                     } else {
                         holder.delBtn1.setOnClickListener(clickListener);
                     }
@@ -88,6 +87,9 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
                     if(requestCode == 0) {
                         holder.delBtn1.setVisibility(View.GONE);
                         holder.delBtn2.setVisibility(View.GONE);
+
+                        holder.tag1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20.0f);
+                        holder.tag2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20.0f);
                     } else {
                         holder.delBtn1.setOnClickListener(clickListener);
                         holder.delBtn2.setOnClickListener(clickListener);
@@ -107,6 +109,10 @@ public class TagAdapter extends RecyclerView.Adapter<TagAdapter.ViewHolder> {
                         holder.delBtn1.setVisibility(View.GONE);
                         holder.delBtn2.setVisibility(View.GONE);
                         holder.delBtn3.setVisibility(View.GONE);
+
+                        holder.tag1.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20.0f);
+                        holder.tag2.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20.0f);
+                        holder.tag3.setTextSize(TypedValue.COMPLEX_UNIT_DIP, 20.0f);
                     } else {
                         holder.delBtn1.setOnClickListener(clickListener);
                         holder.delBtn2.setOnClickListener(clickListener);

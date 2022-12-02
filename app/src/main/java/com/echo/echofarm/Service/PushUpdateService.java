@@ -35,7 +35,7 @@ public class PushUpdateService extends JobService {
         new Thread(new Runnable() {
             @Override
             public void run() {
-
+                Log.d(TAG, "startBackgroudWork");
                 jobFinished(params, false);
             }
         }).start();

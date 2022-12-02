@@ -22,7 +22,6 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
-import com.google.firebase.messaging.RemoteMessage;
 
 public class ChatServiceImpl implements ChatService {
     private static final String TAG = "ChatService";
@@ -56,16 +55,41 @@ public class ChatServiceImpl implements ChatService {
     //유저기능 개발되면 커버함수 만들기(자동으로 파라미터 입력)
     public void getChatList(String uid1, String uid2, String beforeChatId, GetChatDtoListener getChatDtoListener){
         CollectionReference colRef = db.collection("chat").document(findChatRoomName(uid1,uid2)).collection("log");
+        if(beforeChatId!=null) {
+            colRef.document(beforeChatId).get().addOnCompleteListener(new OnCompleteListener<DocumentSnapshot>() {
+                @Override
+                public void onComplete(@NonNull Task<DocumentSnapshot> task) {
+                    if (task.isSuccessful()) {
+                        DocumentSnapshot document = task.getResult();
+                        if (document.exists()) {
+                            Query query = colRef.orderBy("nowTime", Query.Direction.ASCENDING);
+                            query = query.startAfter(document);
+                            Log.d(TAG, "getStartDocument" + document.getId());
+
+                            getChatList(query, getChatDtoListener);
+                        } else {
+                            Log.d(TAG, "No such document");
+                        }
+                    } else {
+                        Log.d(TAG, "get failed with ", task.getException());
+                    }
+                }
+            });
+
+            return;
+        }
         Query query = colRef.orderBy("nowTime", Query.Direction.ASCENDING);
-        if(beforeChatId!=null)
-            query = query.startAfter(colRef.document(beforeChatId));
+
+        getChatList(query, getChatDtoListener);
+    }
+
+    private void getChatList(Query query, GetChatDtoListener getChatDtoListener){
 
         query.get().addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
             @Override
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()) {
                     if(task.getResult().size() <= 0) {
-                        Log.d(TAG, "ChatResult End: " + beforeChatId);
                     } else {
                         GetChatResultDto getChatResultDto = new GetChatResultDto();
 
