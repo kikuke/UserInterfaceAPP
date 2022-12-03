@@ -18,6 +18,7 @@ public class GetPostDto {
     private List<String> wantTag;
     private boolean allowOther;
     private Date nowTime;
+    private boolean complete;
 
     public String getUid() {
         return uid;
@@ -95,6 +96,14 @@ public class GetPostDto {
 
     public void setNowTime(Date nowTime) {this.nowTime = nowTime;}
 
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
+
     @Override
     public String toString() {
         return "GetPostDto{" +
@@ -108,6 +117,7 @@ public class GetPostDto {
                 ", wantTag=" + wantTag +
                 ", allowOther=" + allowOther +
                 ", nowTime=" + nowTime +
+                ", complete=" + complete +
                 '}';
     }
 }

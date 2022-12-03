@@ -22,7 +22,10 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.echo.echofarm.Data.Dto.GetPostListDto;
+import com.echo.echofarm.Data.Dto.GetUserInfoDto;
+import com.echo.echofarm.Data.Dto.SendUserDto;
 import com.echo.echofarm.Interface.GetPostInfoListener;
+import com.echo.echofarm.Interface.GetUserInfoDtoListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.FcmService;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
@@ -60,6 +63,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+
+        //User사용 예시
+        UserService userService = new UserServiceImpl();
+        userService.sendUserDto(new SendUserDto("userUidTest", "userNameTest", 3));
+        userService.getUserInfoDto("userUidTest", new GetUserInfoDtoListener() {
+            @Override
+            public void onSuccess(GetUserInfoDto getUserInfoDto) {
+                System.out.println(getUserInfoDto);
+            }
+
+            @Override
+            public void onFailed() {
+                System.out.println("Failed UserDto");
+            }
+        });
 
         // 채팅 수신
         /*
