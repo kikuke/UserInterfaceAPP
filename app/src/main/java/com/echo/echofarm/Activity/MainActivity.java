@@ -147,9 +147,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void getData(String beforeId) {
 
         if(beforeId == null) {
+            Log.i("my", "null", null);
             postService.getPostList(getPostListDto, null, 5, postInfoArrayList, new GetPostInfoListener() {
                 @Override
                 public void onSuccess(PostInfo postInfo) {
+                    Log.i("my", "Success", null);
                     postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                     recyclerView.setAdapter(postAdapter);
                     postCount++;
@@ -179,7 +181,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 public void onSuccess(PostInfo postInfo) {
                     postCount++;
                     if(beforePostCount + 3 == postCount) {
-                        postAdapter.notifyItemRangeChanged(beforePostCount, 2);
+                        postAdapter.notifyItemRangeChanged(beforePostCount, 3);
                     }
                 }
 

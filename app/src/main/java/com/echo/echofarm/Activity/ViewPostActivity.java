@@ -33,7 +33,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     private ViewPager2 mPager;
     private RecyclerView.Adapter pagerAdapter;
     private int num_page;
-    List<Uri> list;
+    List<Uri> list = new ArrayList<>();
 
     Button backButton;
     Button homeButton;
@@ -52,6 +52,8 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
 
     PostService postService;
     String postId;
+    String userId;
+    String postTitle;
 
 
 
@@ -74,6 +76,8 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         ownProduct = (TextView) findViewById(R.id.ownProduct);
         needProduct = (TextView) findViewById(R.id.needProduct);
 
+        mPager = findViewById(R.id.imageView);
+
         backButton.setOnClickListener(this);
         homeButton.setOnClickListener(this);
         profileButton.setOnClickListener(this);
@@ -82,6 +86,8 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
 
         Intent intent = getIntent();
         postId=intent.getStringExtra("postId");
+        userId = intent.getStringExtra("userId");
+        postTitle = intent.getStringExtra("postTitle");
 
 
         postService.getPostDto(postId, new GetImgUrlListener() {
@@ -94,6 +100,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
                 ownProduct.setText(getPostDto.getOwnProduct());
                 needProduct.setText(getPostDto.getWantProduct());
                 list = getPostDto.getImgSrc();
+                mPager.setAdapter(new PostViewPhotoAdapter(ViewPostActivity.this, list));
 
                 if(getPostDto.isAllowOther())
                     permitOtherProduct.setText("다른 물품 허용");
@@ -111,8 +118,6 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
             }
         });
 
-        mPager = findViewById(R.id.imageView);
-        mPager.setAdapter(new PostViewPhotoAdapter(this, list));
         }
     @Override
     public void onClick(View v){
@@ -127,11 +132,14 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
             finish();
         }
         else if(v==profileButton){
-
+            Intent intent = new Intent(getApplicationContext(), UserProfileActivity.class);
+            intent.putExtra("oppUserId", userId);
+            startActivity(intent);
         }
         else if(v==chatButton){
             Intent intent = new Intent(getApplicationContext(),ChattingActivity.class);
-            intent.putExtra("postId",postId);
+            intent.putExtra("userId", userId);
+            intent.putExtra("postTitle", postTitle);
             startActivity(intent);
         }
 

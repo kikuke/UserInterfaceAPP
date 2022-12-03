@@ -6,7 +6,7 @@ public class ChattingData {
 
     private String message;
 
-    // 0 : user, 1 : opponent
+    // 0 : opponent, 0 : user
     private int chatCode;
 
     public ChattingData(String message, int chatCode) {

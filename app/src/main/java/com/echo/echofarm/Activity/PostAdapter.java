@@ -49,8 +49,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         PostInfo postInfo = postInfoArrayList.get(position);
         holder.title.setText(postInfo.getTitle());
         holder.tags.setText(postInfo.getTags());
-        if(postInfo == null)
-            Log.i("my", "postInfo is null", null);
         Glide.with(context).load(postInfo.getImageUri()).into(holder.postImage);
     }
 
@@ -76,6 +74,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     int position = getAdapterPosition();
                     Intent intent = new Intent(context, ViewPostActivity.class);
                     intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
+                    intent.putExtra("userId", postInfoArrayList.get(position).getId());
+                    intent.putExtra("postTitle", postInfoArrayList.get(position).getTitle());
                     context.startActivity(intent);
                 }
             });
@@ -85,7 +85,8 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     int position = getAdapterPosition();
                     Intent intent = new Intent(context, ViewPostActivity.class);
                     intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
-                    Log.i("my", "pos : " + position, null);
+                    intent.putExtra("userId", postInfoArrayList.get(position).getId());
+                    intent.putExtra("postTitle", postInfoArrayList.get(position).getTitle());
                     context.startActivity(intent);
                 }
             });
