@@ -10,6 +10,8 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
@@ -17,6 +19,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -35,13 +38,14 @@ public class UserProfileActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private ArrayList<ArrayList<String>> list;
     private final int RESULT_TAG_SETTING = 0;
-    private ImageButton userRecommendFilledBtn;
+    private ImageButton userRecommendBtn;
+    private ImageView heart_filled_Image;
     private Button tagSettingButton;
     private TextView userRecommendCount;
     private String oppUserId;
     private RelativeLayout tagSettingLayout;
     private GetUserInfoDto userInfoDto;
-    private boolean buttonFlag;
+    private boolean buttonFlag = true;
     private UserService userService;
 
     @Override
@@ -53,8 +57,9 @@ public class UserProfileActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Html.fromHtml("<font color='#000'>프로필</font>"));
 
-        userRecommendFilledBtn = findViewById(R.id.user_recommend_filled_button);
+        userRecommendBtn = findViewById(R.id.user_recommend_empty_button);
         userRecommendCount = findViewById(R.id.user_recommend_info);
+        heart_filled_Image = findViewById(R.id.user_recommend_filled_view);
         tagSettingButton = findViewById(R.id.tag_setting_button);
         tagSettingLayout = findViewById(R.id.tag_setting_layout);
 
@@ -63,34 +68,46 @@ public class UserProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         // 상대 프로필
-        if(!TextUtils.isEmpty(intent.getStringExtra("oppUserId")) ){
-                    //&& !userService.getUserUid().equals(intent.getStringExtra("oppUserId"))) {
+        if(!TextUtils.isEmpty(intent.getStringExtra("oppUserId"))
+                    && !userService.getUserUid().equals(intent.getStringExtra("oppUserId"))) {
             oppUserId = intent.getStringExtra("oppUserId");
 
             userService.getUserInfoDto(oppUserId, new GetUserInfoDtoListener() {
                 @Override
                 public void onSuccess(GetUserInfoDto getUserInfoDto) {
                     userInfoDto = getUserInfoDto;
-                    userRecommendCount.setText(userInfoDto.getLike());
+                    userRecommendCount.setText(""+userInfoDto.getLike());
 
                     // if user recommend list 에 상대방 아이디가 없다면
                     if(!userInfoDto.getLikedUser().contains(userService.getUserUid())) {
-                        userRecommendFilledBtn.setVisibility(View.GONE);
+                        heart_filled_Image.setVisibility(View.INVISIBLE);
                         buttonFlag = false;
                     }
 
                     // 상대 프로필일때만 클릭 리스너 작동
-                    userRecommendFilledBtn.setOnClickListener(new View.OnClickListener() {
+                    userRecommendBtn.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View view) {
-                            if(!buttonFlag) {
-                                userRecommendFilledBtn.setVisibility(View.VISIBLE);
-
-                                ArrayList<String> newList = (ArrayList<String>) userInfoDto.getLikedUser();
+                            ArrayList<String> newList = (ArrayList<String>) userInfoDto.getLikedUser();
+                            // 추천
+                            if (!buttonFlag) {
+                                Log.i("my", "recommend clicked");
                                 newList.add(userService.getUserUid());
                                 userInfoDto.setLikedUser(newList);
 
                                 userService.sendUserDto(new SendUserDto(oppUserId, userInfoDto.getName(), userInfoDto.getLike()));
+                                heart_filled_Image.setVisibility(View.VISIBLE);
+                                buttonFlag = true;
+                            }
+                            // 추천 삭제
+                            else {
+                                Log.i("my", "cancel recommend clicked");
+                                newList.remove(userService.getUserUid());
+                                userInfoDto.setLikedUser(newList);
+
+                                userService.sendUserDto(new SendUserDto(oppUserId, userInfoDto.getName(), userInfoDto.getLike()));
+                                heart_filled_Image.setVisibility(View.INVISIBLE);
+                                buttonFlag = false;
                             }
                         }
                     });
@@ -108,8 +125,8 @@ public class UserProfileActivity extends AppCompatActivity {
             userService.getUserInfoDto(userService.getUserUid(), new GetUserInfoDtoListener() {
                 @Override
                 public void onSuccess(GetUserInfoDto getUserInfoDto) {
-                    userInfoDto = getUserInfoDto;
-                    userRecommendCount.setText(userInfoDto.getLike());
+                    Log.e("", "" + getUserInfoDto.getLike());
+                    userRecommendCount.setText("" + getUserInfoDto.getLike());
                 }
 
                 @Override
