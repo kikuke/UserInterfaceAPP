@@ -55,7 +55,6 @@ public class SearchedPostActivity extends AppCompatActivity {
         searchBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("my", "called", null);
                 FragmentManager manager = getSupportFragmentManager();
                 FragmentTransaction ft = manager.beginTransaction();
                 SearchedPostFragment fragment = new SearchedPostFragment(SearchedPostActivity.this, searchedText.getText().toString());

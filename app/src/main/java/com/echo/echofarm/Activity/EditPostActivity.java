@@ -155,7 +155,15 @@ public class EditPostActivity extends AppCompatActivity implements View.OnClickL
                         if (intent.getClipData() == null) {     // 이미지를 하나만 선택한 경우
                             Log.e("single choice: ", String.valueOf(intent.getData()));
                             Uri imageUri = intent.getData();
+
+                            // 첫 이미지 처리
+                            if(PhotoDataList.size() == 0) {
+                                Glide.with(this).load(imageUri).into(firstUploadBtn);
+                                firstUploadBtn.setPadding(0, 0, 0, 0);
+                                additionalUploadBtn.setVisibility(View.VISIBLE);
+                            }
                             PhotoDataList.add(new UploadedPhotoData(imageUri));
+
                         } else {
                             ClipData clipData = intent.getClipData();
 
