@@ -95,7 +95,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 newList.add(userService.getUserUid());
                                 userInfoDto.setLikedUser(newList);
 
-                                userService.sendUserDto(new SendUserDto(oppUserId, userInfoDto.getName(), userInfoDto.getLike()));
+                                userService.sendUserDto(new SendUserDto(oppUserId, userInfoDto.getName()));
                                 heart_filled_Image.setVisibility(View.VISIBLE);
                                 buttonFlag = true;
                             }
@@ -105,7 +105,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 newList.remove(userService.getUserUid());
                                 userInfoDto.setLikedUser(newList);
 
-                                userService.sendUserDto(new SendUserDto(oppUserId, userInfoDto.getName(), userInfoDto.getLike()));
+                                userService.sendUserDto(new SendUserDto(oppUserId, userInfoDto.getName()));
                                 heart_filled_Image.setVisibility(View.INVISIBLE);
                                 buttonFlag = false;
                             }
