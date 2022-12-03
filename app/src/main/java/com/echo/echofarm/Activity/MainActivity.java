@@ -21,13 +21,17 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.echo.echofarm.Data.Dto.GetChatResultDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Data.Dto.GetUserInfoDto;
 import com.echo.echofarm.Data.Dto.SendUserDto;
+import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.GetUserInfoDtoListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.ChatService;
 import com.echo.echofarm.Service.FcmService;
+import com.echo.echofarm.Service.Impl.ChatServiceImpl;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.PostService;
@@ -76,6 +80,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onFailed() {
                 System.out.println("Failed UserDto");
+            }
+        });
+
+        ChatService chatService = new ChatServiceImpl();
+        chatService.detectChat("123", "369", null, new GetChatDtoListener() {
+            @Override
+            public void onSuccess(GetChatResultDto getChatDtoResult) {
+                System.out.println(getChatDtoResult);
+            }
+
+            @Override
+            public void onFailed() {
+
             }
         });
 

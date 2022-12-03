@@ -16,12 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.echo.echofarm.Data.Dto.GetChatResultDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Data.Dto.GetUserInfoDto;
+import com.echo.echofarm.Data.Dto.SendChatDto;
 import com.echo.echofarm.Data.Dto.SendUserDto;
+import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.GetUserInfoDtoListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.ChatService;
+import com.echo.echofarm.Service.Impl.ChatServiceImpl;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.PostService;

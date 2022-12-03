@@ -8,4 +8,6 @@ public interface ChatService {
     void sendChat(String sender, String receiver, SendChatDto sendChatDto);
 
     void getChatList(String uid1, String uid2, String beforeChatId, GetChatDtoListener getChatDtoListener);
+
+    void detectChat(String uid1, String uid2, String beforeChatId, GetChatDtoListener getChatDtoListener);
 }
