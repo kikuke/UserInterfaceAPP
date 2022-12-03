@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.text.Html;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -49,10 +50,6 @@ public class ChattingActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_chatting);
 
-        // 액션바 제목
-        ActionBar actionBar = getSupportActionBar();
-        actionBar.setTitle(Html.fromHtml("<font color='#000'>홍석희</font>"));
-
 
         recyclerView = findViewById(R.id.chatting_recyclerView);
         sendingMessage = findViewById(R.id.sending_message_editText);
@@ -63,6 +60,12 @@ public class ChattingActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         String oppId = intent.getStringExtra("userId");
+        String postTitle = intent.getStringExtra("postTitle");
+
+
+        // 액션바 제목
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Html.fromHtml("<font color='#000'>"+ postTitle +"</font>"));
 
         list = new ArrayList<>();
         chatList = new ArrayList<>();
@@ -74,6 +77,24 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             public void onSuccess(GetChatResultDto getChatDtoResult) {
                 chatList = getChatDtoResult.getGetChatDtoList();
+
+                for(int i = 0; i < chatList.size(); i++) {
+                    int code = 0;
+
+                    if(chatList.get(i).getUid().equals(userService.getUserUid())) {
+                        code = 1;
+                    }
+                    ChattingData chattingData = new ChattingData(chatList.get(i).getMessage(), code);
+                    list.add(chattingData);
+                }
+
+                if(list.size() != 0) {
+                    ChattingDataAdapter adapter = new ChattingDataAdapter(ChattingActivity.this, list, "홍석희");
+                    recyclerView.setAdapter(adapter);
+                    if(list.size() >= 6) {
+                        getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+                    }
+                }
             }
 
             @Override
@@ -82,26 +103,11 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
 
-        for(int i = 0; i < chatList.size(); i++) {
-            int code = 0;
-
-            if(chatList.get(i).getUid().equals(userService.getUserUid())) {
-                code = 1;
-            }
-            ChattingData chattingData = new ChattingData(chatList.get(0).getMessage(), code);
-            list.add(chattingData);
-        }
-
-         if(list.size() != 0) {
-             ChattingDataAdapter adapter = new ChattingDataAdapter(this, list, "홍석희");
-             recyclerView.setAdapter(adapter);
-        }
 
         // 전송 버튼 클릭
         sendMessageButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Log.i("my", "onClick");
                 try {
                     if (!sendingMessage.getText().toString().equals("")) {
                         String message = sendingMessage.getText().toString();
@@ -109,11 +115,15 @@ public class ChattingActivity extends AppCompatActivity {
 
                         // 처음 채팅이라면 adapter 생성
                         if(list.size() == 1) {
-                            Log.i("my", "list size is 1");
                             adapter = new ChattingDataAdapter(ChattingActivity.this, list, "홍석희");
                             recyclerView.setAdapter(adapter);
                         } else {
-                            adapter.notifyItemRangeChanged(list.size() - 1, 1);
+                            adapter = new ChattingDataAdapter(ChattingActivity.this, list, "홍석희");
+                            recyclerView.setAdapter(adapter);
+                        }
+
+                        if(list.size() >= 6) {
+                            getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
                         }
 
                         recyclerView.scrollToPosition(list.size() - 1);

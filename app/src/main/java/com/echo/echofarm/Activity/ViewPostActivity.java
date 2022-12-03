@@ -53,6 +53,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     PostService postService;
     String postId;
     String userId;
+    String postTitle;
 
 
 
@@ -86,6 +87,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         Intent intent = getIntent();
         postId=intent.getStringExtra("postId");
         userId = intent.getStringExtra("userId");
+        postTitle = intent.getStringExtra("postTitle");
 
 
         postService.getPostDto(postId, new GetImgUrlListener() {
@@ -137,6 +139,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         else if(v==chatButton){
             Intent intent = new Intent(getApplicationContext(),ChattingActivity.class);
             intent.putExtra("userId", userId);
+            intent.putExtra("postTitle", postTitle);
             startActivity(intent);
         }
 

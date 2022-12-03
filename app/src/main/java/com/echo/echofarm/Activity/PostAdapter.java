@@ -75,6 +75,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     Intent intent = new Intent(context, ViewPostActivity.class);
                     intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
                     intent.putExtra("userId", postInfoArrayList.get(position).getId());
+                    intent.putExtra("postTitle", postInfoArrayList.get(position).getTitle());
                     context.startActivity(intent);
                 }
             });
@@ -85,6 +86,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     Intent intent = new Intent(context, ViewPostActivity.class);
                     intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
                     intent.putExtra("userId", postInfoArrayList.get(position).getId());
+                    intent.putExtra("postTitle", postInfoArrayList.get(position).getTitle());
                     context.startActivity(intent);
                 }
             });
