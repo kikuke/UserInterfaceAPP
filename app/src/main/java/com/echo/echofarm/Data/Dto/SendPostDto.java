@@ -16,6 +16,7 @@ public class SendPostDto {
     private String wantProduct; // List<String>
     private List<String> wantTag;
     private boolean allowOther;
+    private boolean complete;
 
     public SendPostDto(){}
 
@@ -29,6 +30,19 @@ public class SendPostDto {
         this.wantProduct = wantProduct;
         this.wantTag = wantTag;
         this.allowOther = allowOther;
+    }
+
+    public SendPostDto(String uid, String title, List<Uri> imgSrc, String contents, String ownProduct, List<String> ownTag, String wantProduct, List<String> wantTag, boolean allowOther, boolean complete) {
+        this.uid = uid;
+        this.title = title;
+        this.imgSrc = imgSrc;
+        this.contents = contents;
+        this.ownProduct = ownProduct;
+        this.ownTag = ownTag;
+        this.wantProduct = wantProduct;
+        this.wantTag = wantTag;
+        this.allowOther = allowOther;
+        this.complete = complete;
     }
 
     public String getUid() {
@@ -103,6 +117,13 @@ public class SendPostDto {
         this.allowOther = allowOther;
     }
 
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
 
     @Override
     public String toString() {
@@ -116,6 +137,7 @@ public class SendPostDto {
                 ", wantProduct='" + wantProduct + '\'' +
                 ", wantTag=" + wantTag +
                 ", allowOther=" + allowOther +
+                ", complete=" + complete +
                 '}';
     }
 }

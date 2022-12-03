@@ -17,10 +17,15 @@ import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.echo.echofarm.Data.Dto.GetPostListDto;
+import com.echo.echofarm.Data.Dto.GetUserInfoDto;
+import com.echo.echofarm.Data.Dto.SendUserDto;
 import com.echo.echofarm.Interface.GetPostInfoListener;
+import com.echo.echofarm.Interface.GetUserInfoDtoListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
+import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.PostService;
+import com.echo.echofarm.Service.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
