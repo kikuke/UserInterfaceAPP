@@ -121,7 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
-                            userService.sendUserDto(new SendUserDto(user.getUid(), "새로운 유저", 0));
+                            userService.sendUserDto(new SendUserDto(user.getUid(), "새로운 유저"));
 
                             //테스트 용으로 포스트만드는 인텐트로 이동.
                             Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);

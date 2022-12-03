@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         //User사용 예시
         UserService userService = new UserServiceImpl();
-        userService.sendUserDto(new SendUserDto("userUidTest", "userNameTest", 3));
+        userService.sendUserDto(new SendUserDto("userUidTest", "userNameTest"));
         userService.getUserInfoDto("userUidTest", new GetUserInfoDtoListener() {
             @Override
             public void onSuccess(GetUserInfoDto getUserInfoDto) {

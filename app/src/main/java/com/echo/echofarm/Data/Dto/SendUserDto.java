@@ -7,25 +7,20 @@ public class SendUserDto {
 
     private String uid;
     private String name;
-    private int like;
     private List<String> tags = new ArrayList<>();
-    private List<String> likeUser = new ArrayList<>();
     private List<String> likedUser= new ArrayList<>();
 
     public SendUserDto() {};
 
-    public SendUserDto(String uid, String name, int like) {
+    public SendUserDto(String uid, String name) {
         this.uid = uid;
         this.name = name;
-        this.like = like;
     }
 
-    public SendUserDto(String uid, String name, int like, List<String> tags, List<String> likeUser, List<String> likedUser) {
+    public SendUserDto(String uid, String name, List<String> tags, List<String> likedUser) {
         this.uid = uid;
         this.name = name;
-        this.like = like;
         this.tags = tags;
-        this.likeUser = likeUser;
         this.likedUser = likedUser;
     }
 
@@ -46,11 +41,7 @@ public class SendUserDto {
     }
 
     public int getLike() {
-        return like;
-    }
-
-    public void setLike(int like) {
-        this.like = like;
+        return likedUser.size();
     }
 
     public List<String> getTags() {
@@ -59,14 +50,6 @@ public class SendUserDto {
 
     public void setTags(List<String> tags) {
         this.tags = tags;
-    }
-
-    public List<String> getLikeUser() {
-        return likeUser;
-    }
-
-    public void setLikeUser(List<String> likeUser) {
-        this.likeUser = likeUser;
     }
 
     public List<String> getLikedUser() {
@@ -82,9 +65,7 @@ public class SendUserDto {
         return "User{" +
                 "uid='" + uid + '\'' +
                 ", name='" + name + '\'' +
-                ", like=" + like +
                 ", tags=" + tags +
-                ", likeUser=" + likeUser +
                 ", likedUser=" + likedUser +
                 '}';
     }
