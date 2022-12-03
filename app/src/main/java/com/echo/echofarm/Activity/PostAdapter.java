@@ -68,6 +68,19 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             title = itemView.findViewById(R.id.title_postLayout);
             tags = itemView.findViewById(R.id.tags_postLayout);
 
+            itemView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    int position = getAdapterPosition();
+                    Intent intent = new Intent(context, ViewPostActivity.class);
+                    intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
+                    intent.putExtra("userId", postInfoArrayList.get(position).getId());
+                    intent.putExtra("postTitle", postInfoArrayList.get(position).getTitle());
+                    context.startActivity(intent);
+                }
+            });
+
+            /*
             postImage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
@@ -90,7 +103,11 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     context.startActivity(intent);
                 }
             });
+
+             */
         }
+
+
 
     }
 }

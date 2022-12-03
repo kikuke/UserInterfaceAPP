@@ -3,16 +3,20 @@ package com.echo.echofarm.Activity;
 import static com.echo.echofarm.Activity.TagSettingActivity.separateString;
 
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.text.Html;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
+import android.widget.FrameLayout;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.echo.echofarm.R;
@@ -28,20 +32,29 @@ public class UserProfileActivity extends AppCompatActivity {
     private ArrayList<ArrayList<String>> list;
     private final int RESULT_TAG_SETTING = 0;
     private ImageButton userRecommendImageButton;
+    private Button tagSettingButton;
     private TextView userRecommendCount;
     private String oppUserId;
+    private RelativeLayout tagSettingLayout;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_user_profile);
 
+        // 액션바 제목
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Html.fromHtml("<font color='#000'>프로필</font>"));
+
         userRecommendImageButton = findViewById(R.id.user_recommend_button);
         userRecommendCount = findViewById(R.id.user_recommend_info);
+        tagSettingButton = findViewById(R.id.tag_setting_button);
+        tagSettingLayout = findViewById(R.id.tag_setting_layout);
 
         Intent intent = getIntent();
         if(!TextUtils.isEmpty(intent.getStringExtra("oppUserId"))) {
             oppUserId = intent.getStringExtra("oppUserId");
+            tagSettingLayout.setVisibility(View.GONE);
             UserService userService = new UserServiceImpl();
 
             // if user recommend list 에 상대방 아이디가 없다면
@@ -73,8 +86,7 @@ public class UserProfileActivity extends AppCompatActivity {
         TagAdapter tagAdapter = new TagAdapter(this, list, 0);
         recyclerView.setAdapter(tagAdapter);
 
-        Button button = findViewById(R.id.tag_setting_button);
-        button.setOnClickListener(new View.OnClickListener() {
+        tagSettingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(UserProfileActivity.this, TagSettingActivity.class);
