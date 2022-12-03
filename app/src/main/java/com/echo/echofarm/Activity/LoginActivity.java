@@ -43,6 +43,7 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
+    private UserService userService;
 
     EditText editID;
     EditText editPW;
@@ -54,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        userService = new UserServiceImpl();
 
         setContentView(R.layout.activity_login);
 
@@ -119,6 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+                            userService.sendUserDto(new SendUserDto(user.getUid(), "새로운 유저", 0));
 
                             //테스트 용으로 포스트만드는 인텐트로 이동.
                             Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);
