@@ -26,8 +26,6 @@ public class ChattingDataAdapter extends RecyclerView.Adapter<ChattingDataAdapte
         this.context = context;
         this.chattingDataArrayList = chattingDataArrayList;
         this.opponentName = opponentName;
-
-        Log.i("my", "size : " + chattingDataArrayList.size(), null);
     }
 
     @NonNull

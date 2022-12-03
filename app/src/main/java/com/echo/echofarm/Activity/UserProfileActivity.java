@@ -29,6 +29,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private final int RESULT_TAG_SETTING = 0;
     private ImageButton userRecommendImageButton;
     private TextView userRecommendCount;
+    private String oppUserId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,8 +41,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         if(!TextUtils.isEmpty(intent.getStringExtra("oppUserId"))) {
+            oppUserId = intent.getStringExtra("oppUserId");
             UserService userService = new UserServiceImpl();
-            //String myId = userService.GetUserUid();
 
             // if user recommend list 에 상대방 아이디가 없다면
             userRecommendImageButton.setImageResource(R.drawable.heart_empty);

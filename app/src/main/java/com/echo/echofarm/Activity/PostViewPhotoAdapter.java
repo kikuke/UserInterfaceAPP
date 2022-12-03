@@ -10,6 +10,7 @@ import android.widget.ImageView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.bumptech.glide.Glide;
 import com.echo.echofarm.R;
 
 import java.util.ArrayList;
@@ -35,7 +36,8 @@ public class PostViewPhotoAdapter extends RecyclerView.Adapter<PostViewPhotoAdap
 
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
-        holder.imageView.setImageURI(listData.get(position));
+        //holder.imageView.setImageURI(listData.get(position));
+        Glide.with(context).load(listData.get(position)).into(holder.imageView);
     }
 
     @Override

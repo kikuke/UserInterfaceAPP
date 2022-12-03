@@ -33,11 +33,14 @@ import java.util.List;
 
 public class SearchedPostFragment extends Fragment {
 
-    Context context;
-    String tag;
-    ArrayList<PostInfo> postInfoArrayList;
-    RecyclerView recyclerView;
-    RecyclerView.LayoutManager layoutManager;
+    private Context context;
+    private String tag;
+    private ArrayList<PostInfo> postInfoArrayList;
+    private RecyclerView recyclerView;
+    private RecyclerView.LayoutManager layoutManager;
+    private PostService postService;
+    private GetPostListDto getPostListDto;
+    private PostAdapter adapter;
 
     public SearchedPostFragment(Context context, String tag) {
         super();
@@ -59,19 +62,54 @@ public class SearchedPostFragment extends Fragment {
         layoutManager = new LinearLayoutManager(getActivity());
         recyclerView.setLayoutManager(layoutManager);
 
-        PostService  postService = new PostServiceImpl();
-        GetPostListDto getPostListDto = new GetPostListDto(null, null, null, Arrays.asList(tag), null, null, null);
+        postService = new PostServiceImpl();
+        getPostListDto = new GetPostListDto(null, null, null, Arrays.asList(tag), null, null, null);
 
         postInfoArrayList = new ArrayList<>();
 
+        getTagData(null);
+
+        if(postInfoArrayList.size() != 0 && postInfoArrayList.size() < 5) {
+            Log.i("my", "size is " + postInfoArrayList.size());
+            getTagData(postInfoArrayList.get(postInfoArrayList.size()-1).getPostId());
+        }
+
         Log.i("my", "onCreateView tag : " + tag, null);
-        postService.getPostList(getPostListDto, null, 3, postInfoArrayList, new GetPostInfoListener() {
+    }
+
+    private int countIter;
+    private boolean isFirstTime = true;
+
+    private void getTagData(String beforeId) {
+
+        int beforeSize = postInfoArrayList.size();
+        countIter = beforeSize;
+
+        postService.getPostList(getPostListDto, beforeId, 5, postInfoArrayList, new GetPostInfoListener() {
             @Override
             public void onSuccess(PostInfo postInfo) {
-                Log.i("my", "onSuccess", null);
-                PostAdapter adapter = new PostAdapter(context ,postInfoArrayList);
-                Log.i("my", "size : " + postInfoArrayList.size(), null);
-                recyclerView.setAdapter(adapter);
+                if(beforeId == null) {
+                    Log.i("my", "onSuccess", null);
+                    adapter = new PostAdapter(context, postInfoArrayList);
+                    Log.i("my", "size : " + postInfoArrayList.size(), null);
+                    recyclerView.setAdapter(adapter);
+                    countIter++;
+                    Log.i("my", "countIter : " + countIter, null);
+                } else {
+                    adapter.notifyItemRangeChanged(beforeSize, postInfoArrayList.size() - beforeSize);
+                    countIter++;
+                    Log.i("my", "not null post size : " + postInfoArrayList.size(), null);
+                }
+
+
+                if(countIter == postInfoArrayList.size()  && postInfoArrayList.size() < 5) {
+                    Log.i("my", "Iter called", null);
+                    getTagData(postInfoArrayList.get(postInfoArrayList.size()-1).getPostId());
+                }
+
+                if(postInfoArrayList.size() >= 5) {
+                    setListener();
+                }
             }
 
             @Override
@@ -79,37 +117,27 @@ public class SearchedPostFragment extends Fragment {
 
             }
         });
+    }
 
-        /*
-        recyclerView.setOnScrollChangeListener(new RecyclerView.OnScrollChangeListener() {
-            @Override
-            public void onScrollChange(View view, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
-                LinearLayoutManager layoutManager =
-                        LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
-                int totalItemCount = layoutManager.getItemCount();
-                int lastVisible = layoutManager.findLastCompletelyVisibleItemPosition();
+    private void setListener() {
+        if(isFirstTime) {
+            recyclerView.setOnScrollChangeListener(new RecyclerView.OnScrollChangeListener() {
+                @Override
+                public void onScrollChange(View view, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
+                    LinearLayoutManager layoutManager =
+                            LinearLayoutManager.class.cast(recyclerView.getLayoutManager());
+                    int totalItemCount = layoutManager.getItemCount();
+                    int lastVisible = layoutManager.findLastCompletelyVisibleItemPosition();
 
-                // 스크롤의 끝
-                if (lastVisible >= totalItemCount - 1) {
-                    String beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId();
-                    postInfoArrayList = new ArrayList<>();
-
-                    postService.getPostList(getPostListDto, beforeId, 2, postInfoArrayList, new GetPostInfoListener() {
-                        @Override
-                        public void onSuccess(PostInfo postInfo) {
-                            PostAdapter adapter = new PostAdapter(context ,postInfoArrayList);
-                            recyclerView.setAdapter(adapter);
-                        }
-
-                        @Override
-                        public void onFailed() {
-
-                        }
-                    });
+                    // 스크롤의 끝
+                    if ((lastVisible == totalItemCount - 1)) {
+                        Log.i("my", "scroll called, lastVisivle : " + lastVisible + ", total Item count -1 : " + totalItemCount, null);
+                        String beforeId = postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId();
+                        getTagData(beforeId);
+                    }
                 }
-            }
-        });
-
-         */
+            });
+        }
+        isFirstTime = false;
     }
 }

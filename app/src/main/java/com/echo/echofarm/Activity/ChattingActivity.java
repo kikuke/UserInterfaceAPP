@@ -1,5 +1,7 @@
 package com.echo.echofarm.Activity;
 
+import static androidx.constraintlayout.helper.widget.MotionEffect.TAG;
+
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -8,6 +10,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.os.Bundle;
 import android.text.Html;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -22,7 +25,9 @@ import com.echo.echofarm.Service.ChatService;
 import com.echo.echofarm.Service.Impl.ChatServiceImpl;
 import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.UserService;
+import com.google.android.material.tabs.TabLayout;
 
+import org.checkerframework.checker.units.qual.A;
 import org.checkerframework.checker.units.qual.C;
 
 import java.util.ArrayList;
@@ -34,6 +39,7 @@ public class ChattingActivity extends AppCompatActivity {
     private EditText sendingMessage;
     private Button sendMessageButton;
     private ArrayList<ChattingData> list;
+    private ChattingDataAdapter adapter;
 
 
     private List<GetChatDto> chatList;
@@ -56,39 +62,15 @@ public class ChattingActivity extends AppCompatActivity {
         UserService userService = new UserServiceImpl();
 
         Intent intent = getIntent();
-        String oppId = intent.getStringExtra("oppId");
+        String oppId = intent.getStringExtra("userId");
 
-        sendMessageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                try {
-                    if (!sendingMessage.getText().toString().equals("")) {
-                        String message = sendingMessage.getText().toString();
-                        list.add(new ChattingData(message, 1));
-                        ChattingDataAdapter adapter = new ChattingDataAdapter(ChattingActivity.this, list, "홍석희");
-                        recyclerView.setAdapter(adapter);
-
-                        recyclerView.scrollToPosition(list.size() - 1);
-                        sendingMessage.setText("");
-
-                        // send message info to server
-                        chatService.sendChat(userService.getUserUid(), oppId, new SendChatDto(message));
-                    }
-                } catch (Exception e) {
-                    Toast.makeText(ChattingActivity.this, "메세지만 입력 가능합니다.", Toast.LENGTH_SHORT);
-                }
-            }
-        });
-
-
-        chatService.sendChat(userService.getUserUid(), oppId, new SendChatDto("123"));
-
+        list = new ArrayList<>();
         chatList = new ArrayList<>();
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
 
-        chatService.getChatList(userService.getUserUid(), "oppId", null, new GetChatDtoListener() {
+        chatService.getChatList(userService.getUserUid(), oppId, null, new GetChatDtoListener() {
             @Override
             public void onSuccess(GetChatResultDto getChatDtoResult) {
                 chatList = getChatDtoResult.getGetChatDtoList();
@@ -110,27 +92,40 @@ public class ChattingActivity extends AppCompatActivity {
             list.add(chattingData);
         }
 
-        /*
-        ArrayList<String> chatting = new ArrayList<>();
-        chatting.add("내 채팅1");
-        chatting.add("내 채팅2");
-        chatting.add("상대 채팅 1");
-        chatting.add("상대 채팅 2");
-        chatting.add("내 채팅 3");
+         if(list.size() != 0) {
+             ChattingDataAdapter adapter = new ChattingDataAdapter(this, list, "홍석희");
+             recyclerView.setAdapter(adapter);
+        }
 
-        ArrayList<Integer> code = new ArrayList<>();
-        code.add(1);
-        code.add(1);
-        code.add(0);
-        code.add(0);
-        code.add(1);
+        // 전송 버튼 클릭
+        sendMessageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Log.i("my", "onClick");
+                try {
+                    if (!sendingMessage.getText().toString().equals("")) {
+                        String message = sendingMessage.getText().toString();
+                        list.add(new ChattingData(message, 1));
 
-        list = new ArrayList<>();
-        for(int i = 0; i < 5; i++)
-            list.add(new ChattingData(chatting.get(i), code.get(i)));
-         */
+                        // 처음 채팅이라면 adapter 생성
+                        if(list.size() == 1) {
+                            Log.i("my", "list size is 1");
+                            adapter = new ChattingDataAdapter(ChattingActivity.this, list, "홍석희");
+                            recyclerView.setAdapter(adapter);
+                        } else {
+                            adapter.notifyItemRangeChanged(list.size() - 1, 1);
+                        }
 
-        ChattingDataAdapter adapter = new ChattingDataAdapter(this, list, "홍석희");
-        recyclerView.setAdapter(adapter);
+                        recyclerView.scrollToPosition(list.size() - 1);
+                        sendingMessage.setText("");
+
+                        // send message info to server
+                        chatService.sendChat(userService.getUserUid(), oppId, new SendChatDto(message));
+                   }
+                } catch (Exception e) {
+                    Toast.makeText(ChattingActivity.this, "메세지만 입력 가능합니다.", Toast.LENGTH_SHORT);
+                }
+            }
+        });
     }
 }
