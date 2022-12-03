@@ -7,9 +7,9 @@ public class GetUserInfoDto {
 
     private String uid;
     private String name;
-    private int like;
+    private int like;//이거 지우고 사이즈 반환하기
     private List<String> tags = new ArrayList<>();
-    private List<String> likeUser = new ArrayList<>();
+    private List<String> likeUser = new ArrayList<>();//이건 필요없는것.지우기
     private List<String> likedUser= new ArrayList<>();
 
     public GetUserInfoDto() {};

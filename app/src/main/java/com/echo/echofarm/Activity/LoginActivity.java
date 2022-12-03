@@ -16,12 +16,17 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.echo.echofarm.Data.Dto.GetChatResultDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Data.Dto.GetUserInfoDto;
+import com.echo.echofarm.Data.Dto.SendChatDto;
 import com.echo.echofarm.Data.Dto.SendUserDto;
+import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.GetUserInfoDtoListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.ChatService;
+import com.echo.echofarm.Service.Impl.ChatServiceImpl;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.PostService;
@@ -38,6 +43,7 @@ import java.util.List;
 public class LoginActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
+    private UserService userService;
 
     EditText editID;
     EditText editPW;
@@ -49,6 +55,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         mAuth = FirebaseAuth.getInstance();
+        userService = new UserServiceImpl();
 
         setContentView(R.layout.activity_login);
 
@@ -114,6 +121,7 @@ public class LoginActivity extends AppCompatActivity implements View.OnClickList
                                     Toast.LENGTH_SHORT).show();
                             FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);
+                            userService.sendUserDto(new SendUserDto(user.getUid(), "새로운 유저", 0));
 
                             //테스트 용으로 포스트만드는 인텐트로 이동.
                             Intent mainActivity = new Intent(LoginActivity.this, MainActivity.class);

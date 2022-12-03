@@ -1,5 +1,6 @@
 package com.echo.echofarm.Activity;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.widget.NestedScrollView;
@@ -21,18 +22,25 @@ import android.widget.ImageButton;
 import android.widget.ProgressBar;
 import android.widget.Toast;
 
+import com.echo.echofarm.Data.Dto.GetChatResultDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Data.Dto.GetUserInfoDto;
 import com.echo.echofarm.Data.Dto.SendUserDto;
+import com.echo.echofarm.Interface.GetChatDtoListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.Interface.GetUserInfoDtoListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.ChatService;
 import com.echo.echofarm.Service.FcmService;
+import com.echo.echofarm.Service.Impl.ChatServiceImpl;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.PostService;
 import com.echo.echofarm.Service.PushUpdateService;
 import com.echo.echofarm.Service.UserService;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -63,6 +71,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        Log.d(TAG, "User UID: "+ userService.getUserUid(), null);
+        //FCM토큰 확인
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+                        String token = task.getResult();
+                        Log.d(TAG, "FCM Token: "+ token);
+                    }
+                });
+
 
         //User사용 예시
         UserService userService = new UserServiceImpl();
@@ -79,25 +102,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        // 채팅 수신
-        /*
-        fcmService.subscribeTopic("user_" + userService.getUserUid());
-        ComponentName componentName = new ComponentName(this, PushUpdateService.class);
-        JobInfo info = new JobInfo.Builder(999, componentName)
-                .setRequiresCharging(false)
-                .setRequiresDeviceIdle(false)
-                .setRequiredNetworkType(JobInfo.NETWORK_TYPE_ANY)
-                .setPersisted(true)
-                .setPeriodic(5 * 60 * 1000)//5분간격 실행
-                .build();
-        JobScheduler jobScheduler = (JobScheduler) getSystemService(JOB_SCHEDULER_SERVICE);
-        int resultCode = jobScheduler.schedule(info);
-        if(resultCode == jobScheduler.RESULT_SUCCESS){
-            Log.d(TAG, "푸시업데이트 서비스 실행");
-        } else {
-            Log.d(TAG, "푸시업데이트 서비스 실패");
-        }
-        */
+        ChatService chatService = new ChatServiceImpl();
+        chatService.detectChat("123", "369", null, new GetChatDtoListener() {
+            @Override
+            public void onSuccess(GetChatResultDto getChatDtoResult) {
+                System.out.println(getChatDtoResult);
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
 
         // 액션바 제목
         ActionBar actionBar = getSupportActionBar();
