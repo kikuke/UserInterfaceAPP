@@ -23,6 +23,7 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.echo.echofarm.Data.Dto.GetChatResultDto;
+import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Data.Dto.GetUserInfoDto;
 import com.echo.echofarm.Data.Dto.SendUserDto;
@@ -63,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private FcmService fcmService = new FcmService();
     private int postCount = 0;
     private int checkPositionBefore = 0;
+    private ArrayList<String> tagList;
 
     public MainActivity() {
     }
@@ -134,8 +136,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         morePostBtn = findViewById(R.id.idBtn);
         postInfoArrayList = new ArrayList<>();
 
+        // userService.getTagList
+        // getData(null, tagList);
 
-        getData(null); // 화면에 뿌릴 초기 데이터
+        getData(null, tagList); // 화면에 뿌릴 초기 데이터
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -158,10 +162,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else if (checkPositionBefore != scrollY && (scrollY == v.getChildAt(0).getMeasuredHeight() - v.getMeasuredHeight())) {
                     checkPositionBefore = scrollY + 126;
                     Log.i("my", checkPositionBefore + "", null);
-                    loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
 
+                    if(postInfoArrayList.get(postInfoArrayList.size() - 1) == null) return;
+
+                    loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
                     // 데이터 불러옴
-                    getData(postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId());
+                    getData(postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId(), null);
                 }
             }
         });
@@ -178,17 +184,55 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void getData(String beforeId) {
+    private void getData(String beforeId, ArrayList<String> tagList) {
+        if(tagList != null) {
+            for(String tag : tagList) {
+                GetPostListDto getTagPostListDto = new GetPostListDto(null, null, null, tagList, null, null, null);
+                postService.getPostList(getTagPostListDto, null, 30, postInfoArrayList, new GetPostInfoListener() {
+                    @Override
+                    public void onSuccess(PostInfo postInfo) {
+                        if(postInfo == null) {
+                            Log.i("my", "null post");
+                            return;
+                        }
+
+                        postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
+                        recyclerView.setAdapter(postAdapter);
+                        postCount++;
+                        Log.i("my", "success " + postCount);
+                    }
+
+                    @Override
+                    public void onFailed() {
+                        loadingPB.setVisibility(View.GONE);
+                        morePostBtn.setVisibility(View.VISIBLE);
+                        morePostBtn.setOnClickListener(new View.OnClickListener() {
+                            @Override
+                            public void onClick(View view) {
+                                startActivity(new Intent(MainActivity.this, SearchedPostActivity.class));
+                            }
+                        });
+                        Log.i("my", "failed", null);
+                    }
+                });
+            }
+            return;
+        }
 
         if(beforeId == null) {
             Log.i("my", "null", null);
-            postService.getPostList(getPostListDto, null, 5, postInfoArrayList, new GetPostInfoListener() {
+            postService.getPostList(getPostListDto, null, 30, postInfoArrayList, new GetPostInfoListener() {
                 @Override
                 public void onSuccess(PostInfo postInfo) {
-                    Log.i("my", "Success", null);
+                    if(postInfo == null) {
+                        Log.i("my", "null post");
+                        return;
+                    }
+                    // 중복제거
                     postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                     recyclerView.setAdapter(postAdapter);
                     postCount++;
+                    Log.i("my", "success " + postCount);
                 }
 
                 @Override
@@ -210,10 +254,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             Log.i("my", "beforeId : " + beforeId + " , arrSize : " + postInfoArrayList.size(), null);
 
-            postService.getPostList(getPostListDto, beforeId, 3, postInfoArrayList, new GetPostInfoListener() {
+            postService.getPostList(getPostListDto, beforeId, 30, postInfoArrayList, new GetPostInfoListener() {
                 @Override
                 public void onSuccess(PostInfo postInfo) {
+                    if(postInfo == null) {
+                        postAdapter.notifyItemRangeChanged(beforePostCount, postCount - beforePostCount);
+                        Log.i("my", "null post");
+                        return;
+                    }
+
                     postCount++;
+                    Log.i("my", "success " + postCount);
                     if(beforePostCount + 3 == postCount) {
                         postAdapter.notifyItemRangeChanged(beforePostCount, 3);
                     }

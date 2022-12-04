@@ -85,7 +85,7 @@ public class SearchedPostFragment extends Fragment {
         int beforeSize = postInfoArrayList.size();
         countIter = beforeSize;
 
-        postService.getPostList(getPostListDto, beforeId, 5, postInfoArrayList, new GetPostInfoListener() {
+        postService.getPostList(getPostListDto, beforeId, 100, postInfoArrayList, new GetPostInfoListener() {
             @Override
             public void onSuccess(PostInfo postInfo) {
                 if(beforeId == null) {

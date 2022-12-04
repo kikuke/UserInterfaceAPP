@@ -17,7 +17,11 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.echo.echofarm.Data.Dto.GetUserInfoDto;
+import com.echo.echofarm.Interface.GetUserInfoDtoListener;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.Impl.UserServiceImpl;
+import com.echo.echofarm.Service.UserService;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,6 +33,9 @@ public class TagSettingActivity extends AppCompatActivity {
     private RecyclerView recyclerView;
     private Button addTagButton;
     private EditText inputTag;
+    private UserService userService;
+    private GetUserInfoDto userInfoDto;
+    private String userId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,6 +53,30 @@ public class TagSettingActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Html.fromHtml("<font color='#000'>태그 설정</font>"));
 
+
+        userService = new UserServiceImpl();
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("UserId");
+        userService.getUserInfoDto(userId, new GetUserInfoDtoListener() {
+            @Override
+            public void onSuccess(GetUserInfoDto getUserInfoDto) {
+                userInfoDto = getUserInfoDto;
+
+                list = new ArrayList<>();
+
+                ArrayList<String> s = (ArrayList<String>) userInfoDto.getTags();
+
+                separateString(s, list);
+
+                TagAdapter tagAdapter = new TagAdapter(TagSettingActivity.this, list, userId, 1);
+                recyclerView.setAdapter(tagAdapter);
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
 
         addTagButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -92,16 +123,6 @@ public class TagSettingActivity extends AppCompatActivity {
         });
 
 
-        list = new ArrayList<>();
-
-        ArrayList<String> s = new ArrayList<>(Arrays.asList("한글", "둖ㄷㄴ훋ㄴ", "나이키"
-                , "일이삼사오육칠팔구십일이삼사오육", "아디다스",
-                "일이삼사오육칠팔구십일이삼사오"));
-
-        separateString(s, list);
-
-        TagAdapter tagAdapter = new TagAdapter(this, list, 1);
-        recyclerView.setAdapter(tagAdapter);
 
     }
 
@@ -117,7 +138,7 @@ public class TagSettingActivity extends AppCompatActivity {
         list = new ArrayList<>();
         separateString(slist, list);
 
-        TagAdapter tagAdapter = new TagAdapter(this, list, 1);
+        TagAdapter tagAdapter = new TagAdapter(this, list, userId,1);
         recyclerView = findViewById(R.id.setting_tag_recyclerview);
         recyclerView.setAdapter(tagAdapter);
     }
@@ -167,6 +188,7 @@ public class TagSettingActivity extends AppCompatActivity {
     }
 
     private void addTag(String addedTag) {
+        userService.addUserTag(userInfoDto, addedTag);
         inputTag.setText("");
 
         ArrayList<String> slist = new ArrayList<>();
@@ -179,7 +201,7 @@ public class TagSettingActivity extends AppCompatActivity {
         list = new ArrayList<>();
         separateString(slist, list);
 
-        TagAdapter tagAdapter = new TagAdapter(this, list, 1);
+        TagAdapter tagAdapter = new TagAdapter(this, list, userId,1);
         recyclerView = findViewById(R.id.setting_tag_recyclerview);
         recyclerView.setAdapter(tagAdapter);
     }
