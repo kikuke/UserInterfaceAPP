@@ -101,6 +101,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 Log.i("my", "recommend clicked");
                                 newList.add(userService.getUserUid());
                                 userInfoDto.setLikedUser(newList);
+                                userRecommendCount.setText(""+userInfoDto.getLike());
 
                                 userService.sendUserDto(new SendUserDto(userId, userInfoDto.getName()));
                                 heart_filled_Image.setVisibility(View.VISIBLE);
@@ -111,6 +112,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 Log.i("my", "cancel recommend clicked");
                                 newList.remove(userService.getUserUid());
                                 userInfoDto.setLikedUser(newList);
+                                userRecommendCount.setText(""+userInfoDto.getLike());
 
                                 userService.sendUserDto(new SendUserDto(userId, userInfoDto.getName()));
                                 heart_filled_Image.setVisibility(View.INVISIBLE);
@@ -192,5 +194,13 @@ public class UserProfileActivity extends AppCompatActivity {
             TagAdapter tagAdapter = new TagAdapter(this, list, userId, 0);
             recyclerView.setAdapter(tagAdapter);
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(this, MainActivity.class);
+        intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+        startActivity(intent);
+        super.onBackPressed();
     }
 }

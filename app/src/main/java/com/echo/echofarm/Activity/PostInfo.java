@@ -2,6 +2,8 @@ package com.echo.echofarm.Activity;
 
 import android.net.Uri;
 
+import androidx.annotation.Nullable;
+
 public class PostInfo {
 
     private String postId;
@@ -42,5 +44,19 @@ public class PostInfo {
                 ", tags='" + tags + '\'' +
                 ", imageUri=" + imageUri +
                 '}';
+    }
+
+    @Override
+    public int hashCode() {
+        return postId.hashCode();
+    }
+
+    @Override
+    public boolean equals(@Nullable Object obj) {
+        if(obj instanceof PostInfo) {
+            PostInfo temp = (PostInfo) obj;
+            return temp.postId.equals(this.postId);
+        }
+        return false;
     }
 }

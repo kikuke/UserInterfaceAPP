@@ -45,6 +45,8 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashSet;
+import java.util.LinkedHashSet;
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -136,10 +138,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         morePostBtn = findViewById(R.id.idBtn);
         postInfoArrayList = new ArrayList<>();
 
-        // userService.getTagList
-        // getData(null, tagList);
 
-        getData(null, tagList); // 화면에 뿌릴 초기 데이터
+        postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
+        recyclerView.setAdapter(postAdapter);
+
+        userService.getUserInfoDto(userService.getUserUid(), new GetUserInfoDtoListener() {
+            @Override
+            public void onSuccess(GetUserInfoDto getUserInfoDto) {
+                tagList = (ArrayList<String>) getUserInfoDto.getTags();
+                if(tagList.size() != 0) {
+
+                    getData(null, tagList);
+                    Log.i("my", "tag size is not 0");
+
+                }
+                else {
+                    getData(null, null);
+                    Log.i("my", "tag size is 0");
+
+                }
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
+
 
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
@@ -187,7 +212,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void getData(String beforeId, ArrayList<String> tagList) {
         if(tagList != null) {
             for(String tag : tagList) {
-                GetPostListDto getTagPostListDto = new GetPostListDto(null, null, null, tagList, null, null, null);
+                GetPostListDto getTagPostListDto = new GetPostListDto(null, null, null, Arrays.asList(tag), null, null, null);
                 postService.getPostList(getTagPostListDto, null, 30, postInfoArrayList, new GetPostInfoListener() {
                     @Override
                     public void onSuccess(PostInfo postInfo) {
@@ -200,6 +225,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         recyclerView.setAdapter(postAdapter);
                         postCount++;
                         Log.i("my", "success " + postCount);
+                        if(postInfoArrayList.size() == postCount)
+                            getData(null, null);
                     }
 
                     @Override
@@ -219,72 +246,49 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             return;
         }
 
-        if(beforeId == null) {
-            Log.i("my", "null", null);
-            postService.getPostList(getPostListDto, null, 30, postInfoArrayList, new GetPostInfoListener() {
-                @Override
-                public void onSuccess(PostInfo postInfo) {
-                    if(postInfo == null) {
-                        Log.i("my", "null post");
-                        return;
-                    }
-                    // 중복제거
+
+
+        int beforePostCount = postCount;
+
+        Log.i("my", "beforeId : " + beforeId + " , arrSize : " + postInfoArrayList.size(), null);
+
+        postService.getPostList(getPostListDto, beforeId, 30, postInfoArrayList, new GetPostInfoListener() {
+            @Override
+            public void onSuccess(PostInfo postInfo) {
+                if(postInfo == null) {
+                    postAdapter.notifyItemRangeChanged(beforePostCount, postCount - beforePostCount);
+                    Log.i("my", "null post");
+                    return;
+                }
+
+                postCount++;
+                Log.i("my", "success " + postCount);
+                if(postInfoArrayList.size() == postCount) {
+                    Log.i("my", "before size : " + postInfoArrayList.size());
+                    LinkedHashSet<PostInfo> set = new LinkedHashSet<>(postInfoArrayList);
+                    postInfoArrayList.clear();
+                    postInfoArrayList.addAll(set);
+                    Log.i("my", "after size : " + postInfoArrayList.size());
+                    postCount = postInfoArrayList.size();
+
                     postAdapter = new PostAdapter(MainActivity.this, postInfoArrayList);
                     recyclerView.setAdapter(postAdapter);
-                    postCount++;
-                    Log.i("my", "success " + postCount);
                 }
+            }
 
-                @Override
-                public void onFailed() {
-                    loadingPB.setVisibility(View.GONE);
-                    morePostBtn.setVisibility(View.VISIBLE);
-                    morePostBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(MainActivity.this, SearchedPostActivity.class));
-                        }
-                    });
-                    Log.i("my", "failed", null);
-                }
-            });
-        } else {
-
-            int beforePostCount = postCount;
-
-            Log.i("my", "beforeId : " + beforeId + " , arrSize : " + postInfoArrayList.size(), null);
-
-            postService.getPostList(getPostListDto, beforeId, 30, postInfoArrayList, new GetPostInfoListener() {
-                @Override
-                public void onSuccess(PostInfo postInfo) {
-                    if(postInfo == null) {
-                        postAdapter.notifyItemRangeChanged(beforePostCount, postCount - beforePostCount);
-                        Log.i("my", "null post");
-                        return;
+            @Override
+            public void onFailed() {
+                loadingPB.setVisibility(View.GONE);
+                morePostBtn.setVisibility(View.VISIBLE);
+                morePostBtn.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(MainActivity.this, SearchedPostActivity.class));
                     }
-
-                    postCount++;
-                    Log.i("my", "success " + postCount);
-                    if(beforePostCount + 3 == postCount) {
-                        postAdapter.notifyItemRangeChanged(beforePostCount, 3);
-                    }
-                }
-
-                @Override
-                public void onFailed() {
-                    loadingPB.setVisibility(View.GONE);
-                    morePostBtn.setVisibility(View.VISIBLE);
-                    morePostBtn.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View view) {
-                            startActivity(new Intent(MainActivity.this, SearchedPostActivity.class));
-                        }
-                    });
-                    Log.i("my", "failed", null);
-                }
-            });
-        }
-
+                });
+                Log.i("my", "failed", null);
+            }
+        });
     }
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
