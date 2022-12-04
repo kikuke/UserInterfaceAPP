@@ -42,7 +42,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private ImageView heart_filled_Image;
     private Button tagSettingButton;
     private TextView userRecommendCount;
-    private String oppUserId;
+    private String userId;
     private RelativeLayout tagSettingLayout;
     private GetUserInfoDto userInfoDto;
     private boolean buttonFlag = true;
@@ -70,9 +70,9 @@ public class UserProfileActivity extends AppCompatActivity {
         // 상대 프로필
         if(!TextUtils.isEmpty(intent.getStringExtra("oppUserId"))
                     && !userService.getUserUid().equals(intent.getStringExtra("oppUserId"))) {
-            oppUserId = intent.getStringExtra("oppUserId");
+            userId = intent.getStringExtra("oppUserId");
 
-            userService.getUserInfoDto(oppUserId, new GetUserInfoDtoListener() {
+            userService.getUserInfoDto(userId, new GetUserInfoDtoListener() {
                 @Override
                 public void onSuccess(GetUserInfoDto getUserInfoDto) {
                     userInfoDto = getUserInfoDto;
@@ -83,6 +83,13 @@ public class UserProfileActivity extends AppCompatActivity {
                         heart_filled_Image.setVisibility(View.INVISIBLE);
                         buttonFlag = false;
                     }
+
+                    ArrayList<String> s = (ArrayList<String>) userInfoDto.getTags();
+
+                    separateString(s, list);
+
+                    TagAdapter tagAdapter = new TagAdapter(UserProfileActivity.this, list, userId,0);
+                    recyclerView.setAdapter(tagAdapter);
 
                     // 상대 프로필일때만 클릭 리스너 작동
                     userRecommendBtn.setOnClickListener(new View.OnClickListener() {
@@ -95,7 +102,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 newList.add(userService.getUserUid());
                                 userInfoDto.setLikedUser(newList);
 
-                                userService.sendUserDto(new SendUserDto(oppUserId, userInfoDto.getName()));
+                                userService.sendUserDto(new SendUserDto(userId, userInfoDto.getName()));
                                 heart_filled_Image.setVisibility(View.VISIBLE);
                                 buttonFlag = true;
                             }
@@ -105,7 +112,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                 newList.remove(userService.getUserUid());
                                 userInfoDto.setLikedUser(newList);
 
-                                userService.sendUserDto(new SendUserDto(oppUserId, userInfoDto.getName()));
+                                userService.sendUserDto(new SendUserDto(userId, userInfoDto.getName()));
                                 heart_filled_Image.setVisibility(View.INVISIBLE);
                                 buttonFlag = false;
                             }
@@ -122,11 +129,20 @@ public class UserProfileActivity extends AppCompatActivity {
         }
         // 내 프로필
         else {
-            userService.getUserInfoDto(userService.getUserUid(), new GetUserInfoDtoListener() {
+            userId = userService.getUserUid();
+            userService.getUserInfoDto(userId, new GetUserInfoDtoListener() {
                 @Override
                 public void onSuccess(GetUserInfoDto getUserInfoDto) {
                     Log.e("", "" + getUserInfoDto.getLike());
+                    userInfoDto = getUserInfoDto;
                     userRecommendCount.setText("" + getUserInfoDto.getLike());
+
+                    ArrayList<String> s = (ArrayList<String>) userInfoDto.getTags();
+
+                    separateString(s, list);
+
+                    TagAdapter tagAdapter = new TagAdapter(UserProfileActivity.this, list, userId,0);
+                    recyclerView.setAdapter(tagAdapter);
                 }
 
                 @Override
@@ -145,19 +161,12 @@ public class UserProfileActivity extends AppCompatActivity {
 
         list = new ArrayList<>();
 
-        ArrayList<String> s = new ArrayList<>(Arrays.asList("한글", "둖ㄷㄴ훋ㄴ", "나이키"
-                , "일이삼사오육칠팔구십일이삼사오육", "아디다스",
-                "일이삼사오육칠팔구십일이삼사오"));
-
-        separateString(s, list);
-
-        TagAdapter tagAdapter = new TagAdapter(this, list, 0);
-        recyclerView.setAdapter(tagAdapter);
 
         tagSettingButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(UserProfileActivity.this, TagSettingActivity.class);
+                intent.putExtra("UserId", userId);
                 startActivityForResult(intent, RESULT_TAG_SETTING);
             }
         });
@@ -169,15 +178,18 @@ public class UserProfileActivity extends AppCompatActivity {
         if(requestCode == RESULT_TAG_SETTING && resultCode == RESULT_OK) {
             list = (ArrayList<ArrayList<String>>) data.getSerializableExtra("tagList");
 
+
             ArrayList<String> slist = new ArrayList<>();
             for(int i = 0; i < list.size(); i++)
                 for(int j = 0; j < list.get(i).size(); j++)
                     slist.add(list.get(i).get(j));
+
+
             list = new ArrayList<>();
 
             separateString(slist, list);
 
-            TagAdapter tagAdapter = new TagAdapter(this, list, 0);
+            TagAdapter tagAdapter = new TagAdapter(this, list, userId, 0);
             recyclerView.setAdapter(tagAdapter);
         }
     }
