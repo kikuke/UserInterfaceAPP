@@ -4,6 +4,7 @@ import android.os.Message;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.echo.echofarm.Data.Dto.GetChatDto;
 import com.echo.echofarm.Data.Dto.GetChatResultDto;
@@ -17,9 +18,12 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
+import com.google.firebase.firestore.DocumentChange;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -32,6 +36,37 @@ public class ChatServiceImpl implements ChatService {
     public ChatServiceImpl(){
         db = FirebaseFirestore.getInstance();
         fcmService = new FcmService();
+    }
+
+    @Override
+    public void detectChat(String uid1, String uid2, String beforeChatId, GetChatDtoListener getChatDtoListener){
+        CollectionReference colRef = db.collection("chat").document(findChatRoomName(uid1,uid2)).collection("log");
+        colRef.addSnapshotListener(new EventListener<QuerySnapshot>() {
+            @Override
+            public void onEvent(@Nullable QuerySnapshot snapshots,
+                                @Nullable FirebaseFirestoreException e) {
+                if (e != null) {
+                    Log.w(TAG, "listen:error", e);
+                    return;
+                }
+
+                for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                    switch (dc.getType()) {
+                        case ADDED:
+                            Log.d(TAG, "Added: " + dc.getDocument().getData());
+                            getChatList(uid1, uid2, beforeChatId, getChatDtoListener);
+                            break;
+                        case MODIFIED:
+                            Log.d(TAG, "Modified: " + dc.getDocument().getData());
+                            break;
+                        case REMOVED:
+                            Log.d(TAG, "Removed: " + dc.getDocument().getData());
+                            break;
+                    }
+                }
+
+            }
+        });
     }
 
     //유저기능 개발되면 커버함수 만들기(자동으로 파라미터 입력)

@@ -17,11 +17,11 @@ public class Post {
     private List<String> wantTag;
     private boolean allowOther;
     private Date nowTime = new Date();
+    private boolean complete;
 
     public Post() { }
 
-    public Post(String uid, String title, List<Uri> imgSrc, String contents, String ownProduct, List<String> ownTag,
-                String wantProduct, List<String> wantTag, boolean allowOther) {
+    public Post(String uid, String title, String contents, String ownProduct, List<String> ownTag, String wantProduct, List<String> wantTag, boolean allowOther, Date nowTime, boolean complete) {
         this.uid = uid;
         this.title = title;
         this.contents = contents;
@@ -30,6 +30,8 @@ public class Post {
         this.wantProduct = wantProduct;
         this.wantTag = wantTag;
         this.allowOther = allowOther;
+        this.nowTime = nowTime;
+        this.complete = complete;
     }
 
     public String getUid() {
@@ -98,6 +100,14 @@ public class Post {
 
     public Date getNowTime() {return nowTime;}
 
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
+    }
+
     @Override
     public String toString() {
         return "Post{" +
@@ -110,6 +120,7 @@ public class Post {
                 ", wantTag=" + wantTag +
                 ", allowOther=" + allowOther +
                 ", nowTime=" + nowTime +
+                ", complete=" + complete +
                 '}';
     }
 }

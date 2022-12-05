@@ -27,8 +27,6 @@ public class FcmService extends FirebaseMessagingService {
 
 
     private static final String TAG = "MyFirebaseMsgService";
-    
-    //서버로 fcm전송요청하는 함수 만들기
 
     public void subscribeTopic(String topic){
         FirebaseMessaging.getInstance().subscribeToTopic(topic);

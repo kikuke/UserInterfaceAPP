@@ -12,7 +12,10 @@ import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.echo.echofarm.Data.Dto.SendUserDto;
 import com.echo.echofarm.R;
+import com.echo.echofarm.Service.Impl.UserServiceImpl;
+import com.echo.echofarm.Service.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
@@ -22,6 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 public class JoinActivity extends AppCompatActivity implements View.OnClickListener {
     private static final String TAG = "EmailPassword";
     private FirebaseAuth mAuth;
+    private UserService userService;
 
     EditText editID;
     EditText editPW;
@@ -31,6 +35,7 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
 
         mAuth = FirebaseAuth.getInstance();
+        userService = new UserServiceImpl();
         setContentView(R.layout.activity_join);
 
         editID = (EditText) findViewById(R.id.signupID);
@@ -68,11 +73,13 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
+                            FirebaseUser user = mAuth.getCurrentUser();
+                            userService.sendUserDto(new SendUserDto(user.getUid(), "새로운 유저"));
+
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
                             Toast.makeText(JoinActivity.this, "createUserWithEmail:success",
                                     Toast.LENGTH_SHORT).show();
-                            FirebaseUser user = mAuth.getCurrentUser();
                             updateUI(user);//화면 전환 시키기
                         } else {
                             // If sign in fails, display a message to the user.

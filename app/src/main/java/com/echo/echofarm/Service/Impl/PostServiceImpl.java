@@ -90,7 +90,7 @@ public class PostServiceImpl implements PostService {
             public void onComplete(@NonNull Task<QuerySnapshot> task) {
                 if(task.isSuccessful()) {
                     if(task.getResult().size() <= 0) {
-                        //데이터 끝
+                        getPostInfoListener.onSuccess(null);
                     } else {
                         for(DocumentSnapshot document : task.getResult()) {
                             Post post = document.toObject(Post.class);
@@ -153,6 +153,7 @@ public class PostServiceImpl implements PostService {
         post.setWantProduct(sendPostDto.getWantProduct());
         post.setWantTag(sendPostDto.getWantTag());
         post.setAllowOther(sendPostDto.isAllowOther());
+        post.setComplete(sendPostDto.isComplete());
 
         db.collection("post").add(post)
             .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
@@ -197,6 +198,7 @@ public class PostServiceImpl implements PostService {
                 getPostDto.setWantTag(post.getWantTag());
                 getPostDto.setAllowOther(post.isAllowOther());
                 getPostDto.setNowTime(post.getNowTime());
+                getPostDto.setComplete(post.isComplete());
 
                 getPostDto.setImgSrc(new ArrayList<>());
                 storeService.getAllImageUrl(postId, getPostDto, getImgUrlListener);
@@ -208,6 +210,6 @@ public class PostServiceImpl implements PostService {
                     public void onFailure(@NonNull Exception e) {
                         Log.w(TAG, "Success getPostDto:", e);
                     }
-                });;
+                });
     }
 }
