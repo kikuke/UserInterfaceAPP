@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.echo.echofarm.R;
 
 import org.w3c.dom.Text;
@@ -59,7 +60,7 @@ public class TradeListAdapter extends BaseAdapter {
         TradeListInfo item = items.get(position);
         tag.setText(item.getTradeTag());		// 해당위치 +1 설정, 배열순으로 0부터 시작
         title.setText(item.getPostTitle());					// item 객체 내용을 가져와 세팅
-        image.setImageURI(item.getPoster());		// item 객체 내용을 가져와 세팅
+        Glide.with(context).load(item.getPoster()).into(image);
 
         // 설정한 view를 반환해줘야 함
         return view;
