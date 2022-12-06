@@ -111,6 +111,7 @@ public class UserProfileActivity extends AppCompatActivity {
                             if(view==exchangeListButton){
                                 Intent intent = new Intent(getApplicationContext(),TradeListActivity.class);
                                 intent.putExtra("uid",userId);
+                                startActivity(intent);
                             }
                         }
                     });
