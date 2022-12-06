@@ -21,7 +21,9 @@ import com.echo.echofarm.Interface.GetImgUrlListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
+import com.echo.echofarm.Service.Impl.UserServiceImpl;
 import com.echo.echofarm.Service.PostService;
+import com.echo.echofarm.Service.UserService;
 
 import java.util.ArrayList;
 import java.util.Date;
@@ -55,6 +57,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     String userId;
     String postTitle;
 
+    LinearLayout bottomLayout;
 
 
     @Override
@@ -75,6 +78,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         postTime = (TextView) findViewById(R.id.postTime);
         ownProduct = (TextView) findViewById(R.id.ownProduct);
         needProduct = (TextView) findViewById(R.id.needProduct);
+        bottomLayout = findViewById(R.id.bottom_layout);
 
         mPager = findViewById(R.id.imageView);
 
@@ -83,6 +87,8 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         profileButton.setOnClickListener(this);
         chatButton.setOnClickListener(this);
         likeButton.setOnClickListener(this);
+
+        UserService userService = new UserServiceImpl();
 
         Intent intent = getIntent();
         postId=intent.getStringExtra("postId");
@@ -93,6 +99,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         postService.getPostDto(postId, new GetImgUrlListener() {
             @Override
             public void onSuccess(GetPostDto getPostDto) {
+                if(!getPostDto.getUid().equals(userService.getUserUid())) bottomLayout.setVisibility(View.VISIBLE);
                 productName.setText(getPostDto.getTitle());
                 productDesc.setText(getPostDto.getContents());
                 myProductTag.setText(tagListToString(getPostDto.getOwnTag()));
