@@ -8,11 +8,14 @@ import androidx.annotation.Nullable;
 
 import com.echo.echofarm.Data.Dto.GetChatDto;
 import com.echo.echofarm.Data.Dto.GetChatResultDto;
+import com.echo.echofarm.Data.Dto.GetUserInfoDto;
 import com.echo.echofarm.Data.Dto.SendChatDto;
 import com.echo.echofarm.Data.Entity.Chat;
 import com.echo.echofarm.Interface.GetChatDtoListener;
+import com.echo.echofarm.Interface.GetUserInfoDtoListener;
 import com.echo.echofarm.Service.ChatService;
 import com.echo.echofarm.Service.FcmService;
+import com.echo.echofarm.Service.UserService;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -31,11 +34,13 @@ public class ChatServiceImpl implements ChatService {
     private static final String TAG = "ChatService";
     private FirebaseFirestore db;
     private FcmService fcmService;
+    private UserService userService;
     //나중에 유저서비스 만들어서 이미지랑 아이디 넣기?
 
     public ChatServiceImpl(){
         db = FirebaseFirestore.getInstance();
         fcmService = new FcmService();
+        userService = new UserServiceImpl();
     }
 
     @Override
@@ -71,20 +76,31 @@ public class ChatServiceImpl implements ChatService {
 
     //유저기능 개발되면 커버함수 만들기(자동으로 파라미터 입력)
     public void sendChat(String sender, String receiver, SendChatDto sendChatDto){
-        Chat chat = new Chat(sender, sendChatDto.getMessage());
 
-        db.collection("chat").document(findChatRoomName(sender, receiver)).collection("log").add(chat)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                    @Override
-                    public void onSuccess(DocumentReference documentReference) {
-                        Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
-                    }})
-                .addOnFailureListener(new OnFailureListener() {
-                    @Override
-                    public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Error adding document", e);
-                    }
-                });
+        userService.getUserInfoDto(sender, new GetUserInfoDtoListener() {
+            @Override
+            public void onSuccess(GetUserInfoDto getUserInfoDto) {
+                Chat chat = new Chat(sender, getUserInfoDto.getName(), sendChatDto.getMessage());
+
+                db.collection("chat").document(findChatRoomName(sender, receiver)).collection("log").add(chat)
+                        .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+                            @Override
+                            public void onSuccess(DocumentReference documentReference) {
+                                Log.d(TAG, "DocumentSnapshot written with ID: " + documentReference.getId());
+                            }})
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Error adding document", e);
+                            }
+                        });
+            }
+
+            @Override
+            public void onFailed() {
+
+            }
+        });
     }
 
     //유저기능 개발되면 커버함수 만들기(자동으로 파라미터 입력)
@@ -130,7 +146,7 @@ public class ChatServiceImpl implements ChatService {
 
                         for(DocumentSnapshot document : task.getResult()) {
                             Chat chat = document.toObject(Chat.class);
-                            GetChatDto getChatDto = new GetChatDto(document.getId(), chat.getUid(), chat.getMessage(), chat.getNowTime(), chat.isRead());
+                            GetChatDto getChatDto = new GetChatDto(document.getId(), chat.getUid(), chat.getName(), chat.getMessage(), chat.getNowTime(), chat.isRead());
                             //읽었을 경우 읽은 데이터 전송하는 기능 추가하기. 나중에 시간 되면.
 
                             getChatResultDto.getGetChatDtoList().add(getChatDto);

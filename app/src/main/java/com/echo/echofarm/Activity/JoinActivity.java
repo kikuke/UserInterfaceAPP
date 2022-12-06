@@ -29,6 +29,7 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
 
     EditText editID;
     EditText editPW;
+    EditText userName;
     Button joinBtn;
     @Override
     protected void onCreate(Bundle savedInstanceState){
@@ -40,6 +41,7 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
 
         editID = (EditText) findViewById(R.id.signupID);
         editPW = (EditText) findViewById(R.id.signupPassword);
+        userName = findViewById(R.id.user_name);
 
         joinBtn = (Button) findViewById(R.id.signup_okButton);
         joinBtn.setOnClickListener(this);
@@ -74,7 +76,7 @@ public class JoinActivity extends AppCompatActivity implements View.OnClickListe
                     public void onComplete(@NonNull Task<AuthResult> task) {
                         if (task.isSuccessful()) {
                             FirebaseUser user = mAuth.getCurrentUser();
-                            userService.sendUserDto(new SendUserDto(user.getUid(), "새로운 유저"));
+                            userService.sendUserDto(new SendUserDto(user.getUid(), userName.getText().toString()));
 
                             // Sign in success, update UI with the signed-in user's information
                             Log.d(TAG, "createUserWithEmail:success");
