@@ -111,21 +111,18 @@ public class UserProfileActivity extends AppCompatActivity {
                             // 추천
                             if (!buttonFlag) {
                                 Log.i("my", "recommend clicked");
-                                newList.add(userService.getUserUid());
-                                userInfoDto.setLikedUser(newList);
-                                userRecommendCount.setText(""+userInfoDto.getLike());
 
-                                userService.sendUserDto(new SendUserDto(userId, userInfoDto.getName()));
+                                userService.addUserLike(userService.getUserUid(), userInfoDto);
+
+                                userRecommendCount.setText(""+userInfoDto.getLike());
                                 heart_filled_Image.setVisibility(View.VISIBLE);
                                 buttonFlag = true;
                             }
                             // 추천 삭제
                             else {
-                                Log.i("my", "cancel recommend clicked");
-                                newList.remove(userService.getUserUid());
-                                userInfoDto.setLikedUser(newList);
-                                userRecommendCount.setText(""+userInfoDto.getLike());
+                                userService.deleteUserLike(userService.getUserUid(), userInfoDto);
 
+                                userRecommendCount.setText(""+userInfoDto.getLike());
                                 heart_filled_Image.setVisibility(View.INVISIBLE);
                                 buttonFlag = false;
                             }
