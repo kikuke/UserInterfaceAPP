@@ -38,7 +38,7 @@ public class TradeListActivity extends AppCompatActivity {
         getPostListDto2.setUid(uid);
 
         postService.getPostList(getPostListDto2,
-                null, 3, postInfoList, new GetPostInfoListener() {
+                null, 30, postInfoList, new GetPostInfoListener() {
                     //데이터는 일괄 로딩되지만, 사진은 한장씩 로딩됨.
                     //넉넉하게 로딩해야됨. 필터링되는게 있어서
                     @Override
@@ -57,6 +57,12 @@ public class TradeListActivity extends AppCompatActivity {
                             @Override
                             public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
                                 TradeListInfo item = (TradeListInfo) adapterView.getItemAtPosition(position);
+
+                                Intent intent = new Intent(TradeListActivity.this, ViewPostActivity.class);
+                                intent.putExtra("postId", postInfoList.get(position).getPostId());
+                                intent.putExtra("userId", postInfoList.get(position).getId());
+                                intent.putExtra("postTitle", postInfoList.get(position).getTitle());
+                                startActivity(intent);
                             }
                         });
                     }
