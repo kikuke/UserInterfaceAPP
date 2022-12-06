@@ -65,4 +65,6 @@ public class TradeListAdapter extends BaseAdapter {
         // 설정한 view를 반환해줘야 함
         return view;
     }
+
+
 }
