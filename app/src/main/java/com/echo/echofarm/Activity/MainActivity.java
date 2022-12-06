@@ -173,7 +173,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             @Override
             public void onScrollChange(NestedScrollView v, int scrollX, int scrollY, int oldScrollX, int oldScrollY) {
                 // ex) 3 * 5개 게시물 표시시 '더 많은 게시물'버튼 생성
-                if(postCount >= 5*3) {
+                if(postCount >= 100) {
+                    Log.i("my", "post count : " + postCount + " ======================");
                     loadingPB.setVisibility(View.GONE);
                     morePostBtn.setVisibility(View.VISIBLE);
                     morePostBtn.setOnClickListener(new View.OnClickListener() {

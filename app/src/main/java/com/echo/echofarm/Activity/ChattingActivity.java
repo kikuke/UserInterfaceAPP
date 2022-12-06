@@ -72,7 +72,8 @@ public class ChattingActivity extends AppCompatActivity {
         String postTitle = intent.getStringExtra("postTitle");
         Log.e("",userService.getUserUid() + " " + oppId + " ==================");
 
-        chatService.detectChat(userService.getUserUid(), oppId, "", new GetChatDtoListener() {
+
+        chatService.detectChat(userService.getUserUid(), oppId, null, new GetChatDtoListener() {
             @Override
             public void onSuccess(GetChatResultDto getChatDtoResult) {
                 if(!sendingMessage.getText().toString().equals(""))
@@ -90,6 +91,8 @@ public class ChattingActivity extends AppCompatActivity {
             }
         });
 
+
+
         // 액션바 제목
         ActionBar actionBar = getSupportActionBar();
         actionBar.setTitle(Html.fromHtml("<font color='#000'>"+ postTitle +"</font>"));
@@ -98,7 +101,7 @@ public class ChattingActivity extends AppCompatActivity {
         LinearLayoutManager manager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(manager);
 
-        adapter = new ChattingDataAdapter(ChattingActivity.this, list, "홍석희");
+        adapter = new ChattingDataAdapter(ChattingActivity.this, list, "");
         recyclerView.setAdapter(adapter);
 
 
@@ -124,19 +127,23 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             public void onSuccess(GetChatResultDto getChatDtoResult) {
                 chatList = getChatDtoResult.getGetChatDtoList();
+                String oppName = "";
 
                 for(int i = 0; i < chatList.size(); i++) {
                     int code = 0;
 
                     if(chatList.get(i).getUid().equals(userService.getUserUid())) {
                         code = 1;
+                    } else {
+                        oppName = chatList.get(i).getName();
                     }
                     ChattingData chattingData = new ChattingData(chatList.get(i).getMessage(), code);
                     list.add(chattingData);
                 }
 
                 if(list.size() != 0) {
-                    ChattingDataAdapter adapter = new ChattingDataAdapter(ChattingActivity.this, list, "홍석희");
+
+                    ChattingDataAdapter adapter = new ChattingDataAdapter(ChattingActivity.this, list, oppName);
                     recyclerView.setAdapter(adapter);
 
                     recyclerView.scrollToPosition(list.size() - 1);

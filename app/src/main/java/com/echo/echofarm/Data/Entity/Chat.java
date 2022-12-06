@@ -6,15 +6,24 @@ import java.util.Date;
 public class Chat {
 
     private String uid;
+    private String name;
     private String message;
     private Date nowTime = new Date();
     private boolean isRead;
 
     public Chat(){}
 
-    public Chat(String uid, String message) {
+    public Chat(String uid, String name, String message) {
         this.uid = uid;
         this.message = message;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getUid() {

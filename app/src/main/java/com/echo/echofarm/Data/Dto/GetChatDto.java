@@ -6,19 +6,29 @@ public class GetChatDto {
 
     private String chatId;
     private String uid;
+    private String name;
     private String message;
     private Date nowTime;
     private boolean isRead;
 
-    public GetChatDto(String chatId, String uid, String message, Date nowTime, boolean isRead) {
+    public GetChatDto(String chatId, String uid, String name, String message, Date nowTime, boolean isRead) {
         this.chatId = chatId;
         this.uid = uid;
+        this.name = name;
         this.message = message;
         this.nowTime = nowTime;
         this.isRead = isRead;
     }
 
     public GetChatDto() {};
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
 
     public void setChatId(String chatId) {
         this.chatId = chatId;
