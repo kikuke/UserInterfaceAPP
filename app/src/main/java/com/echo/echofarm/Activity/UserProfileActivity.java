@@ -72,6 +72,18 @@ public class UserProfileActivity extends AppCompatActivity {
                     && !userService.getUserUid().equals(intent.getStringExtra("oppUserId"))) {
             userId = intent.getStringExtra("oppUserId");
 
+            userService.detectUserInfo(userId, new GetUserInfoDtoListener() {
+                @Override
+                public void onSuccess(GetUserInfoDto getUserInfoDto) {
+
+                }
+
+                @Override
+                public void onFailed() {
+
+                }
+            });
+
             userService.getUserInfoDto(userId, new GetUserInfoDtoListener() {
                 @Override
                 public void onSuccess(GetUserInfoDto getUserInfoDto) {
@@ -114,7 +126,6 @@ public class UserProfileActivity extends AppCompatActivity {
                                 userInfoDto.setLikedUser(newList);
                                 userRecommendCount.setText(""+userInfoDto.getLike());
 
-                                userService.sendUserDto(new SendUserDto(userId, userInfoDto.getName()));
                                 heart_filled_Image.setVisibility(View.INVISIBLE);
                                 buttonFlag = false;
                             }
@@ -132,6 +143,18 @@ public class UserProfileActivity extends AppCompatActivity {
         // 내 프로필
         else {
             userId = userService.getUserUid();
+            userService.detectUserInfo(userId, new GetUserInfoDtoListener() {
+                @Override
+                public void onSuccess(GetUserInfoDto getUserInfoDto) {
+
+                }
+
+                @Override
+                public void onFailed() {
+
+                }
+            });
+
             userService.getUserInfoDto(userId, new GetUserInfoDtoListener() {
                 @Override
                 public void onSuccess(GetUserInfoDto getUserInfoDto) {
