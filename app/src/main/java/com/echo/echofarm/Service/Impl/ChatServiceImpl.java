@@ -80,6 +80,8 @@ public class ChatServiceImpl implements ChatService {
         userService.getUserInfoDto(sender, new GetUserInfoDtoListener() {
             @Override
             public void onSuccess(GetUserInfoDto getUserInfoDto) {
+
+                Log.w(TAG, "getUserinfo Chat: " + getUserInfoDto);
                 Chat chat = new Chat(sender, getUserInfoDto.getName(), sendChatDto.getMessage());
 
                 db.collection("chat").document(findChatRoomName(sender, receiver)).collection("log").add(chat)

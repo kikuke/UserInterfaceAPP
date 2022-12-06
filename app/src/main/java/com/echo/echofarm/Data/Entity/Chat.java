@@ -15,6 +15,7 @@ public class Chat {
 
     public Chat(String uid, String name, String message) {
         this.uid = uid;
+        this.name = name;
         this.message = message;
     }
 
@@ -62,6 +63,7 @@ public class Chat {
     public String toString() {
         return "Chat{" +
                 "uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
                 ", message='" + message + '\'' +
                 ", nowTime=" + nowTime +
                 ", isRead=" + isRead +

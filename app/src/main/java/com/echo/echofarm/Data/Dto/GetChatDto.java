@@ -76,6 +76,7 @@ public class GetChatDto {
         return "GetChatDto{" +
                 "chatId='" + chatId + '\'' +
                 ", uid='" + uid + '\'' +
+                ", name='" + name + '\'' +
                 ", message='" + message + '\'' +
                 ", nowTime=" + nowTime +
                 ", isRead=" + isRead +

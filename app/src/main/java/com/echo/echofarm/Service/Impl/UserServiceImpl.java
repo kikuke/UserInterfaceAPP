@@ -32,7 +32,7 @@ import java.util.ArrayList;
 
 public class UserServiceImpl implements UserService {
 
-    private static final String TAG = "PostService";
+    private static final String TAG = "UserService";
     private FirebaseAuth mAuth;
     private FirebaseFirestore db;
 
@@ -119,6 +119,7 @@ public class UserServiceImpl implements UserService {
                         GetUserInfoDto getUserInfoDto = new GetUserInfoDto();
                         User user = documentSnapshot.toObject(User.class);
                         getUserInfoDto = getUserInfoDtoFactory(user);
+                        Log.w(TAG, "Success getUserInfoDto:" + getUserInfoDto);
                         getUserInfoDtoListener.onSuccess(getUserInfoDto);
 
                         Log.w(TAG, "Success getUserInfoDto: " + getUserInfoDto);
@@ -126,7 +127,7 @@ public class UserServiceImpl implements UserService {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Success getUserInfoDto:", e);
+                        Log.w(TAG, "Failed getUserInfoDto:", e);
                     }
                 });
     }
