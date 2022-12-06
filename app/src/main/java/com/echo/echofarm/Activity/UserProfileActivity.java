@@ -188,6 +188,7 @@ public class UserProfileActivity extends AppCompatActivity {
                 }
             });
 
+
             userService.getUserInfoDto(userId, new GetUserInfoDtoListener() {
                 @Override
                 public void onSuccess(GetUserInfoDto getUserInfoDto) {
@@ -206,6 +207,17 @@ public class UserProfileActivity extends AppCompatActivity {
                 @Override
                 public void onFailed() {
 
+                }
+            });
+
+            exchangeListButton.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    if(view==exchangeListButton){
+                        Intent intent = new Intent(getApplicationContext(),TradeListActivity.class);
+                        intent.putExtra("uid",userId);
+                        startActivity(intent);
+                    }
                 }
             });
         }

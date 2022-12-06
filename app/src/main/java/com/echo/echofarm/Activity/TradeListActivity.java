@@ -48,6 +48,17 @@ public class TradeListActivity extends AppCompatActivity {
                         //현재 한장씩 다운로드 되는 사진들. 각 사진마다 해당 사진에 대해 다시 액티비티에 띄워야 함.
                         System.out.println("SearchUser PostList: " + postInfo);
 
+                        int counts = postInfoList.size();
+                        ListView listView = findViewById(R.id.tradeLists);
+                        init_ArrayList(counts);
+                        TradeListAdapter mAdapter = new TradeListAdapter(TradeListActivity.this,items);
+                        listView.setAdapter(mAdapter);
+                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                            @Override
+                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                                TradeListInfo item = (TradeListInfo) adapterView.getItemAtPosition(position);
+                            }
+                        });
                     }
 
                     @Override
@@ -56,17 +67,6 @@ public class TradeListActivity extends AppCompatActivity {
                     }
                 });
 
-        int counts = postInfoList.size();
-        ListView listView = findViewById(R.id.tradeLists);
-        init_ArrayList(counts);
-        TradeListAdapter mAdapter = new TradeListAdapter(this,items);
-        listView.setAdapter(mAdapter);
-        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                TradeListInfo item = (TradeListInfo) adapterView.getItemAtPosition(position);
-            }
-        });
 
         }
 
