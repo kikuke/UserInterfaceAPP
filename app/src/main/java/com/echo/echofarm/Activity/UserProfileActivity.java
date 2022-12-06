@@ -47,6 +47,7 @@ public class UserProfileActivity extends AppCompatActivity {
     private GetUserInfoDto userInfoDto;
     private boolean buttonFlag = true;
     private UserService userService;
+    private Button exchangeListButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -62,6 +63,7 @@ public class UserProfileActivity extends AppCompatActivity {
         heart_filled_Image = findViewById(R.id.user_recommend_filled_view);
         tagSettingButton = findViewById(R.id.tag_setting_button);
         tagSettingLayout = findViewById(R.id.tag_setting_layout);
+        exchangeListButton = findViewById(R.id.exchange_list_button);
 
         userService = new UserServiceImpl();
 
@@ -90,6 +92,16 @@ public class UserProfileActivity extends AppCompatActivity {
 
                     TagAdapter tagAdapter = new TagAdapter(UserProfileActivity.this, list, userId,0);
                     recyclerView.setAdapter(tagAdapter);
+
+                    exchangeListButton.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View view) {
+                            if(view==exchangeListButton){
+                                Intent intent = new Intent(getApplicationContext(),TradeListActivity.class);
+                                intent.putExtra("uid",userId);
+                            }
+                        }
+                    });
 
                     // 상대 프로필일때만 클릭 리스너 작동
                     userRecommendBtn.setOnClickListener(new View.OnClickListener() {
