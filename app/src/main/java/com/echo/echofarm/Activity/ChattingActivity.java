@@ -80,6 +80,7 @@ public class ChattingActivity extends AppCompatActivity {
                     list.add(new ChattingData(sendingMessage.getText().toString(), 1));
 
                 if(list.size() >= 6) {
+                    Log.i("my", "gesngjnsken size = " + list.size());
                     getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
                 }
                 setChatting();
@@ -128,7 +129,7 @@ public class ChattingActivity extends AppCompatActivity {
             public void onSuccess(GetChatResultDto getChatDtoResult) {
                 chatList = getChatDtoResult.getGetChatDtoList();
                 String oppName = "";
-
+                list.clear();
                 for(int i = 0; i < chatList.size(); i++) {
                     int code = 0;
 

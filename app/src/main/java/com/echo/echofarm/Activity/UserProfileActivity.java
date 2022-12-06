@@ -41,8 +41,8 @@ public class UserProfileActivity extends AppCompatActivity {
     private ImageButton userRecommendBtn;
     private ImageView heart_filled_Image;
     private Button tagSettingButton;
-    private TextView userRecommendCount;
-    private String userId;
+    private TextView userRecommendCount, userNameTextView;
+    private String userId, userName;
     private RelativeLayout tagSettingLayout;
     private GetUserInfoDto userInfoDto;
     private boolean buttonFlag = true;
@@ -64,6 +64,7 @@ public class UserProfileActivity extends AppCompatActivity {
         tagSettingButton = findViewById(R.id.tag_setting_button);
         tagSettingLayout = findViewById(R.id.tag_setting_layout);
         exchangeListButton = findViewById(R.id.exchange_list_button);
+        userNameTextView = findViewById(R.id.user_name_profile);
 
         userService = new UserServiceImpl();
 
@@ -73,6 +74,17 @@ public class UserProfileActivity extends AppCompatActivity {
         if(!TextUtils.isEmpty(intent.getStringExtra("oppUserId"))
                     && !userService.getUserUid().equals(intent.getStringExtra("oppUserId"))) {
             userId = intent.getStringExtra("oppUserId");
+            userService.getUserInfoDto(userId, new GetUserInfoDtoListener() {
+                @Override
+                public void onSuccess(GetUserInfoDto getUserInfoDto) {
+                    userNameTextView.setText(getUserInfoDto.getName());
+                }
+
+                @Override
+                public void onFailed() {
+
+                }
+            });
 
             userService.detectUserInfo(userId, new GetUserInfoDtoListener() {
                 @Override
@@ -153,6 +165,17 @@ public class UserProfileActivity extends AppCompatActivity {
         // 내 프로필
         else {
             userId = userService.getUserUid();
+            userService.getUserInfoDto(userId, new GetUserInfoDtoListener() {
+                @Override
+                public void onSuccess(GetUserInfoDto getUserInfoDto) {
+                    userNameTextView.setText(getUserInfoDto.getName());
+                }
+
+                @Override
+                public void onFailed() {
+
+                }
+            });
             userService.detectUserInfo(userId, new GetUserInfoDtoListener() {
                 @Override
                 public void onSuccess(GetUserInfoDto getUserInfoDto) {
