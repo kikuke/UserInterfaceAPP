@@ -55,6 +55,12 @@
                 android:text="프로필 및 사용자 정보" />
 
             <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/complete"
+                android:text="거래완료여부"/>
+
+            <TextView
                 android:id="@+id/myProductTag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"

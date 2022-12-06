@@ -28,6 +28,14 @@
                 android:value="" />
         </activity>
 
+        <activity
+            android:name=".Activity.TradeListActivity"
+            android:exported="true">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+
         <meta-data
             android:name="com.google.firebase.messaging.default_notification_channel_id"
             android:value="@string/default_notification_channel_id" />
@@ -103,6 +111,8 @@
                 android:value="" />
         </activity>
         <activity android:name=".Activity.JoinActivity" />
+
+
 
         <provider
             android:name="androidx.core.content.FileProvider"

@@ -35,6 +35,7 @@ public class MakePostActivity extends AppCompatActivity {
 
         setContentView(R.layout.activity_make_post);
 
+
         /* 메시지 보내는 방법
         chatService.sendChat("user1", "user2", new SendChatDto("안녕"));
         chatService.sendChat("user2", "user1", new SendChatDto("이라고"));
