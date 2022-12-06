@@ -35,7 +35,7 @@ public class TradeListActivity extends AppCompatActivity {
         GetPostListDto getPostListDto2 = new GetPostListDto();
         Intent intent = getIntent();
         String uid = intent.getStringExtra("uid");
-        getPostListDto2.setUid("uid");
+        getPostListDto2.setUid(uid);
 
         postService.getPostList(getPostListDto2,
                 null, 3, postInfoList, new GetPostInfoListener() {
