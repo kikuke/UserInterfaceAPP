@@ -143,6 +143,7 @@ public class ChattingActivity extends AppCompatActivity {
 
                 if(list.size() != 0) {
 
+                    System.out.println(oppName);
                     ChattingDataAdapter adapter = new ChattingDataAdapter(ChattingActivity.this, list, oppName);
                     recyclerView.setAdapter(adapter);
 
