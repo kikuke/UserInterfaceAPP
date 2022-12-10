@@ -150,7 +150,7 @@
             android:id="@+id/exchange_list_button"
             android:layout_width="match_parent"
             android:layout_height="60dp"
-            android:text="게시물 보기"
+            android:text="거래내역"
             android:textSize="20dp"
             android:textColor="@color/black"
             android:gravity="center_vertical"

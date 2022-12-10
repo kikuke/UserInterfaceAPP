@@ -9,7 +9,7 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:gravity="center_horizontal|bottom"
-        android:text="App Name"
+        android:text="물물교환"
         android:textSize="30dp"
         android:textStyle="bold"/>
 

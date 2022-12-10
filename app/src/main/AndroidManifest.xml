@@ -62,13 +62,6 @@
                 android:value="" />
         </activity>
         <activity
-            android:name=".Activity.ChattingListActivity"
-            android:exported="true">
-            <meta-data
-                android:name="android.app.lib_name"
-                android:value="" />
-        </activity>
-        <activity
             android:name=".Activity.UserProfileActivity"
             android:exported="true">
             <meta-data

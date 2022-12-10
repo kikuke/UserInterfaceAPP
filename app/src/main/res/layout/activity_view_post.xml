@@ -72,58 +72,76 @@
                 android:layout_height="wrap_content"
                 android:layout_marginHorizontal="5dp"
                 android:text="프로필 및 사용자 정보"
-                android:background="#90C5F9"/>
+                android:background="#90C5F9"
+                android:layout_marginBottom="10dp"/>
 
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:id="@+id/complete"
                 android:text="거래완료여부"
-                android:textColor="@color/black"/>
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
 
             <TextView
                 android:id="@+id/myProductTag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="내 물품 태그"/>
+                android:text="내 물품 태그"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
             <TextView
                 android:id="@+id/needProductTag"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="원하는 물건 태그" />
+                android:text="원하는 물건 태그"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
             <TextView
                 android:id="@+id/ownProduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="내 물건" />
+                android:text="내 물건"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
             <TextView
                 android:id="@+id/needProduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="원하는 물건" />
+                android:text="원하는 물건"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
             <TextView
                 android:id="@+id/permitOtherProduct"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="다른 물품과 교환가능여부" />
+                android:text="다른 물품과 교환가능여부"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
 
             <TextView
                 android:id="@+id/productName"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="제목"/>
+                android:text="제목"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
 
             <TextView
                 android:id="@+id/productDesc"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="본문"/>
+                android:text="본문"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp"/>
 
             <TextView
                 android:id="@+id/postTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="작성시간" />
+                android:text="작성시간"
+                android:textColor="@color/black"
+                android:layout_marginBottom="5dp" />
 
         </LinearLayout>
     </ScrollView>

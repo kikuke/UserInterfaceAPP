@@ -17,6 +17,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
@@ -177,6 +178,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
             postService.sendPostComplete(postId, m_getPostDto, new StoreImgListener() {
                 @Override
                 public void onSuccess(String postId) {
+                    Toast.makeText(ViewPostActivity.this, "거래완료 설정 완료", Toast.LENGTH_SHORT).show();
                     complete.setText("거래완료");
                 }
 
@@ -196,5 +198,12 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         }
 
         return result;
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+        startActivity(intent);
+        finish();
     }
 }
