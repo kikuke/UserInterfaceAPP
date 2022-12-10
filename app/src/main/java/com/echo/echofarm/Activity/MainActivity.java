@@ -191,7 +191,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if(postInfoArrayList.get(postInfoArrayList.size() - 1) == null) return;
 
-                    loadingPB.setVisibility(View.VISIBLE); // progressBar 생성
                     // 데이터 불러옴
                     getData(postInfoArrayList.get(postInfoArrayList.size() - 1).getPostId(), null);
                 }
@@ -217,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 postService.getPostList(getTagPostListDto, null, 30, postInfoArrayList, new GetPostInfoListener() {
                     @Override
                     public void onSuccess(PostInfo postInfo) {
+
                         if(postInfo == null) {
                             Log.i("my", "null post");
                             return;

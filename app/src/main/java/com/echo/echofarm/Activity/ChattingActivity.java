@@ -50,6 +50,7 @@ public class ChattingActivity extends AppCompatActivity {
     private List<GetChatDto> chatList;
 
     private String oppId;
+    private String oppName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -128,7 +129,7 @@ public class ChattingActivity extends AppCompatActivity {
             @Override
             public void onSuccess(GetChatResultDto getChatDtoResult) {
                 chatList = getChatDtoResult.getGetChatDtoList();
-                String oppName = "";
+                oppName = "";
                 list.clear();
                 for(int i = 0; i < chatList.size(); i++) {
                     int code = 0;

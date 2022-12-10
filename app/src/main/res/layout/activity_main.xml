@@ -62,16 +62,6 @@
             android:scaleType="centerInside"
             android:padding="12dp"/>
         <ImageButton
-            android:id="@+id/chattingBtn"
-            android:layout_weight="1"
-            android:layout_width="0dp"
-            android:layout_height="match_parent"
-            android:background="#00000000"
-            android:src="@drawable/chatting"
-            android:adjustViewBounds="true"
-            android:scaleType="centerInside"
-            android:padding="12dp"/>
-        <ImageButton
             android:id="@+id/settingBtn"
             android:layout_weight="1"
             android:layout_width="0dp"

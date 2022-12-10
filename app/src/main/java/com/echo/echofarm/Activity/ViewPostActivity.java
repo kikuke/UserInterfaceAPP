@@ -1,5 +1,6 @@
 package com.echo.echofarm.Activity;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -9,6 +10,7 @@ import androidx.viewpager2.widget.ViewPager2;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -41,7 +43,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     Button homeButton;
     Button profileButton;
     Button chatButton;
-    Button likeButton;
+    Button alreadyExchangedButton;
     TextView myProductTag;
     TextView needProductTag;
     TextView permitOtherProduct;
@@ -69,7 +71,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         homeButton = (Button) findViewById(R.id.homeButton);
         profileButton = (Button) findViewById(R.id.profileButton);
         chatButton = (Button) findViewById(R.id.chatButton);
-        likeButton = (Button) findViewById(R.id.likeButton);
+        alreadyExchangedButton = (Button) findViewById(R.id.check_product_already_exchanged);
         myProductTag = (TextView) findViewById(R.id.myProductTag);
         needProductTag = (TextView) findViewById(R.id.needProductTag);
         permitOtherProduct = (TextView) findViewById(R.id.permitOtherProduct);
@@ -86,7 +88,8 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         homeButton.setOnClickListener(this);
         profileButton.setOnClickListener(this);
         chatButton.setOnClickListener(this);
-        likeButton.setOnClickListener(this);
+        alreadyExchangedButton.setOnClickListener(this);
+
 
         UserService userService = new UserServiceImpl();
 
@@ -94,6 +97,9 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         postId=intent.getStringExtra("postId");
         userId = intent.getStringExtra("userId");
         postTitle = intent.getStringExtra("postTitle");
+
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Html.fromHtml("<font color='#000'>"+ postTitle +"</font>"));
 
 
         postService.getPostDto(postId, new GetImgUrlListener() {
@@ -106,6 +112,9 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
                 needProductTag.setText(tagListToString(getPostDto.getWantTag()));
                 ownProduct.setText(getPostDto.getOwnProduct());
                 needProduct.setText(getPostDto.getWantProduct());
+                getPostDto.isComplete();//거래여부 체크
+                getPostDto.setComplete(true);//거래체결
+                
                 list = getPostDto.getImgSrc();
                 mPager.setAdapter(new PostViewPhotoAdapter(ViewPostActivity.this, list));
 
@@ -148,6 +157,9 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
             intent.putExtra("userId", userId);
             intent.putExtra("postTitle", postTitle);
             startActivity(intent);
+        }
+        else if(v == alreadyExchangedButton) {
+
         }
 
     }
