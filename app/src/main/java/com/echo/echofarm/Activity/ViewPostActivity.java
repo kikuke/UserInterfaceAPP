@@ -116,7 +116,11 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
                 needProductTag.setText(tagListToString(getPostDto.getWantTag()));
                 ownProduct.setText(getPostDto.getOwnProduct());
                 needProduct.setText(getPostDto.getWantProduct());
-                getPostDto.isComplete();//거래여부 체크
+
+                if(getPostDto.isComplete()) {
+                    alreadyExchangedButton.setVisibility(View.VISIBLE);
+                    alreadyExchangedButton.setClickable(false);
+                }
                 getPostDto.setComplete(true);//거래체결
                 
                 list = getPostDto.getImgSrc();
