@@ -19,6 +19,8 @@ import androidx.work.WorkManager;
 import androidx.work.Worker;
 import androidx.work.WorkerParameters;
 
+import com.echo.echofarm.Activity.ChattingActivity;
+import com.echo.echofarm.Activity.LoginActivity;
 import com.echo.echofarm.Activity.MainActivity;
 import com.echo.echofarm.R;
 import com.google.firebase.messaging.*;
@@ -45,16 +47,7 @@ public class FcmService extends FirebaseMessagingService {
 
         // Check if message contains a data payload.
         if (remoteMessage.getData().size() > 0) {
-            Log.d(TAG, "Message data payload: " + remoteMessage.getData());
-
-            if (/* Check if data needs to be processed by long running job */ true) {
-                // For long-running tasks (10 seconds or more) use WorkManager.
-                scheduleJob();
-            } else {
-                // Handle message within 10 seconds
-                handleNow();
-            }
-
+            //메인액티비티로 이동
         }
 
         // Check if message contains a notification payload.
@@ -106,8 +99,15 @@ public class FcmService extends FirebaseMessagingService {
     }
 
     private void sendNotification(String title, String messageBody) {
-        Intent intent = new Intent(this, MainActivity.class);
+        Intent intent = new Intent();
+        if(title.equals("거래 메시지")){
+            intent = new Intent(this, ChattingActivity.class);
+        }
+        else{
+            intent = new Intent(this, MainActivity.class);
+        }
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
+
         PendingIntent pendingIntent = PendingIntent.getActivity(this, 0 /* Request code */, intent,
                 PendingIntent.FLAG_IMMUTABLE);
 
