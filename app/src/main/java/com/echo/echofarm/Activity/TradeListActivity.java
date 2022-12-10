@@ -1,13 +1,16 @@
 package com.echo.echofarm.Activity;
 
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.ClipData;
 import android.content.Intent;
 import android.content.res.Resources;
 import android.os.Bundle;
+import android.text.Html;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageButton;
 import android.widget.ListView;
 
 import com.bumptech.glide.load.engine.Resource;
@@ -25,6 +28,7 @@ public class TradeListActivity extends AppCompatActivity {
     ArrayList<TradeListInfo> items;
     PostService postService;
     List<PostInfo> postInfoList;
+    int size = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,34 +41,48 @@ public class TradeListActivity extends AppCompatActivity {
         String uid = intent.getStringExtra("uid");
         getPostListDto2.setUid(uid);
 
+        ActionBar actionBar = getSupportActionBar();
+        actionBar.setTitle(Html.fromHtml("<font color='#000'>거래내역</font>"));
+
         postService.getPostList(getPostListDto2,
                 null, 30, postInfoList, new GetPostInfoListener() {
                     //데이터는 일괄 로딩되지만, 사진은 한장씩 로딩됨.
                     //넉넉하게 로딩해야됨. 필터링되는게 있어서
                     @Override
                     public void onSuccess(PostInfo postInfo) {
+                        size++;
                         //현재 postInfoList 다 다운 되있을거임
                         //System.out.println(postInfoList);
                         //현재 한장씩 다운로드 되는 사진들. 각 사진마다 해당 사진에 대해 다시 액티비티에 띄워야 함.
                         System.out.println("SearchUser PostList: " + postInfo);
 
-                        int counts = postInfoList.size();
-                        ListView listView = findViewById(R.id.tradeLists);
-                        init_ArrayList(counts);
-                        TradeListAdapter mAdapter = new TradeListAdapter(TradeListActivity.this,items);
-                        listView.setAdapter(mAdapter);
-                        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                            @Override
-                            public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
-                                TradeListInfo item = (TradeListInfo) adapterView.getItemAtPosition(position);
-
-                                Intent intent = new Intent(TradeListActivity.this, ViewPostActivity.class);
-                                intent.putExtra("postId", postInfoList.get(position).getPostId());
-                                intent.putExtra("userId", postInfoList.get(position).getId());
-                                intent.putExtra("postTitle", postInfoList.get(position).getTitle());
-                                startActivity(intent);
+                        if(size == postInfoList.size()) {
+                            ArrayList<PostInfo> exchangedList = new ArrayList<>();
+                            for(int i = 0; i < postInfoList.size(); i++) {
+                                if(postInfoList.get(i).isComplete())
+                                    exchangedList.add(postInfoList.get(i));
                             }
-                        });
+                            postInfoList.clear();
+                            postInfoList = new ArrayList<>(exchangedList);
+
+                            int counts = postInfoList.size();
+                            ListView listView = findViewById(R.id.tradeLists);
+                            init_ArrayList(counts);
+                            TradeListAdapter mAdapter = new TradeListAdapter(TradeListActivity.this, items);
+                            listView.setAdapter(mAdapter);
+                            listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                                @Override
+                                public void onItemClick(AdapterView<?> adapterView, View view, int position, long l) {
+                                    TradeListInfo item = (TradeListInfo) adapterView.getItemAtPosition(position);
+
+                                    Intent intent = new Intent(TradeListActivity.this, ViewPostActivity.class);
+                                    intent.putExtra("postId", postInfoList.get(position).getPostId());
+                                    intent.putExtra("userId", postInfoList.get(position).getId());
+                                    intent.putExtra("postTitle", postInfoList.get(position).getTitle());
+                                    startActivity(intent);
+                                }
+                            });
+                        }
                     }
 
                     @Override
@@ -90,5 +108,9 @@ public class TradeListActivity extends AppCompatActivity {
             // item 객체 생성하여 리스트에 추가
             items.add(new TradeListInfo(postInfoList.get(i).getImageUri(),postInfoList.get(i).getTitle(),postInfoList.get(i).getTags()));
         }
+    }
+
+    public void onClick(View view) {
+        onBackPressed();
     }
 }

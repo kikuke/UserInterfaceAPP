@@ -57,7 +57,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private ProgressBar loadingPB;
     private NestedScrollView nestedSV;
     private Button morePostBtn;
-    private ImageButton editPostBtn, chattingBtn, settingBtn;
+    private ImageButton editPostBtn, settingBtn;
     private ArrayList<PostInfo> postInfoArrayList;
     private PostAdapter postAdapter;
     private GetPostListDto getPostListDto = new GetPostListDto();
@@ -200,8 +200,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onClick(View view) {
         if(view == editPostBtn) {
             startActivity(new Intent(this, EditPostActivity.class));
-        } else if(view == chattingBtn) {
-            startActivity(new Intent(this, ChattingListActivity.class));
         } else if(view == settingBtn) {
             startActivity(new Intent(this, UserProfileActivity.class));
         }
