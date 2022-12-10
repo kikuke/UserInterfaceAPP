@@ -14,6 +14,7 @@ import android.text.Html;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
@@ -40,10 +41,10 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     private int num_page;
     List<Uri> list = new ArrayList<>();
 
-    Button backButton;
-    Button homeButton;
+    ImageButton backButton;
+    ImageButton homeButton;
     Button profileButton;
-    Button chatButton;
+    ImageButton chatButton;
     Button alreadyExchangedButton;
     TextView myProductTag;
     TextView needProductTag;
@@ -70,10 +71,10 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_view_post);
         postService = new PostServiceImpl();
-        backButton = (Button) findViewById(R.id.backButton);
-        homeButton = (Button) findViewById(R.id.homeButton);
+        backButton = (ImageButton) findViewById(R.id.backButton);
+        homeButton = (ImageButton) findViewById(R.id.homeButton);
         profileButton = (Button) findViewById(R.id.profileButton);
-        chatButton = (Button) findViewById(R.id.chatButton);
+        chatButton = (ImageButton) findViewById(R.id.chatButton);
         alreadyExchangedButton = (Button) findViewById(R.id.check_product_already_exchanged);
         myProductTag = (TextView) findViewById(R.id.myProductTag);
         needProductTag = (TextView) findViewById(R.id.needProductTag);
@@ -110,6 +111,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onSuccess(GetPostDto getPostDto) {
                 if(!getPostDto.getUid().equals(userService.getUserUid())) bottomLayout.setVisibility(View.VISIBLE);
+                else alreadyExchangedButton.setVisibility(View.VISIBLE);
                 m_getPostDto = getPostDto;
                 productName.setText(getPostDto.getTitle());
                 productDesc.setText(getPostDto.getContents());

@@ -49,6 +49,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
         PostInfo postInfo = postInfoArrayList.get(position);
         holder.title.setText(postInfo.getTitle());
         holder.tags.setText(postInfo.getTags());
+        holder.exchanged.setVisibility(View.VISIBLE);
         Glide.with(context).load(postInfo.getImageUri()).into(holder.postImage);
     }
 
@@ -59,7 +60,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
 
     public class ViewHolder extends RecyclerView.ViewHolder {
 
-        TextView title, tags;
+        TextView title, tags, exchanged;
         ImageView postImage;
 
         public ViewHolder(@NonNull View itemView) {
@@ -67,6 +68,7 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
             postImage = itemView.findViewById(R.id.imageView_postLayout);
             title = itemView.findViewById(R.id.title_postLayout);
             tags = itemView.findViewById(R.id.tags_postLayout);
+            exchanged = itemView.findViewById(R.id.exchanged_info_text);
 
             itemView.setOnClickListener(new View.OnClickListener() {
                 @Override
@@ -79,32 +81,6 @@ public class PostAdapter extends RecyclerView.Adapter<PostAdapter.ViewHolder> {
                     context.startActivity(intent);
                 }
             });
-
-            /*
-            postImage.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    Intent intent = new Intent(context, ViewPostActivity.class);
-                    intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
-                    intent.putExtra("userId", postInfoArrayList.get(position).getId());
-                    intent.putExtra("postTitle", postInfoArrayList.get(position).getTitle());
-                    context.startActivity(intent);
-                }
-            });
-            title.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View view) {
-                    int position = getAdapterPosition();
-                    Intent intent = new Intent(context, ViewPostActivity.class);
-                    intent.putExtra("postId", postInfoArrayList.get(position).getPostId());
-                    intent.putExtra("userId", postInfoArrayList.get(position).getId());
-                    intent.putExtra("postTitle", postInfoArrayList.get(position).getTitle());
-                    context.startActivity(intent);
-                }
-            });
-
-             */
         }
 
 
