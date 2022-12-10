@@ -52,6 +52,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     TextView postTime;
     TextView needProduct;
     TextView ownProduct;
+    TextView complete;
 
 
     PostService postService;
@@ -81,6 +82,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
         ownProduct = (TextView) findViewById(R.id.ownProduct);
         needProduct = (TextView) findViewById(R.id.needProduct);
         bottomLayout = findViewById(R.id.bottom_layout);
+        complete = (TextView)findViewById(R.id.complete);
 
         mPager = findViewById(R.id.imageView);
 
@@ -116,6 +118,10 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
                 getPostDto.setComplete(true);//거래체결
                 
                 list = getPostDto.getImgSrc();
+                if(getPostDto.isComplete())
+                    complete.setText("거래완료");
+                else
+                    complete.setText("거래를 기다리고 있어요");
                 mPager.setAdapter(new PostViewPhotoAdapter(ViewPostActivity.this, list));
 
                 if(getPostDto.isAllowOther())
