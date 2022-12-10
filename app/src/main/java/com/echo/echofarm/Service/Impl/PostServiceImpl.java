@@ -136,7 +136,7 @@ public class PostServiceImpl implements PostService {
                             if(!compareContainTags(post.getWantTag(), getPostListDto.getWantTag()))
                                 continue;
 
-                            PostInfo postInfo = new PostInfo(document.getId(), post.getUid(), post.getTitle(), post.getOwnTag().toString());
+                            PostInfo postInfo = new PostInfo(document.getId(), post.getUid(), post.getTitle(), post.getOwnTag().toString(), post.isComplete());
                             postInfoList.add(postInfo);
                             storeService.getImageUrl(document.getId(), "0.png", postInfo, getPostInfoListener);
                             Log.d(TAG, "PostInfo: " + postInfo);
