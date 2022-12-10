@@ -4,6 +4,7 @@ import android.net.Uri;
 import android.util.Log;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 
 import com.echo.echofarm.Activity.PostInfo;
 import com.echo.echofarm.Data.Dto.GetPostDto;
@@ -22,7 +23,9 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.firestore.CollectionReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.EventListener;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QuerySnapshot;
 
@@ -37,6 +40,34 @@ public class PostServiceImpl implements PostService {
     public PostServiceImpl(){
         db = FirebaseFirestore.getInstance();
         storeService = new StoreServiceImpl();
+    }
+
+    @Override
+    public void sendPostComplete(String postId, GetPostDto getPostDto, StoreImgListener sendPostListener) {
+        Post post = new Post();
+
+        post.setUid(getPostDto.getUid());
+        post.setTitle(getPostDto.getTitle());
+        post.setContents(getPostDto.getContents());
+        post.setOwnProduct(getPostDto.getOwnProduct());
+        post.setOwnTag(getPostDto.getOwnTag());
+        post.setWantProduct(getPostDto.getWantProduct());
+        post.setWantTag(getPostDto.getWantTag());
+        post.setAllowOther(getPostDto.isAllowOther());
+        post.setComplete(true);
+
+        db.collection("post").document(postId).set(post).addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        sendPostListener.onSuccess(postId);
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Error writing document", e);
+                    }
+                });
     }
 
     @Override
@@ -105,7 +136,7 @@ public class PostServiceImpl implements PostService {
                             if(!compareContainTags(post.getWantTag(), getPostListDto.getWantTag()))
                                 continue;
 
-                            PostInfo postInfo = new PostInfo(document.getId(), post.getUid(), post.getTitle(), post.getOwnTag().toString());
+                            PostInfo postInfo = new PostInfo(document.getId(), post.getUid(), post.getTitle(), post.getOwnTag().toString(), post.isComplete());
                             postInfoList.add(postInfo);
                             storeService.getImageUrl(document.getId(), "0.png", postInfo, getPostInfoListener);
                             Log.d(TAG, "PostInfo: " + postInfo);

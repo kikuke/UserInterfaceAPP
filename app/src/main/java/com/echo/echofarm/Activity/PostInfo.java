@@ -11,12 +11,23 @@ public class PostInfo {
     private String title;
     private String tags;//리스트 형태잉
     private Uri imageUri;
+    private boolean complete;
 
-    public PostInfo(String postId,String id, String title, String tags) {
-        this.postId=postId;
+    public PostInfo(String postId, String id, String title, String tags, boolean complete) {
+        this.postId = postId;
         this.id = id;
         this.title = title;
         this.tags = tags;
+        this.imageUri = imageUri;
+        this.complete = complete;
+    }
+
+    public boolean isComplete() {
+        return complete;
+    }
+
+    public void setComplete(boolean complete) {
+        this.complete = complete;
     }
 
     public String getPostId() {return postId;}
@@ -43,6 +54,7 @@ public class PostInfo {
                 ", title='" + title + '\'' +
                 ", tags='" + tags + '\'' +
                 ", imageUri=" + imageUri +
+                ", complete=" + complete +
                 '}';
     }
 
