@@ -1,6 +1,7 @@
 package com.echo.echofarm.Service;
 
 import com.echo.echofarm.Activity.PostInfo;
+import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Data.Dto.SendPostDto;
 import com.echo.echofarm.Interface.GetImgUrlListener;
@@ -18,6 +19,8 @@ public interface PostService {
                      String beforePostId, Integer limitSize, List<PostInfo> postInfoList, GetPostInfoListener getPostInfoListener);
 
     void sendPostDto(SendPostDto sendPostDto, StoreImgListener sendPostListener);
+
+    void sendPostComplete(String postId, GetPostDto getPostDto, StoreImgListener sendPostListener);
 
     void getPostDto(String postId, GetImgUrlListener getPostListener);
 

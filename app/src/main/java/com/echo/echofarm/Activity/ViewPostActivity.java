@@ -21,6 +21,7 @@ import com.echo.echofarm.Data.Dto.GetPostDto;
 import com.echo.echofarm.Data.Dto.GetPostListDto;
 import com.echo.echofarm.Interface.GetImgUrlListener;
 import com.echo.echofarm.Interface.GetPostInfoListener;
+import com.echo.echofarm.Interface.StoreImgListener;
 import com.echo.echofarm.R;
 import com.echo.echofarm.Service.Impl.PostServiceImpl;
 import com.echo.echofarm.Service.Impl.UserServiceImpl;
@@ -59,6 +60,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
     String postId;
     String userId;
     String postTitle;
+    GetPostDto m_getPostDto;
 
     LinearLayout bottomLayout;
 
@@ -108,6 +110,7 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
             @Override
             public void onSuccess(GetPostDto getPostDto) {
                 if(!getPostDto.getUid().equals(userService.getUserUid())) bottomLayout.setVisibility(View.VISIBLE);
+                m_getPostDto = getPostDto;
                 productName.setText(getPostDto.getTitle());
                 productDesc.setText(getPostDto.getContents());
                 myProductTag.setText(tagListToString(getPostDto.getOwnTag()));
@@ -165,7 +168,17 @@ public class ViewPostActivity extends AppCompatActivity implements View.OnClickL
             startActivity(intent);
         }
         else if(v == alreadyExchangedButton) {
+            postService.sendPostComplete(postId, m_getPostDto, new StoreImgListener() {
+                @Override
+                public void onSuccess(String postId) {
+                    complete.setText("거래완료");
+                }
 
+                @Override
+                public void onFailed() {
+
+                }
+            });
         }
 
     }

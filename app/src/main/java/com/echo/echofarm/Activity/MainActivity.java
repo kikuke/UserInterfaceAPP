@@ -125,10 +125,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         // 액티비티 버튼 처리
         editPostBtn = findViewById(R.id.editPostBtn);
-        chattingBtn = findViewById(R.id.chattingBtn);
         settingBtn = findViewById(R.id.settingBtn);
         editPostBtn.setOnClickListener(this);
-        chattingBtn.setOnClickListener(this);
         settingBtn.setOnClickListener(this);
 
         // post, 스크롤 관련 처리
